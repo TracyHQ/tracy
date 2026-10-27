@@ -642,7 +642,8 @@ Only for `origin='migrated'` sites on Joomla (WordPress waits for its own adapte
   copy (cutting the dump with `lib/dump_tables.py`, loading in parallel with the "Before restore" copy); other tables, their triggers and
   the session table stay as they are. The Restore button in the Backups tab still swaps the whole DB. Live reads load into
   scratch schemas over several connections (`tracy_db_load_dump`, `dump_sections.py split`: 2 + 2 in the merge, 4 for the
-  preview's base; 2026-10-27).
+  preview's base; 2026-10-27). The two reads load beside the copy's dump (`load_reads`, in the background), not after it. A machine runs
+  `TRACY_HEAVY_SLOTS` heavy webroot jobs at once (default 2; `lib/heavy-slots.sh`, slot 0 the old lock file).
 - **Conflicts: Tracy's version wins** (20/10/2026). Where both sites edited the same thing differently, the copy's version is kept —
   files with `git merge-file --ours` (colliding hunks take Tracy's, the rest of the live file still comes over), DB with
   the copy's value/row — and listed in `kept` with the live-side value; the Export dialog shows that list once

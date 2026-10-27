@@ -53,6 +53,8 @@ HERE="$(cd "$(dirname "$0")" && pwd)"
 LIB_DIR="${TRACY_LIB_DIR:-$HERE/../lib}"
 # shellcheck source=../lib/roots.sh
 . "$LIB_DIR/roots.sh"
+# shellcheck source=../lib/heavy-slots.sh
+. "$LIB_DIR/heavy-slots.sh"
 # shellcheck source=../lib/webroot-repo-git.sh
 . "$LIB_DIR/webroot-repo-git.sh"
 # shellcheck source=../lib/webroot-platform.sh
@@ -345,12 +347,11 @@ run_heavy() {
   # TRACY_HEAVY_LOCK_HELD: a parent of this run (restore-everything) already holds it — taking it
   # again from a second open of the file would wait on ourselves.
   if [[ -n "${TRACY_HEAVY_LOCK_HELD:-}" ]] || ! command -v flock >/dev/null 2>&1; then "$@"; return; fi
-  exec 9>"$HEAVY_LOCK"
   # A queue must look like a queue (webroot-git.sh's run_heavy says why): provision's Initial backup
   # follows a silent `mark`, so without this line a job queued here kept showing the step before it.
-  if ! flock -n 9; then
-    echo "==> waiting for another site's webroot baseline (one at a time per machine)" >&2
-    if ! flock -w 1800 9; then
+  if ! heavy_try "$HEAVY_LOCK"; then
+    echo "==> waiting for another site's webroot baseline (the machine's heavy jobs are full)" >&2
+    if ! heavy_wait "$HEAVY_LOCK" 1800; then
       echo "another heavy webroot job is running; try again shortly" >&2
       exit 1
     fi
