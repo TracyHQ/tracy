@@ -1,0 +1,3 @@
+- **A sync's result point is dumped in one stream again** — David (Claude) · #PR · `perf/revert-backup-parts` · 2026-10-28
+  **Affects:** nobody's output; it takes back #17's parts dump. Measured on dev side by side (28/10/2026), the result point's mariadb-dump takes 1.7–2.8 s on the WordPress test site and 0.9 s on the Joomla one in one stream, and the same or more in four parts (2.5 s, 1.5 s): the 9–16 s of the sync's "making the backup point" step is spent elsewhere. `site-backup.sh` and `dump_tables.py` are as before #17.
+  **Deploy debt:** the fleet scripts ship in the `tracy-host` image, rebuilt on merge to `develop`; production with the next `develop` to `main` release.
