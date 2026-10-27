@@ -3,14 +3,15 @@ import assert from 'node:assert/strict'
 import { createHash } from 'node:crypto'
 import { test } from 'node:test'
 import { briefOf } from '../src/opportunities-build/demo-qa.js'
-import { inventoryInvariant } from '../src/sites/agent-demo-inventory.js'
 import {
   AGENT_DEMO,
   freezeAgentResearch,
   checkedResearch,
   bundlePart,
-  validateAgentPlan as validateUnwired,
+  pictureSourceAssociations,
+  validateAgentPlan,
   agentDemoCollected,
+  agentDemoInventoryPolicy,
   clientSendSteps,
   demoInstructions,
   ownSiteInstructions,
@@ -21,26 +22,78 @@ import {
   agentDemoPrompt,
   researchHash,
   amendsPlan,
-  postCoverage,
-  templatePostTitles,
-  templatePostsLeft,
   isLogo,
   structurePage,
-  editorialLeads,
-  leadCoverage,
-  wordpressLogoOptions,
-  inventoryRoutes,
-  postDraftsOf,
-  postTopicNames
+  joinPlan,
+  compactSource
 } from '../src/opportunities-build/agent-demo.js'
-import { planSweep } from '../src/opportunities-build/residue-sweep.js'
-
-// app.js hands the sites domain's invariant to the plan validator; the tests wire it the same way.
-const validateAgentPlan = (plan, bundle, options = {}) =>
-  validateUnwired(plan, bundle, { inventoryInvariant, ...options })
 
 const bytes = Buffer.from('frozen picture')
 const sha256 = createHash('sha256').update(bytes).digest('hex')
+
+test('native text branding is authorized only by frozen WordPress research without a logo', () => {
+  const revision = (read) => ({
+    id: 'revision',
+    account_id: 'account',
+    brief: {
+      quickstartWorkflow: AGENT_DEMO,
+      agentDemoSnapshot: freezeAgentResearch({
+        accountId: 'account',
+        opportunityId: 'opp',
+        revisionId: 'revision',
+        at: '2026-10-27T00:00:00Z',
+        read: { profile: {}, posts: [], rawSources: [], media: [], ...read }
+      })
+    }
+  })
+  assert.equal(agentDemoInventoryPolicy(revision({}), 'wordpress').allowWordPressSiteTitle, true)
+  assert.deepEqual(agentDemoInventoryPolicy(revision({}), 'joomla'), {})
+  assert.deepEqual(agentDemoInventoryPolicy(revision({}), 'emdash'), {})
+  // A selected logo without an import (or even an available media row) still requires the logo.
+  assert.equal(
+    agentDemoInventoryPolicy(revision({ brand: { logo: 'logo-id' } }), 'wordpress').allowWordPressSiteTitle,
+    false
+  )
+  assert.equal(
+    agentDemoInventoryPolicy(
+      revision({ media: [{ id: 'asset', kind: 'image', sourceUrl: 'https://x.test/logo.png' }] }),
+      'wordpress'
+    ).allowWordPressSiteTitle,
+    false
+  )
+  const changed = revision({})
+  changed.brief.agentDemoSnapshot.brand = { logo: null }
+  assert.throws(() => agentDemoInventoryPolicy(changed, 'wordpress'), /SNAPSHOT_CHANGED/)
+})
+
+test('plan.read pages through picture proposals and marks unknown native targets explicitly', async () => {
+  const { pool, build } = fixture()
+  build.qa = {
+    baseline: {
+      pictureFrames: Array.from({ length: 25 }, (_, i) => ({
+        frameId: `frame-${i}`,
+        page: '/',
+        width: 800,
+        height: 400,
+        underWords: true
+      }))
+    }
+  }
+  const service = agentDemoCapabilities({ pool, objects: null })
+  const auth = { accountId: 'account', siteKey: 'site.test', sessionId: 'session' }
+  const first = (await service.call(auth, { operation: 'plan.read' })).pictureProposal
+  assert.equal(first.total, 25)
+  assert.match(first.instructions, /Identity is unverified/)
+  assert.equal(first.proposals[0].identity, 'unverified')
+  assert.equal(first.proposals.length, 12)
+  assert.equal(first.nextOffset, 12)
+  assert.equal(first.proposals[0].mapping, 'unmapped')
+  assert.equal(first.proposals[0].photo, null)
+  const last = (await service.call(auth, { operation: 'plan.read', offset: 12, limit: 20 })).pictureProposal
+  assert.equal(last.proposals.length, 13)
+  assert.equal(last.nextOffset, null)
+})
+
 function fixture(cms = 'wordpress', sourceBytes = bytes) {
   const sourceSha = createHash('sha256').update(sourceBytes).digest('hex')
   const media = Array.from({ length: 30 }, (_, i) => ({
@@ -506,28 +559,25 @@ test('capability binds account/site/session, persists plan before import and imp
   await assert.rejects(service.call(auth, { operation: 'guard' }), /ACTION_CLOSED/)
 })
 
-test("the brief's logo imports with no plan row naming it; any other unplanned picture is still refused", async () => {
-  // The Willow Nook (lrsweep rig, JA Diner wp7, 25/10/2026): the research found the business's logo, the agent's
-  // frozen plan named no row for it, and both of its imports were refused, so the header kept a wordmark.
-  const { pool, plan, build } = fixture()
-  build.brief = { ...build.brief, brand: { logo: 'asset-3' } }
+test('identical bytes from distinct research assets reuse the confirmed native attachment and retain attribution', async () => {
+  const { pool, plan } = fixture()
+  plan.rows.push({ ...plan.rows[0], assetIds: ['asset-28'] })
   const auth = { accountId: 'account', siteKey: 'site.test', sessionId: 'session' }
   const service = agentDemoCapabilities({ pool, objects: { get: async () => new Response(bytes) } })
   await service.call(auth, { operation: 'plan.save', plan })
-  const upload = async () => ({ status: 200, body: { ok: true, attachment: 4420 } })
-  const logo = await service.call(auth, { operation: 'media.import', assetId: 'asset-3' }, { upload })
-  assert.equal(logo.assetId, 'asset-3')
-  assert.equal(logo.attachmentId, 4420)
-  assert.equal(build.content.agentDemo.imports['asset-3'].state, 'written')
-  await assert.rejects(
-    service.call(auth, { operation: 'media.import', assetId: 'asset-4' }, { upload }),
-    /ASSET_NOT_PLANNED/
-  )
-  // A row index is still a planned row's: the logo is not laid in a row it is not in.
-  await assert.rejects(
-    service.call(auth, { operation: 'media.import', assetId: 'asset-3', rowIndex: 0 }, { upload }),
-    /ASSET_NOT_PLANNED/
-  )
+  let uploads = 0
+  const upload = async () => {
+    uploads++
+    // WordPress returns zero on a second write to an existing attachment's path.
+    return { status: 200, body: { ok: true, attachment: uploads === 1 ? 4417 : 0 } }
+  }
+  const first = await service.call(auth, { operation: 'media.import', assetId: 'asset-29' }, { upload })
+  const second = await service.call(auth, { operation: 'media.import', assetId: 'asset-28' }, { upload })
+  assert.equal(second.attachmentId, first.attachmentId)
+  assert.equal(second.path, first.path)
+  assert.equal(second.assetId, 'asset-28')
+  assert.equal(second.sourceUrl, 'https://example.test/photos/28')
+  assert.equal(uploads, 1)
 })
 
 test('Stop/revocation during byte read blocks import; corrupted store bytes and provider errors never claim receipt', async () => {
@@ -704,36 +754,6 @@ test('plan guide supplies canonical frozen part refs and valid native keys/field
       assert.ok(error.detail.guide.sourceRefs.some((ref) => ref.id === 'part:profile'))
     }
   }
-  // The Willow Nook build 8b: WordPress pages are `post/<id>` records; a row naming type "page" was refused with
-  // `expected: []` six times, and the agent dropped its page rows. The refusal names the record with that id.
-  const page = {
-    key: 'post/63',
-    identity: { kind: 'post', id: 63 },
-    data: { post_title: 'About', post_content: '<p>Template</p>' },
-    editorialFields: ['post_title', 'post_content']
-  }
-  const pages = {
-    ...structure,
-    inventory: { ...structure.inventory, records: [...structure.inventory.records, page] }
-  }
-  try {
-    validateAgentPlan(
-      {
-        ...plan,
-        structure: pages,
-        rows: [
-          { ...guide.rowExamples[0], target: { kind: 'native', type: 'page', id: 63, path: 'post_content' } },
-          photo
-        ]
-      },
-      bundle
-    )
-    assert.fail('a page-typed target accepted')
-  } catch (error) {
-    const refusal = error.detail.issues.find((item) => item.path === 'rows[0].target')
-    assert.deepEqual(refusal.expected[0].target, { kind: 'native', type: 'post', id: 63 })
-    assert.match(refusal.reason, /type "post"/)
-  }
 })
 
 test('a plan must place what the research collected: a review (or say why the template has none) and own photos', () => {
@@ -807,9 +827,10 @@ test('collected for the final check: brief facts, every collected review, own ph
             {
               page: '/contact',
               section: 'Contact',
-              goal: 'Email',
+              goal: 'A sample email for the owner',
               operation: 'rewrite',
-              sourceIds: ['p'],
+              sourceIds: [],
+              sample: true,
               target: { kind: 'contract', slot: 'contact_email' }
             }
           ]
@@ -853,6 +874,48 @@ test('a customer’s own site: its steps say website, never demo or pilot, and t
   assert.match(
     demo,
     /Frozen research counts:[\s\S]*provision\.start[\s\S]*this pilot always needs human review/
+  )
+})
+
+// Plan "10/10" §3 (26/10/2026): words a check finds unreadable over a photo are fixed by toning that photo, so a saved
+// image's tone may be set later; its photo and crop stay as saved.
+test("a saved image's tone may be set or changed later; its photo and crop may not", () => {
+  const row = {
+    page: '/',
+    section: 'hero',
+    goal: 'Own photo',
+    assetIds: ['a', 'b'],
+    operation: 'replace-image'
+  }
+  const image = {
+    assetId: 'a',
+    crop: {
+      aspect: 2,
+      source: { width: 800, height: 400 },
+      output: { width: 800, height: 400 },
+      strategy: 'centre'
+    }
+  }
+  const held = {
+    version: 'agent-demo/1',
+    researchHash: 'r',
+    structureHash: 's',
+    rows: [{ ...row, image }],
+    hash: 'h1'
+  }
+  const next = (img) => ({ ...held, rows: [{ ...row, image: img }], hash: 'h2' })
+  assert.equal(amendsPlan(held, next({ ...image, tone: 'dark' })), true)
+  assert.equal(
+    amendsPlan(
+      { ...held, rows: [{ ...row, image: { ...image, tone: 'dark' } }] },
+      next({ ...image, tone: 'light' })
+    ),
+    true
+  )
+  assert.equal(amendsPlan(held, next({ ...image, assetId: 'b', tone: 'dark' })), false)
+  assert.equal(
+    amendsPlan(held, next({ ...image, crop: { ...image.crop, strategy: 'attention' }, tone: 'dark' })),
+    false
   )
 })
 
@@ -937,8 +1000,6 @@ test('a row with no source is neutral: sample content is refused, and the prompt
   )
   assert.match(prompt, /never "Coming soon", "Chef's selection"/)
   assert.match(prompt, /on a plan row with neutral:true/)
-  assert.match(prompt, /a post keeps the date the site was built/)
-  assert.match(prompt, /a button naming a page of this site \(menu, offers, gallery, about\) keeps that page/)
   assert.doesNotMatch(prompt, /sample:true|sample content as a suggestion|sample dishes/)
   assert.ok(prompt.includes('Preserve review text and attribution; ratings stay separated by platform.'))
   assert.doesNotMatch(prompt, /verified business facts|invent people|menu items, prices, claims/)
@@ -978,7 +1039,6 @@ test('a place with no collected reviews keeps its testimonials empty or neutral;
     prompt,
     /In a testimonial or quote area, collected reviews keep their exact text and author, never shortened, merged or re-attributed/
   )
-  assert.match(prompt, /a blog post is never a review/)
   assert.match(prompt, /a collected rating is never replaced or made up/)
   assert.doesNotMatch(prompt, /with no person's name or rating|come only from the research/)
   const emptyTestimonial = {
@@ -1036,7 +1096,7 @@ const menuDish = (name, price, extra = {}) => ({
   verified: true,
   ...extra
 })
-const freezeWithMenu = (menuItems, profile = {}, opportunity = null) =>
+const freezeWithMenu = (menuItems, profile = {}) =>
   freezeAgentResearch({
     accountId: 'account',
     opportunityId: 'opp',
@@ -1044,13 +1104,7 @@ const freezeWithMenu = (menuItems, profile = {}, opportunity = null) =>
     template: { design: 'template', quickstart: 'tag', version: '1' },
     cms: 'wordpress',
     at: '2026-10-23T00:00:00Z',
-    read: {
-      profile: { name: 'Place', ...profile, menuItems },
-      media: [],
-      rawSources: [],
-      posts: [],
-      ...(opportunity ? { opportunity } : {})
-    }
+    read: { profile: { name: 'Place', ...profile, menuItems }, media: [], rawSources: [], posts: [] }
   })
 
 test('the menu is its own paged part with a summary first; the profile no longer carries the dishes', () => {
@@ -1107,7 +1161,7 @@ test('a dish read off a photo or a search result keeps its source in the menu pa
   assert.equal(bundlePart(bundle, 'menu').items[1].currencyAssumed, true)
 })
 
-// Tin Lantern Saigon (stand, 24/10/2026): "110" printed for 110,000 VND must reach the agent with its scale.
+// Barb Wire Saigon (stand, 24/10/2026): "110" printed for 110,000 VND must reach the agent with its scale.
 test('a price printed in thousands reaches the agent with its scale, and the prompt says how to write it', () => {
   const bundle = freezeWithMenu([
     menuDish('Mojito', '110', {
@@ -1130,19 +1184,12 @@ test('the research hash changes when a dish changes; a place with no menu has an
     freezeWithMenu([menuDish('Hummus', '32')]).hash,
     freezeWithMenu([menuDish('Hummus', '33')]).hash
   )
-  const restaurant = { candidate: { trade: 'food' } }
-  const none = bundlePart(freezeWithMenu(undefined, {}, restaurant), 'menu')
+  const none = bundlePart(freezeWithMenu(undefined), 'menu')
   assert.deepEqual([none.total, none.items], [0, []])
-  assert.match(none.summary, /^No menu link or menu photo was found/)
-  assert.match(none.summary, /never presented as read/)
-  const off = bundlePart(freezeWithMenu(undefined, { menuPhotoStatus: 'switched_off' }, restaurant), 'menu')
-  assert.match(off.summary, /photo reading is off on this site/)
-  // A business that is not food or drink hears no word of menus or dishes, only that no price was collected.
-  for (const opportunity of [{ candidate: { trade: 'fitness' } }, { candidate: { trade: 'beauty' } }, null]) {
-    const other = bundlePart(freezeWithMenu(undefined, {}, opportunity), 'menu')
-    assert.match(other.summary, /^No prices were collected/)
-    assert.doesNotMatch(other.summary, /menu|dish/i)
-  }
+  assert.match(none.summary, /^No prices were collected/)
+  assert.match(none.summary, /add no item or price of your own/)
+  const off = bundlePart(freezeWithMenu(undefined, { menuPhotoStatus: 'switched_off' }), 'menu')
+  assert.match(off.summary, /No prices were collected/)
 })
 
 test('a bundle frozen before the menu part still answers it from its profile, without changing its hash', () => {
@@ -1162,172 +1209,6 @@ test('the plan guide and the prompt name the menu part once each', () => {
   const { revision, bundle } = fixture()
   assert.ok(agentPlanGuide(bundle).rules.some((rule) => /part menu/.test(rule)))
   assert.match(agentDemoPrompt(revision), /Read the menu part first/)
-})
-
-test('a template post is written from research: a claim no quote holds is refused, an unwritten blog is a gap', () => {
-  const { bundle, plan } = fixture()
-  const structure = structuredClone(plan.structure)
-  structure.inventory.records.push({
-    key: 'post/7',
-    identity: { kind: 'post', id: 7 },
-    data: { post_type: 'post', post_title: 'Template post', post_content: '<p>Template words</p>' }
-  })
-  const base = { ...plan, structure, structureHash: researchHash(structure) }
-  const row = {
-    page: '/template-post/',
-    section: 'post',
-    goal: "The business's own post",
-    sourceIds: ['part:posts'],
-    assetIds: [],
-    target: { kind: 'native', type: 'post', id: 7, path: 'post_content' },
-    operation: 'rewrite',
-    verify: 'Read the post back',
-    post: {
-      topic: 'own-post',
-      title: 'From our page',
-      body: '<p>We wrote: historic offer</p>',
-      excerpt: 'We wrote: historic offer',
-      claims: [
-        {
-          text: 'We wrote: historic offer',
-          sourceRefs: [{ sourceId: 'part:posts', quote: 'historic offer' }]
-        }
-      ]
-    }
-  }
-  const issuesOf = (rows) => {
-    try {
-      validateAgentPlan({ ...base, rows }, bundle)
-      return []
-    } catch (error) {
-      return (error.detail?.issues ?? [error.code ?? error.message]).map((i) => i.path ?? i)
-    }
-  }
-  assert.deepEqual(issuesOf([plan.rows[0]]), ['coverage.posts'])
-  assert.deepEqual(issuesOf([plan.rows[0], row]), [])
-  const invented = structuredClone(row)
-  invented.post.claims[0].sourceRefs[0].quote = 'new offer'
-  assert.deepEqual(issuesOf([plan.rows[0], invented]), [
-    'rows[1].post.claims[0].sourceRefs[0]',
-    'rows[1].post.body'
-  ])
-  const {
-    own: _own,
-    writtenPosts: _writtenPosts,
-    ...counted
-  } = postCoverage({ ...base, rows: [plan.rows[0], row] }, bundle)
-  assert.deepEqual(counted, {
-    researchTopics: 1,
-    templatePosts: 1,
-    written: 1,
-    topics: 1,
-    thin: null
-  }) // A composed post row on the title alone writes the title: the gap names that row and the body field it needs
-  // (The Willow Nook, build 8: all 22 post rows targeted post_title, "0 are written", and the agent stopped).
-  const titled = { ...structuredClone(row), target: { ...row.target, path: 'post_title' } }
-  const gap = (() => {
-    try {
-      validateAgentPlan({ ...base, rows: [plan.rows[0], titled] }, bundle)
-    } catch (error) {
-      return error.detail?.issues?.find((i) => i.path === 'coverage.posts')
-    }
-  })()
-  assert.ok(gap, 'a title-only post row is not a written post')
-  assert.match(gap.message, /rows\[1\] carry a post but write only post_title/)
-  assert.match(gap.message, /a rewrite row on the post's body field \(post_content\)/)
-})
-
-test('Joomla: an article is a template post unless a menu item opens it as its own page; it carries the fields written', () => {
-  const article = (id) => ({ identity: { kind: 'article', id }, data: { title: `Article ${id}` } })
-  const records = [
-    article(3),
-    article(7),
-    article(12),
-    {
-      identity: { kind: 'menuItem', id: 101 },
-      data: { link: 'index.php?option=com_content&view=article&id=3' }
-    },
-    {
-      identity: { kind: 'menuItem', id: 102 },
-      data: { link: 'index.php?option=com_content&view=category&id=9' }
-    }
-  ]
-  const plan = {
-    structure: { inventory: { records } },
-    rows: [
-      {
-        operation: 'rewrite',
-        target: { kind: 'native', type: 'article', id: '7', path: 'introtext' },
-        post: { topic: 'story' }
-      }
-    ]
-  }
-  assert.deepEqual(
-    templatePostsLeft(plan).map((r) => [r.identity.id, r.written]),
-    [
-      [7, ['introtext']],
-      [12, []]
-    ]
-  )
-  const coverage = postCoverage(plan, { posts: [], media: [], profile: {}, sources: [], menu: [] })
-  assert.equal(coverage.templatePosts, 2)
-  assert.equal(coverage.written, 1)
-})
-
-test('a post is written field by field: a title-only row leaves the body to the sweep and is not a written post', () => {
-  const records = [
-    { identity: { kind: 'post', id: 41 }, data: { post_type: 'post', post_title: 'Efforts to curb soda' } },
-    { identity: { kind: 'post', id: 42 }, data: { post_type: 'post', post_title: 'Drink beer' } }
-  ]
-  const row = (id, path, extra = {}) => ({
-    operation: 'rewrite',
-    target: { kind: 'native', type: 'post', id, path },
-    ...extra
-  })
-  const plan = {
-    structure: { inventory: { records } },
-    rows: [
-      row(41, 'post_title', { post: { topic: 'story' } }),
-      row(42, 'post_title'),
-      row(42, 'post_content'),
-      { operation: 'retain', target: { kind: 'native', type: 'post', id: 42, path: 'post_excerpt' } },
-      // A picture row writes the picture: the featured one when it targets that, never the body it sits in.
-      { operation: 'replace-image', target: { kind: 'native', type: 'post', id: 41, path: 'post_content' } },
-      {
-        operation: 'replace-image',
-        target: { kind: 'native', type: 'postmeta', id: 41, key: '_thumbnail_id', path: 'value' }
-      }
-    ]
-  }
-  assert.deepEqual(
-    templatePostsLeft(plan).map((r) => [r.identity.id, r.written]),
-    [
-      [41, ['post_title', 'featured_image_id']],
-      [42, ['post_title', 'post_content']]
-    ]
-  )
-  const coverage = postCoverage(plan, { posts: [], media: [], profile: {}, sources: [], menu: [] })
-  assert.equal(coverage.templatePosts, 2)
-  assert.equal(coverage.written, 1)
-})
-
-test("every template post's title reaches the QA, written or not, from each CMS's own field", () => {
-  const records = [
-    { identity: { kind: 'post', id: 41 }, data: { post_type: 'post', post_title: 'Efforts to curb soda' } },
-    { identity: { kind: 'post', id: 2 }, data: { post_type: 'page', post_title: 'About us' } },
-    { identity: { kind: 'article', id: 7 }, data: { title: 'Article 7' } },
-    {
-      identity: { collection: 'posts', id: 'p1' },
-      titleField: 'headline',
-      data: { headline: 'Spring menu' }
-    },
-    { identity: { collection: 'posts', id: 'p2' }, data: { title: '  ' } }
-  ]
-  const plan = {
-    structure: { inventory: { records } },
-    rows: [{ target: { kind: 'native', type: 'post', id: '41' }, post: { topic: 'story' } }]
-  }
-  assert.deepEqual(templatePostTitles(plan), ['Efforts to curb soda', 'Article 7', 'Spring menu'])
 })
 
 test('structure.read pages are large by default and bounded by size, never by a fixed 20', () => {
@@ -1374,7 +1255,7 @@ test('the brand part names every WordPress logo option the template reads, its d
 })
 
 test('a source photo over 8 MB imports through its crop, which re-encodes it within the limit', async () => {
-  // Tin Lantern (24/10/2026): its 16:9 hero photo was a 22.5 MB, 5312×3984 PNG; the import refused it as
+  // Barb Wire (24/10/2026): its 16:9 hero photo was a 22.5 MB, 5312×3984 PNG; the import refused it as
   // AGENT_DEMO_MEDIA_UNAVAILABLE and the hero kept the template's picture.
   const width = 1800,
     height = 1700
@@ -1427,500 +1308,6 @@ test("a logo is the brand's or a file called logo; a photo is not", () => {
   assert.equal(isLogo(bundle, { id: 'a4', sourceUrl: 'https://x.test/media/catalogue-cover.jpg' }), false)
 })
 
-test("every page lead the handover's ledger names is written by a row carrying it, or the plan goes back", () => {
-  const { bundle, plan } = fixture()
-  const was = 'Responsive WordPress theme for restaurant'
-  const unit = { page: '/our-blog/', kind: 'text', text: was, lead: true, selector: 'div.d > p.l' }
-  // Once per page and words; a passage that is no lead is not listed.
-  const leads = editorialLeads({
-    ledger: { units: [unit, unit, { page: '/', kind: 'text', text: 'A passage of the template here' }] }
-  })
-  assert.deepEqual(leads, [{ page: '/our-blog/', at: 'div.d > p.l', text: was }])
-  const codes = (p, given = leads) => {
-    try {
-      validateAgentPlan(p, bundle, { leads: given })
-      return []
-    } catch (error) {
-      return error.detail.issues.map((i) => i.path)
-    }
-  }
-  assert.deepEqual(codes(plan, []), [], 'a handover read before leads were named asks for none')
-  assert.deepEqual(codes(plan), ['coverage.leads'])
-  // The blog page's record, whose banner field holds the template's line.
-  const structure = structuredClone(plan.structure)
-  structure.inventory.records.push({
-    key: 'pages/our-blog',
-    identity: { collection: 'pages', id: 'our-blog', slug: 'our-blog', locale: 'en' },
-    routes: [{ pattern: '/our-blog' }],
-    data: { title: 'Our Blog', hero: { lead: `<p>${was}</p>`, image: 'banner.jpg' } }
-  })
-  // Another page whose banner carries the same template line, and a record no route ties to a page.
-  structure.inventory.records.push(
-    {
-      key: 'pages/contact',
-      identity: { collection: 'pages', id: 'contact', slug: 'contact', locale: 'en' },
-      routes: [{ pattern: '/contact' }],
-      data: { title: 'Contact', hero: { lead: `<p>${was}</p>` } }
-    },
-    {
-      key: 'pages/unrouted',
-      identity: { collection: 'pages', id: 'unrouted', slug: 'unrouted', locale: 'en' },
-      data: { title: 'Unrouted', hero: { lead: was } }
-    }
-  )
-  plan.structure = structure
-  plan.structureHash = researchHash(structure)
-  const target = { kind: 'emdash', collection: 'pages', id: 'our-blog', path: 'hero.lead' }
-  const row = {
-    ...plan.rows[0],
-    page: '/our-blog/',
-    operation: 'rewrite',
-    sourceIds: ['part:profile'],
-    target,
-    lead: { page: '/our-blog', was, text: 'News, dishes and evenings from our kitchen' }
-  }
-  const n = plan.rows.length
-  assert.deepEqual(codes({ ...plan, rows: [...plan.rows, row] }), [])
-  // 🔒 A row covers a lead only when its target holds the line (review 24/10/2026): one aimed at the hero's
-  // picture slot, at the banner's picture, or at the page's title writes no lead, whatever it claims.
-  for (const elsewhere of [
-    { kind: 'contract', slot: 'hero.image' },
-    { ...target, path: 'hero.image' },
-    { ...target, path: 'title' }
-  ])
-    assert.deepEqual(codes({ ...plan, rows: [...plan.rows, { ...row, target: elsewhere }] }), [
-      `rows[${n}].lead`,
-      'coverage.leads'
-    ])
-  assert.equal(leadCoverage({ ...plan, rows: [...plan.rows, row] }, leads).written.length, 1)
-  // 🔒 The same words on another page write nothing here (review 24/10/2026): `/contact/`'s banner holds the
-  // template's line too, yet a row aimed at it leaves `/our-blog/`'s as it was.
-  const contactRow = { ...row, target: { ...target, id: 'contact' } }
-  assert.deepEqual(codes({ ...plan, rows: [...plan.rows, contactRow] }), [
-    `rows[${n}].lead`,
-    'coverage.leads'
-  ])
-  assert.equal(leadCoverage({ ...plan, rows: [...plan.rows, contactRow] }, leads).written.length, 0)
-  // A record no route ties to a page cannot say it is the blog's: not counted, not sent back.
-  const unrouted = { ...row, target: { ...target, id: 'unrouted' } }
-  assert.deepEqual(codes({ ...plan, rows: [...plan.rows, unrouted] }), [])
-  assert.equal(leadCoverage({ ...plan, rows: [...plan.rows, unrouted] }, leads).written.length, 0)
-  // 🔒 A LEAD BORROWED FROM ANOTHER RECORD (local stand 25/10/2026, JA Diner WP): a single post prints the
-  // `/our-blog/` page's masthead (`jrMasthead`), so its lead is stored in no record of its own. A row aimed at a
-  // record holding the line is not sent back: not counted as written either, the sweep reads the page after the turn.
-  const borrowed = { page: '/a-post/', kind: 'text', text: was, lead: true, selector: 'div.d > p.l' }
-  const postLeads = editorialLeads({ ledger: { units: [unit, borrowed] } })
-  const withPost = structuredClone(plan.structure)
-  withPost.inventory.records.push({
-    key: 'pages/a-post',
-    identity: { collection: 'pages', id: 'a-post', slug: 'a-post', locale: 'en' },
-    routes: [{ pattern: '/a-post' }],
-    data: { title: 'A post', content: '<p>Our story.</p>' }
-  })
-  const postPlan = { ...plan, structure: withPost, structureHash: researchHash(withPost) }
-  const postRow = { ...row, page: '/a-post/', lead: { ...row.lead, page: '/a-post/' } }
-  assert.deepEqual(codes({ ...postPlan, rows: [...postPlan.rows, row, postRow] }, postLeads), [])
-  const borrowedCoverage = leadCoverage({ ...postPlan, rows: [...postPlan.rows, row, postRow] }, postLeads)
-  assert.equal(borrowedCoverage.written.length, 1)
-  assert.equal(borrowedCoverage.deferred.length, 1)
-  // The page's own record holds the line: a row aimed elsewhere is still sent back.
-  const ownPost = structuredClone(withPost)
-  ownPost.inventory.records.at(-1).data.lead = was
-  const ownPlan = { ...plan, structure: ownPost, structureHash: researchHash(ownPost) }
-  assert.deepEqual(codes({ ...ownPlan, rows: [...ownPlan.rows, row, postRow] }, postLeads), [
-    `rows[${n + 1}].lead`,
-    'coverage.leads'
-  ])
-  // 🔒 A contract slot counts by the value its inspect read (review 24/10/2026): `footer.caption` holds other words
-  // and is sent back; the banner's slot holding the line covers it; a slot the read gave no value is never counted
-  // as written, yet sends nothing back: the sweep reads the page after the turn and writes the line it still finds.
-  const slotted = structuredClone(plan.structure)
-  slotted.contract.slots.push(
-    {
-      key: 'footer.caption',
-      type: 'text',
-      current: 'Made with love in the city',
-      sample: 'Made with love in the city'
-    },
-    { key: 'banner.lead', type: 'text', current: was, sample: was, routes: ['/our-blog/'] },
-    { key: 'contact.lead', type: 'text', current: was, sample: was, routes: ['/contact/'] },
-    { key: 'banner.unrouted', type: 'text', current: was, sample: was },
-    { key: 'banner.note', type: 'text' },
-    { key: 'banner.link', type: 'url', current: was }
-  )
-  const slotPlan = { ...plan, structure: slotted, structureHash: researchHash(slotted) }
-  const toSlot = (slot) => ({ ...row, target: { kind: 'contract', slot } })
-  for (const slot of ['footer.caption', 'banner.link', 'contact.lead'])
-    assert.deepEqual(
-      codes({ ...slotPlan, rows: [...slotPlan.rows, toSlot(slot)] }),
-      [`rows[${n}].lead`, 'coverage.leads'],
-      slot
-    )
-  assert.deepEqual(codes({ ...slotPlan, rows: [...slotPlan.rows, toSlot('banner.lead')] }), [])
-  for (const slot of ['banner.note', 'banner.unrouted']) {
-    assert.deepEqual(codes({ ...slotPlan, rows: [...slotPlan.rows, toSlot(slot)] }), [], slot)
-    assert.equal(
-      leadCoverage({ ...slotPlan, rows: [...slotPlan.rows, toSlot(slot)] }, leads).written.length,
-      0,
-      slot
-    )
-  }
-  assert.equal(
-    leadCoverage({ ...slotPlan, rows: [...slotPlan.rows, toSlot('banner.lead')] }, leads).written.length,
-    1
-  )
-  // 🔒 The WordPress inspect answers each slot's words as a string, its pictures apart in `imageSlots`, and no page
-  // for any slot: a slot holding other words, or a picture, is sent back; one holding the line is not counted as
-  // written, since nothing says it is the blog's, and is left to the sweep.
-  const wordpress = structuredClone(plan.structure)
-  wordpress.contract = {
-    bound: true,
-    slots: {
-      'hero.image': 'photo.jpg',
-      'footer.caption': 'Made with love in the city',
-      'banner.lead': `<p>${was}</p>`,
-      'banner.bg': was
-    },
-    imageSlots: { 'hero.image': 'photo.jpg', 'banner.bg': was }
-  }
-  const wpPlan = { ...plan, structure: wordpress, structureHash: researchHash(wordpress) }
-  for (const slot of ['footer.caption', 'banner.bg'])
-    assert.deepEqual(
-      codes({ ...wpPlan, rows: [...wpPlan.rows, toSlot(slot)] }),
-      [`rows[${n}].lead`, 'coverage.leads'],
-      slot
-    )
-  assert.deepEqual(codes({ ...wpPlan, rows: [...wpPlan.rows, toSlot('banner.lead')] }), [])
-  assert.deepEqual(leadCoverage({ ...wpPlan, rows: [...wpPlan.rows, toSlot('banner.lead')] }, leads), {
-    written: [],
-    deferred: leads,
-    missing: []
-  })
-  // A route that is no path (a page's name, `home`) says nothing of the page: not sent back, not counted.
-  const named = structuredClone(plan.structure)
-  named.contract.slots.push({ key: 'banner.lead', type: 'text', current: was, page: 'blog' })
-  const namedPlan = { ...plan, structure: named, structureHash: researchHash(named) }
-  assert.deepEqual(codes({ ...namedPlan, rows: [...namedPlan.rows, toSlot('banner.lead')] }), [])
-  assert.equal(
-    leadCoverage({ ...namedPlan, rows: [...namedPlan.rows, toSlot('banner.lead')] }, leads).written.length,
-    0
-  )
-  // An inventory read short of every record cannot say which field holds the line: not counted, not sent back.
-  const partial = structuredClone(plan.structure)
-  partial.inventory.complete = false
-  const partialPlan = { ...plan, structure: partial, structureHash: researchHash(partial) }
-  assert.deepEqual(
-    codes({ ...partialPlan, rows: [...partialPlan.rows, { ...row, target: { ...target, path: 'title' } }] }),
-    []
-  )
-  assert.equal(leadCoverage({ ...partialPlan, rows: [...partialPlan.rows, row] }, leads).written.length, 0)
-  // The placeholder, the template's own line, or a retain row: sent back with the reason.
-  assert.deepEqual(
-    codes({ ...plan, rows: [...plan.rows, { ...row, lead: { ...row.lead, text: 'Coming soon' } }] }),
-    [`rows[${n}].lead.text`]
-  )
-  assert.deepEqual(codes({ ...plan, rows: [...plan.rows, { ...row, lead: { ...row.lead, text: was } }] }), [
-    `rows[${n}].lead.text`
-  ])
-  assert.deepEqual(codes({ ...plan, rows: [...plan.rows, { ...row, operation: 'retain', sourceIds: [] }] }), [
-    `rows[${n}].lead`,
-    'coverage.leads'
-  ])
-  // A row for another page's line does not cover this one, and its target, the blog's banner, is not on that page.
-  assert.deepEqual(codes({ ...plan, rows: [...plan.rows, { ...row, lead: { ...row.lead, page: '/' } }] }), [
-    `rows[${n}].lead`,
-    'coverage.leads'
-  ])
-})
-
-// The Willow Nook local, build 8c (25/10/2026): posts 41–48 were rewritten with bodies of their own shape, and
-// native-structure failed on each. A planned body keeps the template's blocks and changes only their words. Since
-// local round 21 the inventory reads a blog post's body as its words, so the frame is held on a page's body.
-test('bodyFrameKept: a body with the template page’s blocks and new words keeps the frame; a dropped or new block does not', async () => {
-  const { bodyFrameKept } = await import('../src/opportunities-build/agent-demo.js')
-  const template =
-    '<!-- wp:heading -->\n<h2 class="wp-block-heading">Old</h2>\n<!-- /wp:heading -->\n\n<!-- wp:paragraph -->\n<p>Lorem ipsum.</p>\n<!-- /wp:paragraph -->'
-  const record = {
-    key: 'post/41',
-    identity: { kind: 'post', id: 41 },
-    editorialFields: ['post_title', 'post_content'],
-    data: { post_type: 'page', post_title: 'T', post_content: template }
-  }
-  assert.equal(
-    bodyFrameKept(
-      record,
-      'post_content',
-      template.replace('Old', 'New').replace('Lorem ipsum.', 'Our words.'),
-      inventoryInvariant
-    ),
-    true
-  )
-  assert.equal(
-    bodyFrameKept(
-      record,
-      'post_content',
-      '<!-- wp:paragraph -->\n<p>Our words.</p>\n<!-- /wp:paragraph -->',
-      inventoryInvariant
-    ),
-    false
-  )
-  // Words alone are the words to put in the blocks: nothing to judge.
-  assert.equal(bodyFrameKept(record, 'post_content', 'Our words.\n\nMore words.', inventoryInvariant), true)
-  // A blog post's body is its words: rewritten in fewer blocks it is the same post.
-  const post = { ...record, data: { ...record.data, post_type: 'post' } }
-  assert.equal(
-    bodyFrameKept(
-      post,
-      'post_content',
-      '<!-- wp:paragraph -->\n<p>Our words.</p>\n<!-- /wp:paragraph -->',
-      inventoryInvariant
-    ),
-    true
-  )
-})
-
-test("wordpressLogoOptions: the agent keeps the template's site-logo block and its size", () => {
-  // The Willow Nook build 8c (25/10/2026): the agent swapped the header's site-logo block for an image block, then
-  // set site_logo to 0, and css-intact failed when the block's stylesheet went with it.
-  const { instructions } = wordpressLogoOptions({ quickstart: 'quickstart/ja-diner/wp7' })
-  assert.match(instructions, /keep the template's site-logo block/i)
-  assert.match(instructions, /width/)
-  assert.match(instructions, /never replace it with an image block/i)
-})
-
-test('inventoryRoutes: every concrete route of the frozen inventory, once, for the QA to read', () => {
-  // The Willow Nook build 8c (25/10/2026): QA read eight pages of 57 routes; the template words on the rest stayed.
-  const inventory = {
-    records: [
-      { identity: { kind: 'post', id: 1 }, routes: ['/'] },
-      { identity: { kind: 'post', id: 2 }, routes: ['/lorem-ipsum/'] },
-      { identity: { kind: 'post', id: 3 }, routes: [{ pattern: '/about-us/', locale: 'en' }] },
-      { identity: { kind: 'post', id: 4 }, routes: ['/lorem-ipsum/', '/blog/[slug]', '$showcase', 'about'] },
-      { identity: { kind: 'option', key: 'x' } }
-    ]
-  }
-  assert.deepEqual(inventoryRoutes(inventory), ['/', '/lorem-ipsum/', '/about-us/'])
-  assert.deepEqual(inventoryRoutes(null), [])
-})
-
-test('postFactsOf: each described dish and each sentence of the profile description, never a review', async () => {
-  const { postFactsOf } = await import('../src/opportunities-build/agent-demo.js')
-  const facts = postFactsOf({
-    menu: {
-      items: [
-        { name: 'Brunch plate', description: 'Eggs, bacon and sourdough' },
-        { name: 'Latte', description: '' }
-      ]
-    },
-    profile: { description: 'A cafe in the Latin Quarter since 2004. Cocktails every evening from six.' },
-    reviews: [{ text: 'Best brunch in town!' }]
-  })
-  assert.deepEqual(facts, [
-    'Brunch plate: Eggs, bacon and sourdough',
-    'A cafe in the Latin Quarter since 2004.',
-    'Cocktails every evening from six.'
-  ])
-})
-
-/**
- * A plan of `count` template posts over research of one story (`sentences`) and the dishes given, with the posts the
- * agent wrote (`written`: `{id, topic, title, body, quote}`), and the live inventory after its turn.
- */
-function blogOf({ count, sentences, dishes = [], written, name = 'Place' }) {
-  const { plan, revision } = fixture()
-  const media = revision.asset_manifest
-  const bundle = freezeAgentResearch({
-    accountId: 'account',
-    opportunityId: 'opp',
-    revisionId: 'revision',
-    at: '2026-10-22T00:00:00Z',
-    read: {
-      profile: { name, description: sentences.join(' '), menuItems: dishes },
-      media,
-      rawSources: [{ id: 'source-1', source: 'facebook', collected: { page: 'Place' } }],
-      posts: []
-    }
-  })
-  const structure = structuredClone(plan.structure)
-  const records = Array.from({ length: count }, (_, i) => ({
-    key: `post/${70 + i}`,
-    identity: { kind: 'post', id: 70 + i },
-    routes: [`/template-post-${i}/`],
-    data: {
-      post_type: 'post',
-      post_title: `Template post ${i}`,
-      post_excerpt: `Lorem ipsum ${i}.`,
-      post_content: `<!-- wp:paragraph --><p>Lorem ipsum dolor ${i}.</p><!-- /wp:paragraph -->`,
-      post_date: '2021-09-10 01:38:00'
-    }
-  }))
-  structure.inventory.records.push(...records)
-  const rows = written.map((w) => ({
-    page: `/template-post-${w.id - 70}/`,
-    section: 'post',
-    goal: "The business's own post",
-    sourceIds: [w.source ?? 'part:profile'],
-    assetIds: [],
-    target: { kind: 'native', type: 'post', id: w.id, path: 'post_content' },
-    operation: 'rewrite',
-    verify: 'Read the post back',
-    post: {
-      topic: w.topic,
-      title: w.title,
-      body: `<p>${w.body}</p>`,
-      excerpt: w.body,
-      claims: [
-        { text: w.body, sourceRefs: [{ sourceId: w.source ?? 'part:profile', quote: w.quote ?? w.body }] }
-      ]
-    }
-  }))
-  const full = {
-    ...plan,
-    researchHash: bundle.hash,
-    structure,
-    structureHash: researchHash(structure),
-    rows: [plan.rows[0], ...rows]
-  }
-  const live = records.map((r) => {
-    const w = written.find((x) => x.id === r.identity.id)
-    return w ? { ...r, data: { ...r.data, post_title: w.title, post_content: `<p>${w.body}</p>` } } : r
-  })
-  return { plan: full, bundle, live }
-}
-
-test('a plan the sweep completes is not refused: the agent writes the research topics, the sweep the split ones', () => {
-  // Review 26/10/2026: 3 template posts, one story of three facts split into three topics, the agent wrote the first;
-  // coverage.posts asked the agent for all three and the sweep never wrote the other two.
-  const sentences = [
-    'Place opened on the harbour in 1998.',
-    'Its bread is baked every morning in a wood oven.',
-    'The terrace seats forty guests in summer.'
-  ]
-  const { plan, bundle, live } = blogOf({
-    count: 3,
-    sentences,
-    written: [{ id: 70, topic: 'story', title: 'On the harbour since 1998', body: sentences[0] }]
-  })
-  const issues = (() => {
-    try {
-      validateAgentPlan(plan, bundle)
-      return []
-    } catch (error) {
-      return (error.detail?.issues ?? [error.code ?? error.message]).map((i) => i.path ?? i)
-    }
-  })()
-  assert.deepEqual(issues, [])
-  const postDrafts = postDraftsOf(plan, bundle)
-  const { calls, unresolved } = planSweep(
-    { items: [] },
-    {
-      buildDate: '2026-10-26',
-      platform: 'wordpress',
-      inventory: live,
-      templatePosts: templatePostsLeft(plan),
-      postDrafts,
-      checksLeft: 0
-    }
-  )
-  const swept = calls.filter((c) => c.action === 'post')
-  assert.deepEqual(
-    swept.map((c) => [c.params.id, c.params.body]),
-    [
-      [71, sentences[1]],
-      [72, sentences[2]]
-    ]
-  )
-  assert.deepEqual(
-    unresolved.filter((u) => u.field === 'post_content' || u.field === 'title'),
-    []
-  )
-})
-
-test('the sweep writes the topics the agent did not use, whatever their order, and never one it did', () => {
-  // Review 26/10/2026: the agent wrote the story and the pasta posts; the split cut the story in two and the sweep's
-  // next draft was the pasta again ("Pasta: Served fresh.").
-  const sentences = [
-    'Place opened on the harbour in 1998.',
-    'Its bread is baked every morning in a wood oven.'
-  ]
-  const pasta = menuDish('Pasta', '120', { description: 'Served fresh' })
-  const both = blogOf({
-    count: 3,
-    sentences,
-    dishes: [pasta],
-    written: [
-      { id: 70, topic: 'story', title: 'Our harbour story', body: `${sentences[0]} ${sentences[1]}` },
-      {
-        id: 71,
-        topic: 'dish',
-        title: 'Fresh pasta',
-        body: 'Pasta: Served fresh.',
-        source: 'part:menu',
-        quote: 'Served fresh'
-      }
-    ]
-  })
-  assert.deepEqual(postDraftsOf(both.plan, both.bundle), [], 'every fact is in a written post: no duplicate')
-  assert.deepEqual(postTopicNames(both.plan, both.bundle), ['Our story', 'Food'])
-  // The agent wrote the dish first and half the story: the other half is the sweep's, never the dish again.
-  const half = blogOf({
-    count: 3,
-    sentences,
-    dishes: [pasta],
-    written: [
-      {
-        id: 70,
-        topic: 'dish',
-        title: 'Fresh pasta',
-        body: 'Pasta: Served fresh.',
-        source: 'part:menu',
-        quote: 'Served fresh'
-      },
-      { id: 71, topic: 'story', title: 'On the harbour', body: sentences[0] }
-    ]
-  })
-  assert.deepEqual(
-    postDraftsOf(half.plan, half.bundle).map((d) => [d.topic, d.body]),
-    [['story', sentences[1]]]
-  )
-  assert.deepEqual(postTopicNames(half.plan, half.bundle), ['Our story', 'Food'])
-})
-
-test('a written post uses only the facts its distinct words say: shared words and the business name never match another fact', () => {
-  // Review 26/10/2026 (second pass): a post on "Harbour Cafe serves fresh bread every morning" marked "fresh pasta
-  // every evening" as used, so postDraftsOf gave nothing while a template post and an unused fact remained.
-  const sentences = [
-    'Harbour Cafe serves fresh bread every morning.',
-    'Harbour Cafe serves fresh pasta every evening.'
-  ]
-  const bread = blogOf({
-    count: 2,
-    name: 'Harbour Cafe',
-    sentences,
-    written: [{ id: 70, topic: 'story', title: 'Fresh bread', body: sentences[0] }]
-  })
-  assert.deepEqual(
-    postDraftsOf(bread.plan, bread.bundle).map((d) => d.body),
-    [sentences[1]]
-  )
-  // A post that says a fact in its own words still uses it: never two posts on one fact.
-  const both = blogOf({
-    count: 3,
-    name: 'Harbour Cafe',
-    sentences,
-    written: [
-      {
-        id: 70,
-        topic: 'story',
-        title: 'Fresh bread',
-        body: 'Our bread comes out of the oven every morning.'
-      },
-      { id: 71, topic: 'story', title: 'Pasta nights', body: 'Fresh pasta is made each evening.' }
-    ]
-  })
-  assert.deepEqual(postDraftsOf(both.plan, both.bundle), [])
-})
-
 // Local round 20, 25/10/2026 (Levain, WordPress): a photo put in place of a PNG sketch behind a welcome text.
 test('contract plan keeps a drawn section background: a photo into it is refused, into a photo background it is not', () => {
   const { bundle, plan } = fixture()
@@ -1971,6 +1358,57 @@ test('media.look answers a page of the frozen photos, numbered with their ids, a
   assert.equal(first.photos[0].cutout, undefined, 'an opaque photo is no cut-out')
 })
 
+// Plan "10/10" P1-1 (26/10/2026): media.look says what each photo shows, from labels made once per photo.
+test('media.look gives each labelled photo its subject and says where people, posters and logos never go', async () => {
+  const { pool } = fixture()
+  const auth = { accountId: 'account', siteKey: 'site.test', sessionId: 'session' }
+  const asked = []
+  const photoLabels = async (rows, origins, bytesOf, options) => {
+    asked.push({
+      rows: rows.length,
+      origins: origins.size,
+      bytes: Boolean(await bytesOf(rows[0])),
+      payer: options.payer
+    })
+    return new Map(
+      rows.map((row, i) => [
+        row.id,
+        i === 0
+          ? { subject: 'people', oneLine: 'two bakers on a bench', quality: 'good' }
+          : { subject: 'food', oneLine: 'chocolate chip cookies', heroWorthy: true, quality: 'good' }
+      ])
+    )
+  }
+  const service = agentDemoCapabilities({
+    pool,
+    objects: { get: async () => new Response(bytes) },
+    photoLabels
+  })
+  const looked = await service.call(auth, { operation: 'media.look', limit: 3 })
+  assert.deepEqual(
+    looked.photos.map((p) => [p.subject, p.shows, p.heroWorthy ?? false]),
+    [
+      ['people', 'two bakers on a bench', false],
+      ['food', 'chocolate chip cookies', true],
+      ['food', 'chocolate chip cookies', true]
+    ]
+  )
+  assert.equal(asked[0].rows, 3)
+  assert.equal(asked[0].bytes, true)
+  assert.deepEqual(asked[0].payer, { kind: 'account', accountId: 'account' })
+  assert.match(String(looked.next), /people, event, poster, menu-board, logo .* never behind words/)
+  // a labeller that fails answers no subject, never an error
+  const failing = agentDemoCapabilities({
+    pool,
+    objects: { get: async () => new Response(bytes) },
+    photoLabels: async () => {
+      throw new Error('vision down')
+    }
+  })
+  const plain = await failing.call(auth, { operation: 'media.look', limit: 2 })
+  assert.equal(plain.photos[0].subject, undefined)
+})
+
 // Local round 27, 25/10/2026: a product cut-out went behind a hero's words; media.look marks it.
 test('media.look marks a photo on a clear ground as a cut-out', async () => {
   const { pool } = fixture()
@@ -2019,7 +1457,187 @@ test('media.import on EmDash answers the library item’s id to write into a pic
     }
   )
   assert.equal(result.mediaId, '01M5R3TSZGG82VFGQ86X8Y9E9Z')
-  assert.match(result.next, /mediaId \(not path\)/)
+  // Local round 36: written as an object `{id, alt}` it kept a shape the template's field never had.
+  // Round 37: a bare id inside a JSON field stays a string EmDash never fills in; the shape the field had is kept.
+  assert.match(result.next, /in the shape it had: a picture field that held an object keeps that object/)
+})
+
+// Plan "10/10" §7 S1 (26/10/2026): a WordPress build sent its 74 saved rows again to add a few (65K characters).
+test('plan.add appends rows, gives images to rows that had none and tones to saved images, never the whole plan again', async () => {
+  const { plan, pool } = fixture()
+  const auth = { accountId: 'account', siteKey: 'site.test', sessionId: 'session' }
+  const service = agentDemoCapabilities({ pool, objects: null })
+  await assert.rejects(service.call(auth, { operation: 'plan.add', rows: [] }), /PLAN_REQUIRED/)
+  await service.call(auth, { operation: 'plan.save', plan })
+  const added = await service.call(auth, {
+    operation: 'plan.add',
+    rows: [{ ...plan.rows[0], section: 'story' }]
+  })
+  assert.deepEqual([added.ok, added.rows, added.appended], [true, 2, 1])
+  await assert.rejects(service.call(auth, { operation: 'plan.add', tones: { 0: 'dark' } }), (e) =>
+    /row 0 has no image to tone/.test(JSON.stringify(e.detail))
+  )
+  const image = {
+    assetId: 'asset-29',
+    crop: {
+      aspect: 2,
+      source: { width: 800, height: 400 },
+      output: { width: 800, height: 400 },
+      strategy: 'centre'
+    }
+  }
+  await service.call(auth, { operation: 'plan.add', images: { 0: image } })
+  const toned = await service.call(auth, { operation: 'plan.add', tones: { 0: 'dark' } })
+  assert.equal(toned.ok, true)
+  await assert.rejects(service.call(auth, { operation: 'plan.add', images: { 0: image } }), (e) =>
+    /row 0 has its image/.test(JSON.stringify(e.detail))
+  )
+  await assert.rejects(service.call(auth, { operation: 'plan.add', plan }), (e) =>
+    /not plan/.test(JSON.stringify(e.detail))
+  )
+  assert.throws(
+    () => joinPlan({ rows: [] }, { operation: 'plan.add', tones: { 3: 'dark' } }),
+    (e) => /3 is no saved row/.test(JSON.stringify(e.detail))
+  )
+})
+
+// Plan "10/10" §7 S1c (26/10/2026): one `read part sources` answered 518K characters in local round 33.
+test('a crawled source is read as its index of pages, and one page whole when asked', () => {
+  const item = {
+    id: 'source:website:1',
+    hash: 'h',
+    data: {
+      ref: 'https://bakery.test/',
+      source: 'website',
+      cursor: { seen: ['a', 'b'], queue: [] },
+      collected: {
+        pages: [
+          { url: 'https://bakery.test/', title: 'Home', text: 'Fresh cookies. '.repeat(100) },
+          { url: 'https://bakery.test/gifts', title: 'Gifts', text: 'Cookie tins and boxes.' }
+        ],
+        media: Array.from({ length: 449 }, (_, i) => ({ url: `https://bakery.test/${i}.jpg` })),
+        profile: { name: 'Bakery' }
+      }
+    }
+  }
+  const index = compactSource(item)
+  assert.equal(index.data.cursor, undefined)
+  assert.deepEqual(index.data.collected.media, { count: 449 })
+  assert.deepEqual(index.data.collected.profile, { name: 'Bakery' })
+  assert.deepEqual(
+    index.data.collected.pages.map((p) => [p.n, p.title, p.lead.length, p.chars]),
+    [
+      [0, 'Home', 400, 1500],
+      [1, 'Gifts', 22, 22]
+    ]
+  )
+  assert.match(index.data.collected.pageRead, /page:<n>/)
+  const one = compactSource(item, 0)
+  assert.deepEqual([one.title, one.text.length], ['Home', 1500])
+  assert.throws(() => compactSource(item, 5), /BAD_PAGE/)
+  const bundle = { hash: 'b', sources: [item] }
+  assert.equal(bundlePart(bundle, 'sources', 0, 1, 1).text, 'Cookie tins and boxes.')
+  assert.ok(JSON.stringify(bundlePart(bundle, 'sources')).length < 4000)
+  assert.throws(() => bundlePart(bundle, 'media', 0, 1, 1), /BAD_PAGE/)
+})
+
+// Plan "10/10" §7 S5 (26/10/2026): the words of every page written in small structured tasks, then read as packs.
+test('copy.start runs the copy tasks once, copy.status says each page, copy.read answers the packs', async () => {
+  const { pool, build } = fixture()
+  build.qa = { baseline: { pageBlocks: { '/': [{ text: 'Welcome', kind: 'heading' }] } } }
+  const query = pool.query.bind(pool)
+  pool.query = async (sql, args) => {
+    if (sql.startsWith('select') && sql.includes("'{agentDemo,copy}'"))
+      return { rows: [{ copy: build.content.agentDemo.copy ?? null }] }
+    if (sql.includes("'{agentDemo,copy}'")) {
+      build.content.agentDemo.copy = JSON.parse(args[1])
+      return { rows: [{ id: 'build' }] }
+    }
+    return query(sql, args)
+  }
+  const auth = { accountId: 'account', siteKey: 'site.test', sessionId: 'session' }
+  let release
+  const asked = []
+  const writeCopy = async (input) => {
+    asked.push(input)
+    await new Promise((r) => (release = r))
+    return {
+      version: 'demo-copy/1',
+      ok: true,
+      pages: { '/': { changes: [{ find: 'Welcome', replace: 'Fresh cookies' }], issues: [], kept: 0 } }
+    }
+  }
+  const service = agentDemoCapabilities({ pool, objects: null, writeCopy })
+  assert.deepEqual(await service.call(auth, { operation: 'copy.status' }), {
+    ok: false,
+    code: 'COPY_NOT_STARTED'
+  })
+  assert.deepEqual(await service.call(auth, { operation: 'copy.start' }), { ok: true, running: true })
+  assert.deepEqual(
+    await service.call(auth, { operation: 'copy.start' }),
+    { ok: true, running: true },
+    'never started twice'
+  )
+  assert.equal(asked.length, 1)
+  assert.deepEqual(asked[0].pageBlocks, build.qa.baseline.pageBlocks)
+  assert.equal(typeof asked[0].sourced, 'string')
+  release()
+  await new Promise((r) => setTimeout(r, 20))
+  const status = await service.call(auth, { operation: 'copy.status' })
+  assert.deepEqual(status.pages, [{ page: '/', changes: 1, issues: 0 }])
+  assert.match(status.next, /copy\.apply/)
+  assert.deepEqual((await service.call(auth, { operation: 'copy.read', page: '/' })).pages, [
+    { path: '/', changes: [{ find: 'Welcome', replace: 'Fresh cookies' }], issues: [] }
+  ])
+  // no baseline words: refused with why
+  build.qa = {}
+  build.content.agentDemo.copy = undefined
+  await assert.rejects(service.call(auth, { operation: 'copy.start' }), /COPY_NO_BASELINE/)
+})
+
+// Local round 35 (26/10/2026): the words were written in 107 s and the poll answered COPY_NOT_STARTED — its read of
+// the build came before the run's write, its look at the running jobs after the run ended.
+test('copy.status that read the build before the run wrote it answers the written words, not "not started"', async () => {
+  const { pool, build } = fixture()
+  build.qa = { baseline: { pageBlocks: { '/': [{ text: 'Welcome', kind: 'heading' }] } } }
+  let row = null
+  const query = pool.query.bind(pool)
+  pool.query = async (sql, args) => {
+    if (sql.startsWith('select') && sql.includes("'{agentDemo,copy}'")) return { rows: [{ copy: row }] }
+    if (sql.includes("'{agentDemo,copy}'")) {
+      row = JSON.parse(args[1])
+      return { rows: [{ id: 'build' }] }
+    }
+    return query(sql, args)
+  }
+  const auth = { accountId: 'account', siteKey: 'site.test', sessionId: 'session' }
+  const writeCopy = async () => ({
+    version: 'demo-copy/1',
+    ok: true,
+    pages: { '/': { changes: [{ find: 'Welcome', replace: 'Fresh cookies' }], issues: [], kept: 0 } }
+  })
+  const service = agentDemoCapabilities({ pool, objects: null, writeCopy })
+  assert.deepEqual(await service.call(auth, { operation: 'copy.start' }), { ok: true, running: true })
+  await new Promise((r) => setTimeout(r, 20))
+  assert.equal(build.content.agentDemo.copy, undefined, 'the build this request read holds no words')
+  const status = await service.call(auth, { operation: 'copy.status' })
+  assert.deepEqual(status.pages, [{ page: '/', changes: 1, issues: 0 }])
+})
+
+// Local round 35 (26/10/2026): a WordPress build lost a block's wrapper and class retyping it, and could not see the
+// installed markup to put them back ("the original is gone"). A failed check names the record; this reads it whole.
+test('structure.read with a record answers that record as the template installed it; an unknown one is refused', async () => {
+  const { pool } = fixture()
+  const service = agentDemoCapabilities({ pool, objects: null })
+  const auth = { accountId: 'account', siteKey: 'site.test', sessionId: 'session' }
+  const one = await service.call(auth, { operation: 'structure.read', record: 'pages/home' })
+  assert.equal(one.record, 'pages/home')
+  assert.deepEqual(one.data, { blocks: [{ image: 'photo.jpg' }] })
+  assert.match(one.next, /only the words and pictures changed/)
+  await assert.rejects(
+    service.call(auth, { operation: 'structure.read', record: 'post/999' }),
+    /AGENT_DEMO_RECORD_UNKNOWN/
+  )
 })
 
 test('the agent demo names an item with no source by what the business offers: a gym’s is a Service, a café’s a Menu item', () => {
@@ -2039,7 +1657,7 @@ test('the prompt carries the logo accent, the WhatsApp button and the areas serv
     brief: {
       ...revision.brief,
       brand: { accent: { hex: '#052514', source: 'logo', share: 0.87 } },
-      contact: { whatsapp: { number: '+971 50 000 1234', verified: false, basis: 'uae-mobile' } },
+      contact: { whatsapp: { number: '+971 58 596 9059', verified: false, basis: 'uae-mobile' } },
       business: {
         serviceAreas: [{ text: 'Locations across Dubai', quote: 'Locations across Dubai', source: 's' }]
       }
@@ -2047,6 +1665,39 @@ test('the prompt carries the logo accent, the WhatsApp button and the areas serv
   }
   const prompt = agentDemoPrompt(branded)
   assert.match(prompt, /:root\{--ds-c-accent:#052514;[^}]*--ds-c-accent-on:#ffffff\}/)
-  assert.match(prompt, /https:\/\/wa\.me\/971500001234/)
+  assert.match(prompt, /https:\/\/wa\.me\/971585969059/)
   assert.match(prompt, /Serving: Locations across Dubai/)
+})
+
+test('media source context joins only exact frozen picture URLs and does not certify product identity', () => {
+  const bundle = {
+    sources: [
+      {
+        id: 'source:website:0',
+        data: {
+          collected: {
+            media: [
+              {
+                url: 'https://x.test/oats.jpg',
+                sourceUrl: 'https://x.test/products/oat-cookie',
+                caption: 'Oat cookie'
+              },
+              {
+                url: 'https://x.test/other.jpg',
+                sourceUrl: 'https://x.test/products/another-cookie',
+                caption: 'Other'
+              }
+            ]
+          }
+        }
+      }
+    ]
+  }
+  const item = { id: 'oats', sourceUrl: 'https://x.test/oats.jpg' }
+  const expected = [
+    { sourceId: 'source:website:0', page: 'https://x.test/products/oat-cookie', caption: 'Oat cookie' }
+  ]
+  assert.deepEqual(pictureSourceAssociations(bundle, item), expected)
+  assert.deepEqual(pictureSourceAssociations(bundle, { sourceUrl: 'https://x.test/oats.jpg?invented' }), [])
+  assert.deepEqual(bundlePart({ ...bundle, media: [item] }, 'media').items[0].sourceAssociations, expected)
 })

@@ -1560,18 +1560,28 @@ for (const [name, given, expected] of /** @type {const} */ ([
 
 // Review of 02/10/2026: the operation was meant for an IMPORTED copy, and a quickstart's contract door (Add site)
 // took it too, a new write road for another flow. The door that existed before answers what it always answered.
-test('string override is not a quickstart contract operation: that door answers what it did before', () => {
+// Local round 35 (26/10/2026): a build fenced out of the theme's files had no road for the words its PHP patterns print
+// through gettext; the plugin takes the override on a quickstart site as on a derived one.
+test('string override reaches a quickstart WordPress site too; on Joomla it is refused with the Joomla road', () => {
   const out = /** @type {any} */ (
     run(
       {
         action: 'content.contract',
-        params: { operation: 'string', domain: 'x', msgid: 'y', locale: 'en', value: 'z' }
+        params: { operation: 'string', domain: 'x', msgid: 'y', locale: 'en_US', value: 'z' }
       },
       { ...WP, contractDoor: true }
     )
   )
-  assert.equal(out.kind, 'refuse')
-  assert.equal(out.answer.code, 'UNKNOWN_OPERATION')
+  assert.equal(out.kind, 'relay')
+  assert.equal(out.params.operation, 'string')
+  const joomla = /** @type {any} */ (
+    run(
+      { action: 'content.contract', params: { operation: 'string', domain: 'x', msgid: 'y', value: 'z' } },
+      { ...WP, platform: 'joomla', derived: true }
+    )
+  )
+  assert.equal(joomla.kind, 'refuse')
+  assert.equal(joomla.answer.code, 'NOT_ON_THIS_PLATFORM')
 })
 
 test('string override reaches the relay with the operation spelled as the plugin takes it', () => {

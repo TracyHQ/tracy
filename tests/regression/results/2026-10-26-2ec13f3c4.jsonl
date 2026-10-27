@@ -1,0 +1,1 @@
+{"id":"REG-PR-1739-emdash-generated-custody","verdict":"PASS","commit":"2ec13f3c456f0ff3cd11bb6d75242441547db0e7","ran_at":"2026-10-26T23:52:56.931Z","evidence":"tests/regression/.runs/2026-10-26-2ec13f3c4/REG-PR-1739-emdash-generated-custody.log"}

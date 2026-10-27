@@ -1,0 +1,46 @@
+{
+  "id": "REG-PR-1739-photos-fit",
+  "kind": "fix",
+  "title": "A build's photos are labelled once with what they show; media.look says it, and photos-fit fails a photo of people behind a section or a photo repeated while others are unused",
+  "pr": 1739,
+  "area": "website-opportunities/agent-demo",
+  "cms": ["wp", "jo", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: createDemoPhotoLabels over an own photo already labelled, an own photo with none and a place photo with none, the model labelling the second as people.",
+    "S2: the same with no vision door, a failing model, no bytes.",
+    "S3: media.look with a labeller answering people for the first photo and food (heroWorthy) for the rest; with a labeller that throws.",
+    "S4: checkPhotosFit on /offers/ with the selfie photo (people) as a section background and on /blog/ with the flowers photo in two 400 px frames and one 60 px thumb, twelve photos collected; then one photo collected; then a food photo as a background."
+  ],
+  "expect": [
+    "S1: the held label is used, the other two are sent once; the place photo is claimed and settled done in wo_media_analysis, the own one written on wo_media.",
+    "S2: no label and no throw in each case.",
+    "S3: subjects, one-line descriptions and heroWorthy on the tiles; the next names people, event, poster, menu-board, logo as never behind words; the failing labeller gives no subject and no error.",
+    "S4: two findings (people behind /offers/, repeat ×2 on /blog/); with one photo collected it passes; the food background passes."
+  ],
+  "selectors": {
+    "files": "apps/tracy-web/src/opportunities-build/demo-photo-labels.js apps/tracy-web/src/opportunities-build/agent-demo.js apps/tracy-web/src/opportunities-build/client-demo.js apps/tracy-host/src/demo-qa.js",
+    "dom": ""
+  },
+  "evidence": "Local rounds 31–33 (WordPress JA Restaurant): a selfie as a section's background on /offers/, a flowers photo behind the Cookie Club card, one photo on two adjacent posts.",
+  "fence": "createDemoPhotoLabels (wo_media.labels.vision, wo_media_analysis claim/settle); media.look subject/shows/heroWorthy; sourceSubjects; checkPhotosFit (BACKGROUND_UNFIT, REPEAT_MIN, collected.pictures)",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-concurrency=1",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/wo-demo-photo-labels.test.mjs",
+      "apps/tracy-web/test/wo-agent-demo.test.mjs",
+      "apps/tracy-host/test/demo-qa.test.mjs"
+    ],
+    "tests": [
+      "a held label is used as it is; the rest are labelled once and kept where each kind of photo keeps it",
+      "no vision door, a failing model or no bytes label nothing and never throw",
+      "media.look gives each labelled photo its subject and says where people, posters and logos never go",
+      "photos-fit fails a photo of people behind a section and a photo repeated while others are unused"
+    ],
+    "needs": ["postgres"]
+  }
+}

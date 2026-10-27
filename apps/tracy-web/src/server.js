@@ -5,7 +5,7 @@ import { readConfig } from './config.js'
 import { docsSiteBuilt } from './docs/route.js'
 import { createPool, migrate } from './db/index.js'
 import { start as startCron } from './cron.js'
-import { hostCall, hostJob } from './host/client.js'
+import { hostCall, hostJob, hostStreamCall } from './host/client.js'
 import { pgIdentityStore, memoryIdentityStore } from './identity/store.js'
 import { transportFor } from './mail/transport.js'
 import { dbSitesResolver } from './sites/resolver.js'
@@ -70,7 +70,7 @@ export async function start({ env = process.env, log = console, deps = {} } = {}
     forgetWorkspaceAtDoor,
     archiveSessionsAtDoor
   }
-  const host = deps.host ?? { hostCall, hostJob }
+  const host = deps.host ?? { hostCall, hostJob, hostStreamCall }
   // `MAIL` missing is not a boot error (#804): the service runs, and every door that mails reports
   // that the mail was not sent. Said once here, because the sign-in doors refuse before a send.
   const mail = transportFor(config.mail, log.log, { localPreview: config.localLoginPreview })

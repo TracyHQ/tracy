@@ -10,6 +10,7 @@
  * deliberately no `seatSecret` field here for a future task to reach for.
  */
 import { demoInstallMinFreeMbOf, demoInstallSlotsOf } from './install-slots.js'
+import { publicOriginOf } from './public-origin.js'
 
 export class ConfigError extends Error {
   constructor(key, why) {
@@ -74,6 +75,12 @@ function readLocalReleasesDir(env) {
 
 export function readConfig(env) {
   const cloudflare = readCloudflare(env)
+  let siteProxyOrigin = null
+  try {
+    siteProxyOrigin = publicOriginOf(env.TRACY_WEB_ORIGIN || undefined) ?? null
+  } catch {
+    throw new ConfigError('TRACY_WEB_ORIGIN', 'must be an HTTP(S) origin without credentials or a path')
+  }
   return {
     hostName: need(env, 'HOST_NAME'),
     // Verifies every `/_host/*` call (auth.js) — the one credential this process holds.
@@ -93,6 +100,8 @@ export function readConfig(env) {
     // (`/opt/tracy-fleet`, the same default `roots.sh` itself falls back to) — this is NOT a
     // `packages/`/`workers/` import, it's a path to files this process shells out to.
     scriptsDir: need(env, 'TRACY_FLEET_DIR'),
+    // A fixed stack backend, never a URL supplied by a site or a QA request.
+    siteProxyOrigin,
     // This process's own bookkeeping — one JSON file per job (`jobs.js`) and one log file per
     // running script (`run.js`). Kept apart from `sitesRoot`/`privateRoot`: neither belongs to a
     // site, both outlive whichever site a job happens to be about. Not required like the roots

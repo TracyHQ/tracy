@@ -98,6 +98,7 @@ test('planReplace: the defaults, and the closed key set is exactly the schema', 
     mode: 'replace',
     changes: [{ find: 'See our capabilities', replace: 'Get a free quote' }],
     path: '/',
+    pathGiven: false,
     where: null,
     at: null,
     all: false,
@@ -231,6 +232,29 @@ test('NOT_FOUND sends to page.text, then this replace quoting exactly — and sa
     next,
     'page.text {path:"/about", match:"Hotline"}, then this replace quoting those words exactly; only a NOT_FOUND needs a read.'
   )
+})
+
+// Local round 31, 25/10/2026: a build's replace with no path read the home page, was told to read the home page again,
+// gave up and edited the theme's PHP. The answer now says only the home page was read, and to name the page.
+test('NOT_FOUND of a call with no path says only the home page was read and asks for the page that shows the words', () => {
+  const page = pageOf('<main><h1>Fresh bread every morning</h1></main>')
+  const { stored, hooks } = identityStore(page)
+  assert.equal(
+    /** @type {any} */ (planReplace({ find: 'Most Read', replace: 'Popular stories' })).pathGiven,
+    false
+  )
+  const asked = /** @type {any} */ (
+    run({ find: 'Most Read', replace: 'Popular stories' }, page, stored, { hooks })
+  )
+  assert.equal(asked.code, 'NOT_FOUND')
+  assert.equal(asked.next, REPLACE_NEXT.notFoundNoPathNext)
+  assert.match(asked.next, /only the home page was read/)
+  assert.doesNotMatch(asked.next, /path:"\/"/)
+  const params = { find: 'Most Read', replace: 'Popular stories', path: '/blog/' }
+  assert.equal(/** @type {any} */ (planReplace(params)).pathGiven, true)
+  const named = /** @type {any} */ (run(params, page, stored, { hooks }))
+  assert.equal(named.code, 'NOT_FOUND')
+  assert.equal(named.next, replaceText('notFoundNext', { page: '/blog/', word: 'Most' }))
 })
 
 test('planReplace: a lone `at` string is one place, corrected and said; restore goes alone', () => {

@@ -300,7 +300,7 @@ export const ALLOWED_PARAMS = Object.freeze({
     'media.delete': Object.freeze(['apply_id', 'id', 'url', 'dry_run']),
     // Words a theme prints at render time (claude-cowork `content.renderedWords`, advertised by
     // `info.rendered_words`): inspect a page's targets, apply proven rules, read a scope's status.
-    'content.renderedWords:inspect': Object.freeze(['operation', 'path', 'targets']),
+    'content.renderedWords:inspect': Object.freeze(['operation', 'path', 'targets', 'composition']),
     'content.renderedWords:apply': Object.freeze([
       'operation',
       'apply_id',
@@ -1769,7 +1769,8 @@ function contract(p, f, notes, refuse) {
         rule: 'no_changes',
         error: 'an apply carries changes: {"<slot key>": "<text>"}, at least one'
       })
-  } else if (op === 'string' && f.derived === true) return stringOverride(p, f, notes, refuse)
+  } else if (op === 'string' && (f.derived === true || f.platform === 'wordpress'))
+    return stringOverride(p, f, notes, refuse)
   else if (op !== 'inspect' && op !== 'bind' && !CONTRACT_PREFIXES.some((x) => op.startsWith(x)))
     // CC-4: the component answers "Unknown contract operation" only after taking its lock.
     return refuse('UNKNOWN_OPERATION', {
@@ -1822,10 +1823,9 @@ function contract(p, f, notes, refuse) {
  * prints that no content row holds — the road `content.locate` names for words that are not in the site's
  * content (`notInContentNext`). Until 01/10/2026 this file knew no such operation and refused it
  * (`UNKNOWN_OPERATION`), so that road ended here. It is known on an IMPORTED copy's DERIVED surface only
- * (`f.derived`): a quickstart's contract door keeps answering `UNKNOWN_OPERATION` (a new write road for
- * Add site was no part of the change), and the open `wordpress` surface has no `content.contract` at all,
- * so for those two `notInContentNext`'s road is still a dead end (review, 02/10/2026; the server does not
- * know the host's surface). The plugin records it under
+ * (`f.derived`) until 26/10/2026, and on every WordPress site since: the plugin takes it on a quickstart site as on a
+ * derived one (claude-cowork `tests/string-overrides.php`), and a build, fenced out of the theme's files, had no other
+ * road for the words a theme prints through gettext (local round 35: JA Restaurant's blog sidebar). The plugin records it under
  * the caller's apply_id and refuses a missing or `contract-` one (those name contract applies), so Tracy
  * makes the receipt's id, as it does for a delete (J-4) and a WordPress content write (WP-27).
  * @param {Record<string, unknown>} p

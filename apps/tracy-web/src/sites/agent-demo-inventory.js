@@ -3,6 +3,7 @@ import { createHash } from 'node:crypto'
 import { siteApi } from './brief-engines/emdash-menus.js'
 import { nativeCopyBindings, nativeStructure } from './brief-engines/quickstart-native.js'
 import { parseBlocks } from './brief-engines/wp-blocks.js'
+import { maskBuildChanges } from '../lib/agent-demo-changes.js'
 
 const fail = (code, detail) => Object.assign(new Error(code), { code, detail })
 const canonical = (value) =>
@@ -24,7 +25,7 @@ const MAX_RECORDS = 10000
 const MAX_MS = 90000
 /**
  * Apply calls in flight at once. One call took 0.3–0.8 s on the stand and a Tracy Business Joomla site holds ~7,800
- * records (reverb, 24/10/2026); 8 was ~3.5× one at a time, 16 no faster than 8.
+ * records (bebop, 24/10/2026); 8 was ~3.5× one at a time, 16 no faster than 8.
  */
 const IN_FLIGHT = 8
 /** The most list pages of one kind asked for at once. */
@@ -178,6 +179,14 @@ const DATE_KEY = /(?:^|_)date$|[a-z]Date$/
  */
 const WORDS_OF_TEXT_KEY =
   /^(?:reading_?time|readingTime|word_?count|wordCount|toc|table_of_contents|tableOfContents)$/
+// Joomla article image descriptions are editorial text; their field names and non-string types stay structural.
+const JOOMLA_PICTURE_WORDS_KEY = /^image_(?:intro|fulltext)_(?:alt|caption)$/
+/**
+ * A page's words for the browser and search engines are words (local round 35, 26/10/2026: a Joomla menu item's
+ * "Browser Page Title" set to the business's name failed native-structure).
+ */
+const PAGE_WORDS_KEY =
+  /^(?:page_title|page_heading|menu-meta_description|menu-meta_keywords|meta_?description|meta_?keywords|metadesc|metakey)$/
 /**
  * A status or type a visitor reads ("Paid 22 Jul 2026", "Full-time · 15/15 rotation", "Full-time") is words: several
  * words, or a capital first. One a machine reads (`published`, `in_stock`, `image`) is one lower-case token and stays
@@ -193,10 +202,39 @@ function linkValues(value) {
   return typeof value === 'string' ? '$link' : pictureValues(value)
 }
 
+/** The keys an EmDash picture object may hold beside its library id. */
+const PICTURE_KEYS = new Set([
+  'id',
+  'alt',
+  'src',
+  'width',
+  'height',
+  'filename',
+  'mimeType',
+  'provider',
+  'meta',
+  'caption'
+])
+
+/** An EmDash library item's id: a ULID. */
+const LIBRARY_ID = /^[0-9A-HJKMNP-TV-Z]{26}$/
+/** A key that names a picture's place (`image`, `avatar`, `heroImage`, `logo`, `cover`, `photo`…). */
+const PICTURE_PLACE_KEY =
+  /(?:^|[_-]|[a-z](?=[A-Z]))(?:image|img|photo|picture|avatar|logo|cover|thumbnail|thumb|icon|banner|background|bg|media|contain)s?$/i
+
 function pictureValues(value) {
   if (Array.isArray(value)) return value.map(pictureValues)
   if (value && typeof value === 'object') {
     if (value.id && (value.provider || value.mimeType)) return { media: '$photo' }
+    // A library item named by its id with only its words beside it (`{id:"01M5…", alt}`) is the same picture: EmDash
+    // fills a bare id into the whole object, an object it keeps as written (local round 36, 26/10/2026: four checks of
+    // an EmDash build failed on picture fields written this way).
+    if (
+      typeof value.id === 'string' &&
+      LIBRARY_ID.test(value.id) &&
+      Object.keys(value).every((key) => PICTURE_KEYS.has(key))
+    )
+      return { media: '$photo' }
     // An EmDash picture written by its file path is kept as `{provider:"external", id:"", src}`: still a picture in
     // the same field (local round 22, 25/10/2026), which `media.import`'s `mediaId` now avoids for new writes.
     if (typeof value.provider === 'string' && typeof value.src === 'string' && value.src)
@@ -230,13 +268,20 @@ function pictureValues(value) {
           key,
           /^(?:featured_image_id|featured_media)$/.test(key)
             ? '$photo'
-            : (DATE_KEY.test(key) && typeof item === 'string') ||
-                WORDS_OF_TEXT_KEY.test(key) ||
-                (STATUS_KEY.test(key) && shownStatus(item))
-              ? '$copy'
-              : LINK_KEY.test(key)
-                ? linkValues(item)
-                : pictureValues(item)
+            : // A library item's bare id in a picture's place is that picture: EmDash fills a bare id into the whole
+              // object in a media field, and keeps it as written inside a JSON field (local round 37, 26/10/2026: the
+              // `sample` pictures of an EmDash build written as ids failed native-structure seven checks running).
+              PICTURE_PLACE_KEY.test(key) && typeof item === 'string' && LIBRARY_ID.test(item)
+              ? { media: '$photo' }
+              : (DATE_KEY.test(key) && typeof item === 'string') ||
+                  WORDS_OF_TEXT_KEY.test(key) ||
+                  (PAGE_WORDS_KEY.test(key) && typeof item === 'string') ||
+                  (JOOMLA_PICTURE_WORDS_KEY.test(key) && typeof item === 'string') ||
+                  (STATUS_KEY.test(key) && shownStatus(item))
+                ? '$copy'
+                : LINK_KEY.test(key)
+                  ? linkValues(item)
+                  : pictureValues(item)
         ])
     )
   }
@@ -264,6 +309,12 @@ function pictureValues(value) {
       .replace(/<!--(?!\/?wp:)[\s\S]*?-->/g, '')
       .replace(/<(img|br|hr|input|source|meta|link)\b([^>]*?)\s*\/>/gi, '<$1$2>')
       .replace(/\b(src|srcset|href|alt|title)\s*=\s*("[^"]*"|'[^']*')/gi, '$1="$value"')
+      // Any other attribute holding a picture's path is the picture (local round 35, 26/10/2026: Joomla's
+      // `data-path="local-images:/joomlart/others/pic-2.jpg"` beside each article image read as changed structure).
+      .replace(
+        /\b([\w:-]+)\s*=\s*(["'])[^"']*\.(?:jpe?g|png|webp|avif|gif|svg)(?:[?#][^"']*)?\2/gi,
+        '$1="$photo"'
+      )
       // A style attribute is the look, which look-kept judges (a paint), not the shape: a photo darkened with an
       // inline filter is the same figure (local round 29, 25/10/2026).
       .replace(/\sstyle\s*=\s*("[^"]*"|'[^']*')/gi, '')
@@ -313,7 +364,9 @@ function relationCopy(value) {
   if (!value || typeof value !== 'object') return value
   const copyOf = (k, v) => {
     if (['title', 'label', 'name'].includes(k) && typeof v === 'string') return '$copy'
-    if (k === 'tags_input' && Array.isArray(v))
+    // The lists a WordPress post's row names its categories and tags in are their names too (local round 36,
+    // 26/10/2026: the template's tag "Fish" renamed for the bakery failed on four posts' `list:tags`).
+    if (['tags_input', 'list:tags', 'list:categories'].includes(k) && Array.isArray(v))
       return v.map((name) => (typeof name === 'string' ? '$copy' : name))
     return relationCopy(v)
   }
@@ -380,6 +433,8 @@ function lineBreaksInWords(value) {
       .replace(/\$copy[ \t]+/g, '$copy')
       .replace(/\$copy(?:\s*<br\s*\/?>\s*(?:\$copy)?)+/g, '$copy')
       .replace(/\$copy(?:\s*\$copy)+/g, '$copy')
+      // A full stop left after an emphasized passage is still its words, never part of the containing frame.
+      .replace(/(>\$copy)[^\p{L}\p{N}<>$]*(?=<)/gu, '$1')
   )
 }
 
@@ -589,7 +644,120 @@ function filledLists(was, now) {
   return now.map((r) => (before.has(r.key) ? { ...r, shape: align(before.get(r.key).shape, r.shape) } : r))
 }
 
-export function compareAgentInventory(before, after) {
+/** A class naming a service a box was made for (the page read's `SERVICE_CLASS`, `demo-qa-browser.js`). */
+const SERVICE_CLASS =
+  /(?:^|[-_\s])(?:form|booking|book-?now|reserv(?:e|ation)s?|widget|feed|embed|map|newsletter|subscribe|sign-?up|opentable|calendar)(?:[-_\s]|$)/i
+/** An element of markup with nothing inside it: `<div class="ot-form"></div>`. */
+const EMPTY_ELEMENT = /(<(div|section|span)\b[^>]*\bclass="([^"]*)"[^>]*>)\s*<\/\2>/g
+
+/** Where the element opened at `from` closes, counting the same tag nested inside it; -1 when it never does. */
+function closingOf(text, from, tag) {
+  const re = new RegExp(`<(/?)${tag}\\b[^>]*>`, 'g')
+  re.lastIndex = from
+  let depth = 1
+  for (let m = re.exec(text); m; m = re.exec(text)) {
+    depth += m[1] ? -1 : m[0].endsWith('/>') ? 0 : 1
+    if (depth === 0) return m.index
+  }
+  return -1
+}
+
+/**
+ * 🔒 A SERVICE BOX THE TEMPLATE LEFT EMPTY IS THE BUILD'S TO FILL (plan "10/10" §5, David 26/10/2026). Local round 31
+ * shipped an empty orange band under the hero — the template's OpenTable form group, empty at install — and the way to
+ * fill it (one button to the business's booking link, phone or Contact page) adds blocks inside it. In markup the
+ * build filled, what is now inside an element that was empty at install and whose class names a service
+ * (`SERVICE_CLASS`, the same reading as `no-empty-boxes`) is read as it was: empty. Every other element, and the box
+ * itself, is held exactly.
+ * @param {string} was
+ * @param {string} now
+ */
+export function serviceBoxesAsBefore(was, now) {
+  if (typeof was !== 'string' || typeof now !== 'string' || was === now) return now
+  let out = now
+  const seen = new Map()
+  for (const m of was.matchAll(EMPTY_ELEMENT)) {
+    const [, open, tag, cls] = m
+    const nth = seen.get(open) ?? 0
+    seen.set(open, nth + 1)
+    if (!SERVICE_CLASS.test(cls)) continue
+    let at = -1
+    for (let k = 0, from = 0; k <= nth; k++) {
+      at = out.indexOf(open, from)
+      if (at < 0) break
+      from = at + open.length
+    }
+    if (at < 0) continue
+    const start = at + open.length
+    const end = closingOf(out, start, tag)
+    if (end > start && out.slice(start, end).trim() !== '') out = out.slice(0, start) + out.slice(end)
+  }
+  return out
+}
+
+/** `serviceBoxesAsBefore` over every string two invariant records hold at the same place. */
+function filledBoxes(was, now) {
+  const align = (a, b) => {
+    if (typeof a === 'string' && typeof b === 'string') return serviceBoxesAsBefore(a, b)
+    if (a && b && typeof a === 'object' && typeof b === 'object' && Array.isArray(a) === Array.isArray(b)) {
+      if (Array.isArray(b)) return b.map((item, i) => align(a[i], item))
+      return Object.fromEntries(Object.entries(b).map(([k, v]) => [k, align(a[k], v)]))
+    }
+    return b
+  }
+  const before = new Map(was.map((r) => [r.key, r]))
+  return now.map((r) => (before.has(r.key) ? { ...r, shape: align(before.get(r.key).shape, r.shape) } : r))
+}
+
+/** Normalize only a server-authorized text fallback at the same frozen header brand block path. */
+function brandFallbackRecords(before, after, policy) {
+  const applied = []
+  if (policy.allowWordPressSiteTitle !== true) return { records: after, applied }
+  const original = new Map(before.map((r) => [r.key, r]))
+  const records = after.map((record) => {
+    const frozen = original.get(record.key)
+    if (frozen?.identity?.kind !== 'templatePart' || frozen.identity.key !== 'header') return record
+    let data = record.data
+    for (const field of ['content', 'post_content']) {
+      const was = frozen.data?.[field],
+        now = data?.[field]
+      if (typeof was !== 'string' || typeof now !== 'string') continue
+      const first = parseBlocks(was),
+        second = parseBlocks(now)
+      if (!first || !second) continue
+      const edits = []
+      const brand = (node) =>
+        node.name === 'core/group' &&
+        /(?:^|\s)(?:logo|site-branding)(?:\s|$)/.test(node.attrs?.className ?? '')
+      const walk = (a, b, path = [], inBrand = false) => {
+        if (
+          inBrand &&
+          a.name === 'core/site-logo' &&
+          b.name === 'core/site-title' &&
+          a.selfClosing &&
+          b.selfClosing
+        ) {
+          edits.push({ start: b.start, end: b.end, text: was.slice(a.start, a.end) })
+          applied.push({ record: record.key, field, path })
+          return
+        }
+        if (a.name !== b.name || a.children.length !== b.children.length) return
+        a.children.forEach((child, i) =>
+          walk(child, b.children[i], [...path, i], inBrand || (brand(a) && brand(b)))
+        )
+      }
+      walk(first, second)
+      let content = now
+      for (const edit of edits.reverse())
+        content = content.slice(0, edit.start) + edit.text + content.slice(edit.end)
+      if (content !== now) data = { ...data, [field]: content }
+    }
+    return data === record.data ? record : { ...record, data }
+  })
+  return { records, applied }
+}
+
+export function compareAgentInventory(before, after, policy = {}) {
   if (!before?.complete || !after?.complete)
     return {
       id: 'native-structure',
@@ -598,10 +766,17 @@ export function compareAgentInventory(before, after) {
       detail: 'The native inventory is incomplete; publication, relation and count evidence is unavailable.'
     }
   const showcase = showcaseOf(before.records)
+  // A frozen inventory read before patterns were (`expandPatterns`) is held to the references as they were read.
+  const asRead = before.patternsRead !== true && after.patternsRead === true
+  const afterRead = asRead
+    ? after.records.map(({ patternsAsRead, ...r }) =>
+        patternsAsRead ? { ...r, data: { ...r.data, ...patternsAsRead } } : r
+      )
+    : after.records
   // A starting inventory read before the site's own relation rows were told apart is compared by every row, as it was read.
   const rowsAsRead = before.records.some((r) => r.identity?.kind === 'taxonomyRelations' && !r.relations?.own)
   const afterRecords = rowsAsRead
-    ? after.records.map((r) =>
+    ? afterRead.map((r) =>
         r.identity?.kind === 'taxonomyRelations' && r.relations?.own
           ? {
               ...r,
@@ -609,26 +784,87 @@ export function compareAgentInventory(before, after) {
             }
           : r
       )
-    : after.records
-  const was = inventoryInvariant(maskShowcase(before.records, showcase))
-  const now = filledLists(was, inventoryInvariant(maskShowcase(afterRecords, showcase)))
+    : afterRead
+  // An article's address and date are the build's (`agent-demo-changes.js`); the showcase pages' address and name too.
+  const branding = brandFallbackRecords(before.records, afterRecords, policy)
+  const was = inventoryInvariant(maskBuildChanges(maskShowcase(before.records, showcase)))
+  const now = filledBoxes(
+    was,
+    filledLists(was, inventoryInvariant(maskBuildChanges(maskShowcase(branding.records, showcase))))
+  )
   const same = hash(was) === hash(now)
   return {
     id: 'native-structure',
     pass: same,
+    ...(branding.applied.length ? { brandFallbacks: branding.applied } : {}),
     measured: `${before.records.length}/${after.records.length}`,
     expected: 'all frozen native IDs, counts, publication, routes, row identities and relations stay intact',
     detail: [
       {
         reason: same
           ? 'Native IDs, counts, publication, routes, row identities and relations match the frozen inventory.'
-          : 'Native structure differs from the frozen inventory; retain all IDs, counts, publication, routes and relations.'
+          : 'Native structure differs from the frozen inventory; retain all IDs, counts, publication, routes and relations. Each record below reads as the template installed it with tracy_demo {operation:"structure.read", record:"<record>"}: write its markup back with only the words and pictures changed.'
       },
       // Which records differ and where, so the build can put each one back (a bare "differs" sent the
       // agent of the 23/10/2026 pilot away with nothing to repair).
       ...(same ? [] : inventoryDifferences(was, now))
     ]
   }
+}
+
+/** A pattern a WordPress record inserts: `<!-- wp:pattern {"slug":"theme/name"} /-->`. */
+const PATTERN_REF = /<!-- wp:pattern (\{[^]*?\}) \/-->/g
+/** How deep a pattern inside a pattern is read. */
+const PATTERN_DEPTH = 3
+
+/**
+ * 🔒 A PATTERN IS READ AS THE BLOCKS IT INSERTS (local round 33, 26/10/2026). A theme's sidebar part held only
+ * `<!-- wp:pattern {"slug":"…/part-sidebar"} /-->`; the build changed its words the way the block editor does —
+ * the pattern expanded into the stored part, then the words written — and native-structure failed it at every check,
+ * the inserted blocks against a one-line reference. Round 31 had gone the other way and edited the pattern's PHP,
+ * which the build fence now refuses. Each reference is replaced by the registered pattern's own content
+ * (`content.get {kind:"pattern"}`, the registry having run its PHP) before the shape is taken, in both inventories, so
+ * an expanded part is held to the very blocks of its pattern and its words stay copy. A plugin that cannot read
+ * patterns leaves the reference as it was read.
+ * @param {string} text
+ * @param {(key: string) => Promise<string | null>} read
+ * @param {number} [depth]
+ * @returns {Promise<string>}
+ */
+export async function expandPatterns(text, read, depth = 0) {
+  if (typeof text !== 'string' || !text.includes('<!-- wp:pattern ') || depth >= PATTERN_DEPTH) return text
+  let out = ''
+  let last = 0
+  for (const m of text.matchAll(PATTERN_REF)) {
+    let slug = null
+    try {
+      slug = JSON.parse(m[1]).slug
+    } catch {
+      // an unreadable reference stays as it stands
+    }
+    const body = typeof slug === 'string' ? await read(slug) : null
+    out += text.slice(last, m.index) + (body === null ? m[0] : await expandPatterns(body, read, depth + 1))
+    last = m.index + m[0].length
+  }
+  return out + text.slice(last)
+}
+
+/** The fields of a WordPress record that can insert a pattern. */
+const PATTERN_FIELDS = ['post_content', 'content']
+/** Those fields as read, before their patterns were. */
+const patternFields = (item) =>
+  Object.fromEntries(PATTERN_FIELDS.filter((f) => typeof item?.[f] === 'string').map((f) => [f, item[f]]))
+
+/** A WordPress record with the patterns its body or content inserts read as their blocks (`expandPatterns`). */
+async function withPatternsRead(item, read) {
+  if (!item || typeof item !== 'object') return item
+  let out = item
+  for (const field of PATTERN_FIELDS)
+    if (typeof out[field] === 'string' && out[field].includes('<!-- wp:pattern ')) {
+      const expanded = await expandPatterns(out[field], read)
+      if (expanded !== out[field]) out = { ...out, [field]: expanded }
+    }
+  return out
 }
 
 /** At most this many differing records are named in a failed `native-structure`. */
@@ -1066,6 +1302,19 @@ export function createAgentDemoInventory({
               : { kind, id: row.id ?? row.ID }
           )
         ).item
+      /** One registered pattern's blocks, read once per inventory (`content.get {kind:"pattern"}`), null when unread. */
+      const patterns = new Map()
+      const pattern = (key) => {
+        if (!patterns.has(key))
+          patterns.set(
+            key,
+            Promise.resolve()
+              .then(() => apply('content.get', { kind: 'pattern', key }))
+              .then((answer) => (typeof answer?.item?.content === 'string' ? answer.item.content : null))
+              .catch(() => null)
+          )
+        return patterns.get(key)
+      }
       /**
        * One kind's records. Joomla lists them WITH their bodies, 25 a page (`include_body`: the component's `read()` of
        * each row merged over its summary), and one `content.get` names the columns `read()` answers (`SELECT *`, the same
@@ -1089,6 +1338,17 @@ export function createAgentDemoInventory({
             )
         }
         items ??= await Promise.all(rows.map((row) => get(kind, row)))
+        // Each pattern a record inserts is read as its blocks; the reference as read is kept beside it for a frozen
+        // inventory read before patterns were (`compareAgentInventory`).
+        const raws = []
+        if (site.platform === 'wordpress')
+          items = await Promise.all(
+            items.map(async (item, i) => {
+              const read = await withPatternsRead(item, pattern)
+              if (read !== item) raws[i] = patternFields(item)
+              return read
+            })
+          )
         const relationKind = joomla ? RELATION_KINDS[kind] : null
         const tables = relationKind ? await relationsRead : null
         const related = relationKind
@@ -1102,7 +1362,10 @@ export function createAgentDemoInventory({
           : []
         return {
           coverage: list.coverage,
-          records: rows.map((row, i) => recordOf(kind, row, items[i], related[i]))
+          records: rows.map((row, i) => {
+            const record = recordOf(kind, row, items[i], related[i])
+            return raws[i] ? { ...record, patternsAsRead: raws[i] } : record
+          })
         }
       }
       const read = await Promise.all(
@@ -1193,6 +1456,7 @@ export function createAgentDemoInventory({
       records.every((record) => record.publication.status !== null)
     return {
       version: 'agent-demo-native/1',
+      ...(site.platform === 'wordpress' ? { patternsRead: true } : {}),
       complete,
       records,
       counts,
@@ -1238,6 +1502,10 @@ const bodyOf = (record) =>
  * @param {any[]} checks
  * @param {{records?: any[]} | null} inventory - the live read the same check compared.
  */
+/** Where a template picture held by no content record is changed: the setting that picks it, named in the template's notes. */
+const PICTURE_SETTING_HINT =
+  'no content record holds this picture: a template setting picks it. content.find {text:"<a word of its file name or its place, e.g. banner>"} names the template line that reads it (on WordPress its option); set that setting to the new picture — media.import answers its path, and on WordPress its attachmentId — with content.update {kind:"option", key, fields:{value}} or the template’s own settings door. For a Joomla T4 logo use template.siteSettings {operation:"read", template:"<template>"}, then {operation:"set", template:"<template>", profiles:{"<profile>":{site_logo:"<imported picture path>"}}}; preserve the other profile settings and use this native Undo-recorded door, not template file edits.'
+
 export function picturesWhere(checks, inventory) {
   const records = Array.isArray(inventory?.records) ? inventory.records : []
   if (!records.length) return checks
@@ -1272,7 +1540,28 @@ export function picturesWhere(checks, inventory) {
         const body = bodyOf(record)
         const at = body === null ? -1 : body.search(needle)
         const block = at >= 0 ? blockAt(body, at) : null
-        return { record: record.key, ...(block !== null ? { block } : {}) }
+        // A post's featured picture (a list's thumbnail: WordPress prints it `attachment-<size>` / `wp-post-image`) is
+        // its `_thumbnail_id`, never a block (local round 37, 26/10/2026: a gallery list's album thumbnails were sent
+        // to swap the album post's blocks).
+        if (
+          record.identity?.kind === 'post' &&
+          /\b(?:wp-post-image|attachment-[a-z0-9_-]+)\b/i.test(String(detail?.selector ?? ''))
+        )
+          return {
+            record: record.key,
+            featured: `content.update {kind:"postmeta", id:${record.identity.id}, key:"_thumbnail_id", fields:{value:<attachmentId>}}`
+          }
+        // A WordPress block's picture is swapped in place (`wp-blocks.mjs` `{pictures}`), never the block retyped.
+        const address = record.identity?.key ? `key:"${record.identity.key}"` : `id:${record.identity?.id}`
+        const swap =
+          block !== null && record.identity?.kind
+            ? `content.get {kind:"${record.identity.kind}", ${address}, outline:true} gives rev; content.update {kind:"${record.identity.kind}", ${address}, rev, blocks:{"${block}":{pictures:{"${String(
+                detail?.file ?? ''
+              )
+                .split('/')
+                .pop()}":{path, attachmentId}}}}}`
+            : null
+        return { record: record.key, ...(block !== null ? { block } : {}), ...(swap ? { swap } : {}) }
       }
     return null
   }
@@ -1282,8 +1571,15 @@ export function picturesWhere(checks, inventory) {
       : {
           ...check,
           detail: check.detail.map((detail) => {
-            const where = detail && typeof detail === 'object' && !detail.in ? find(detail) : null
-            return where ? { ...detail, in: where } : detail
+            if (!detail || typeof detail !== 'object' || detail.in) return detail
+            const where = find(detail)
+            if (where) return { ...detail, in: where }
+            // 🔒 A PICTURE NO RECORD HOLDS IS A SETTING'S (local round 35, 26/10/2026): JA Restaurant shows its blog
+            // banner from the attachment an option names (`wp_ja_restaurant_blog_banner_image`, set by file name at
+            // install); the build read "theme-owned, no door" and left it for eight checks.
+            return typeof detail.file === 'string'
+              ? { ...detail, in: { setting: PICTURE_SETTING_HINT } }
+              : detail
           })
         }
   )

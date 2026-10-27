@@ -117,8 +117,9 @@ import { createClientDemoService } from './opportunities-build/client-demo.js'
 import { createDemoContactPreview } from 'website-opportunities/src/contact-preview.js'
 import { capsFromRuntime, createChargeable, createCostLedger } from 'website-opportunities/src/cost-ledger.js'
 import { createDemoLook } from './opportunities-build/demo-look.js'
+import { createDemoPhotoLabels } from './opportunities-build/demo-photo-labels.js'
+import { createDemoCopy } from './opportunities-build/demo-copy.js'
 import { ownSiteOn } from './opportunities-build/own-site.js'
-import { MAX_PICTURE_BYTES } from './lib/template-shots.js'
 import { claimAndRunQa, sweepDemoQa } from './opportunities-build/demo-qa.js'
 import { sweepDemos } from './opportunities-build/demo-retention.js'
 import { createDemoRunner } from './opportunities-build/demo-runner.js'
@@ -1189,7 +1190,7 @@ export function buildApp(deps) {
                 port: site.port ?? null,
                 // The names the site answers to (WordPress writes every link and redirect with them).
                 ...demoSelfNames(deps.config, site),
-                // A baseline is read inside the hand-off request, under the proxy's 100 s; a round has time.
+                // The host's hard deadline includes its queue and closes the context before transport expires.
                 budgetMs: payload.baseline ? 180_000 : 45_000,
                 ...payload
               },
@@ -1206,8 +1207,8 @@ export function buildApp(deps) {
       deps.websiteOpportunitiesDemoLook ??
       (deps.host
         ? createDemoLook({
-            capture: (site, layouts) =>
-              deps.host.hostCall(
+            capture: (site, layouts, { onFrame, signal }) =>
+              deps.host.hostStreamCall(
                 deps.config,
                 site.host ?? deps.config.defaultHost,
                 '/capture',
@@ -1219,9 +1220,9 @@ export function buildApp(deps) {
                   // Pages open at the site's own name, served from the address that answers, as `/demo-qa` reads
                   // them: on the stand every page but home redirected to `<label>-web-1:8080` (24/10/2026).
                   ...demoSelfNames(deps.config, site),
-                  maxBytes: MAX_PICTURE_BYTES
+                  mode: 'vision-tiles/1'
                 },
-                { fetchImpl: deps.fetchImpl ?? fetch, timeoutMs: 240_000 }
+                { onFrame, signal, fetchImpl: deps.fetchImpl ?? fetch, timeoutMs: 240_000 }
               ),
             visionFor: woVisionDoor,
             chargeable: createChargeable(
@@ -2105,6 +2106,29 @@ export function buildApp(deps) {
           inventoryInvariant,
           objects: placeMediaObjectsFor(deps.config, deps.fetchImpl ?? fetch),
           now: deps.now ?? Date.now,
+          // The words of every page in small structured tasks (`opportunities-build/demo-copy.js`).
+          writeCopy: createDemoCopy({
+            doorFor: () => modelForChain(deps.pool, ['seedText', 'web'], deps.config),
+            chargeable: createChargeable(
+              createCostLedger({
+                pool: deps.pool,
+                caps: capsFromRuntime(() => woRuntime(deps.pool, deps.config))
+              })
+            ),
+            fetchImpl: deps.fetchImpl ?? fetch
+          }),
+          // What each photo shows, labelled once (`opportunities-build/demo-photo-labels.js`).
+          photoLabels: createDemoPhotoLabels({
+            pool: deps.pool,
+            visionFor: () => visionDoorFor(deps),
+            chargeable: createChargeable(
+              createCostLedger({
+                pool: deps.pool,
+                caps: capsFromRuntime(() => woRuntime(deps.pool, deps.config))
+              })
+            ),
+            fetchImpl: deps.fetchImpl ?? fetch
+          }),
           lifecycle: (auth, params, held) => {
             if (!clientDemoService) throw new Error('DEMO_CHAT_UNAVAILABLE')
             return clientDemoService.operation(auth, params, held)

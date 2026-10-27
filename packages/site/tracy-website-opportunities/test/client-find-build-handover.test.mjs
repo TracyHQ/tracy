@@ -36,7 +36,10 @@ let lib
 let dom
 const located = []
 
+let pendingScheduler
 before(async () => {
+  // React's unreferenced MessageChannel still needs a live event loop while act settles.
+  pendingScheduler = setInterval(() => {}, 1000)
   const { JSDOM } = createRequire(path.join(fromStore('jsdom@', 'jsdom'), 'package.json'))('jsdom')
   dom = new JSDOM('<!doctype html><html><body></body></html>', {
     pretendToBeVisual: true,
@@ -126,6 +129,7 @@ before(async () => {
 })
 
 after(() => {
+  clearInterval(pendingScheduler)
   if (outDir) rmSync(outDir, { recursive: true, force: true })
   dom?.window.close()
 })

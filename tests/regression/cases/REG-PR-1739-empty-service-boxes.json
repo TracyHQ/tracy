@@ -1,0 +1,45 @@
+{
+  "id": "REG-PR-1739-empty-service-boxes",
+  "kind": "fix",
+  "title": "A box the template made for a service and left empty is found (no-empty-boxes), filled with a button to the business's real way in, and that filling keeps the native structure",
+  "pr": 1739,
+  "area": "website-opportunities/agent-demo",
+  "cms": ["wp", "jo", "em"],
+  "needs": ["chrome"],
+  "flaky_model": false,
+  "steps": [
+    "S1: checkNoEmptyBoxes on a page read with one empty box (div.acm-opentable > div.ot-form, 1000×60) and on reads with none.",
+    "S2: compareAgentInventory on a home page whose ot-form group (empty at install) now holds a buttons block to tel:+19174643769; whose decorative jr-band group (empty at install) holds it instead; whose ot-form group is gone.",
+    "S3: serviceBoxesAsBefore on a nested empty service group filled with a button, and on a decorative div filled with a paragraph.",
+    "S4: browser reads a collapsed empty booking widget inside padded wrappers, a filled booking box, a hidden widget and a decorative band."
+  ],
+  "expect": [
+    "S1: one finding naming the page, selector and size; none passes; CHECK_IDS includes no-empty-boxes.",
+    "S2: the filled service box passes; the filled band fails; the removed box fails.",
+    "S3: the service box reads empty again; the decorative div keeps its paragraph.",
+    "S4: the collapsed widget is reported with the visible wrapper size; the filled, hidden and decorative examples are not findings."
+  ],
+  "selectors": {
+    "files": "apps/tracy-host/src/demo-qa-browser.js apps/tracy-host/src/demo-qa.js apps/tracy-web/src/sites/agent-demo-inventory.js apps/tracy-web/src/opportunities-build/demo-qa.js",
+    "dom": "elements whose class names a service: form, booking, reservation, widget, feed, embed, map, newsletter, subscribe, sign-up, opentable, calendar"
+  },
+  "evidence": "Local round 31 (25/10/2026, WordPress JA Restaurant): an empty orange band under the hero, the template's OpenTable form group (.ot-form) empty at install.",
+  "fence": "SERVICE_CLASS (reader and compare); emptyBoxes; checkNoEmptyBoxes; serviceBoxesAsBefore/filledBoxes",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-concurrency=1",
+      "--test-reporter=tap",
+      "apps/tracy-host/test/demo-qa.test.mjs",
+      "apps/tracy-web/test/agent-demo-native-inventory.test.mjs",
+      "apps/tracy-host/test/demo-qa-browser.test.mjs"
+    ],
+    "tests": [
+      "no-empty-boxes fails each service box a page shows empty, and passes when none is",
+      "a service box the template left empty may be filled; a decorative box, or the box itself, may not change",
+      "a real read finds a service box shown empty, not a filled one or a decorative band"
+    ],
+    "needs": ["chrome"]
+  }
+}

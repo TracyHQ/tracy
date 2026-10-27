@@ -1,0 +1,1 @@
+{"id":"REG-PR-1739-over-picture-contrast","verdict":"PASS","commit":"f507dcbe05eb8fce8518435a14781c4cb703171b","ran_at":"2026-10-25T17:48:05.731Z","evidence":"tests/regression/.runs/2026-10-25-f507dcbe0/REG-PR-1739-over-picture-contrast.log"}

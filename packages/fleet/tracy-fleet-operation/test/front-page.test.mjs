@@ -24,7 +24,7 @@ after(() => {
  * A `curl` that answers per URL: `byName` for `http://<label>-web-1/`, `byPort` for the loopback
  * port. `null` = that road does not answer (curl prints 000 and exits non-zero, as the real one does).
  */
-function stand({ byName = null, byPort = null }) {
+function stand({ byName = null, byPort = null, inside = null, identity, execExit = 0 }) {
   const dir = mkdtempSync(path.join(tmpdir(), 'tracy-front-page-'))
   temps.push(dir)
   const bin = path.join(dir, 'bin')
@@ -42,11 +42,25 @@ esac
 `,
     { mode: 0o755 }
   )
-  return { bin }
+  const log = path.join(dir, 'docker-args')
+  const verified = identity ?? `${'a'.repeat(64)}|true|demo|web`
+  writeFileSync(
+    path.join(bin, 'docker'),
+    `#!/bin/sh
+printf '%s\\n' "$@" >> "${log}"
+case "$1" in
+  inspect) printf '%s' '${verified}' ;;
+  exec) printf '%s' '${inside ?? '000'}'; exit ${execExit} ;;
+  *) exit 2 ;;
+esac
+`,
+    { mode: 0o755 }
+  )
+  return { bin, log }
 }
 
 function refuse(roads) {
-  const { bin } = stand(roads)
+  const { bin, log } = stand(roads)
   const run = spawnSync(
     'bash',
     ['-euo', 'pipefail', '-c', '. "$1"; tracy_front_page_refusal demo 52110', '_', LIB],
@@ -55,11 +69,21 @@ function refuse(roads) {
       env: { ...process.env, PATH: `${bin}:${process.env.PATH}` }
     }
   )
-  return { status: run.status, out: run.stdout.trim() }
+  return {
+    status: run.status,
+    out: run.stdout.trim(),
+    docker: (() => {
+      try {
+        return readFileSync(log, 'utf8')
+      } catch {
+        return ''
+      }
+    })()
+  }
 }
 
 test('a page that renders lets the site be called up', () => {
-  assert.deepEqual(refuse({ byName: 200 }), { status: 0, out: '' })
+  assert.deepEqual(refuse({ byName: 200 }), { status: 0, out: '', docker: '' })
 })
 
 test('a redirect is the site answering', () => {
@@ -81,6 +105,66 @@ test('silence on both roads is refused, not taken for a healthy site', () => {
   const r = refuse({})
   assert.equal(r.status, 1)
   assert.match(r.out, /did not answer at all/)
+})
+
+test('an isolated PHP site is probed inside its verified running web container', () => {
+  const r = refuse({ inside: 200 })
+  assert.equal(r.status, 0)
+  const args = r.docker.trim().split('\n')
+  const exec = args.slice(args.indexOf('exec'))
+  assert.deepEqual(exec, [
+    'exec',
+    'a'.repeat(64),
+    'curl',
+    '--noproxy',
+    '*',
+    '-s',
+    '--max-time',
+    '20',
+    '-o',
+    '/dev/null',
+    '--write-out',
+    '%{http_code}',
+    '--header',
+    'Host: demo-web-1',
+    'http://127.0.0.1/'
+  ])
+  assert.ok(args.includes('demo-web-1'))
+})
+
+test('the internal probe preserves redirect and server-error policy', () => {
+  assert.equal(refuse({ inside: 302 }).status, 0)
+  assert.match(refuse({ inside: 500 }).out, /front page answers 500/)
+  assert.equal(refuse({ byName: 500, inside: 200 }).docker, '')
+  assert.equal(refuse({ byPort: 503, inside: 200 }).docker, '')
+})
+
+test('an unverified container cannot supply health evidence', () => {
+  for (const identity of [
+    '',
+    `${'a'.repeat(64)}|false|demo|web`,
+    `${'a'.repeat(64)}|true|other|web`,
+    `${'a'.repeat(64)}|true|demo|db`,
+    'short|true|demo|web',
+    `${'a'.repeat(64)}|true|demo|web|extra`
+  ]) {
+    const r = refuse({ inside: 200, identity })
+    assert.equal(r.status, 1, identity)
+    assert.ok(!r.docker.split('\n').includes('exec'), identity)
+  }
+})
+
+test('missing curl, failed exec and malformed HTTP output remain unavailable', () => {
+  for (const roads of [
+    { inside: 200, execExit: 127 },
+    { inside: 200, execExit: 28 },
+    { inside: '200noise' },
+    { inside: '200\n200' },
+    { inside: '' },
+    { inside: '000' }
+  ]) {
+    assert.equal(refuse(roads).status, 1, JSON.stringify(roads))
+  }
 })
 
 // Issue #165: a label past 57 characters has a `<label>-web-1` longer than a DNS label, so on the

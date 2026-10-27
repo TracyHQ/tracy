@@ -17,6 +17,7 @@ test('readConfig: reads hostName, hostSecret, sitesRoot, privateRoot and scripts
     sitesRoot: '/data/sites',
     privateRoot: '/srv/tracy',
     scriptsDir: '/opt/tracy-fleet',
+    siteProxyOrigin: null,
     jobsDir: '/var/lib/tracy-host/jobs',
     logDir: '/var/lib/tracy-host/logs',
     cloudflare: null,
@@ -123,4 +124,22 @@ test('readConfig: TRACY_TUNNEL=catch-all is a shard host whose tunnel sends ever
       }),
     ConfigError
   )
+})
+
+test('the browser proxy origin comes only from the fixed stack origin setting', () => {
+  assert.equal(
+    readConfig({ ...fullEnv, TRACY_WEB_ORIGIN: 'http://tracy-web:51710/' }).siteProxyOrigin,
+    'http://tracy-web:51710'
+  )
+  for (const value of [
+    'http://user:secret@web',
+    'http://web/path',
+    'http://web?site=other',
+    'file:///tmp/web'
+  ]) {
+    assert.throws(
+      () => readConfig({ ...fullEnv, TRACY_WEB_ORIGIN: value }),
+      (error) => error instanceof ConfigError && error.key === 'TRACY_WEB_ORIGIN'
+    )
+  }
 })

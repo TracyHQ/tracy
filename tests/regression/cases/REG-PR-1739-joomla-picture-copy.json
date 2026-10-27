@@ -1,0 +1,32 @@
+{
+  "id": "REG-PR-1739-joomla-picture-copy",
+  "kind": "fix",
+  "title": "Joomla article image alt and captions change as copy while native structure remains enforced",
+  "pr": 1739,
+  "area": "wo/native-inventory",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "selectors": {
+    "files": "apps/tracy-web/src/sites/agent-demo-inventory.js"
+  },
+  "steps": [
+    "Fill empty Joomla intro/fulltext image alt and captions, then edit those descriptions again.",
+    "Change alignment, remove a metadata field, change alt to a boolean or add an arbitrary layout key."
+  ],
+  "expect": [
+    "Only image description value changes pass native structure.",
+    "Alignment, missing or added fields and non-string types still fail."
+  ],
+  "evidence": "Official Joomla Retry check2 rejected article/1\u201310 image_intro_alt strings as native-structure differences; meaningful image descriptions are allowed content.",
+  "fence": "Only four exact Joomla image text field names are normalized, and only for string values; keys, types, alignment and every other structural invariant remain.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/agent-demo-native-inventory.test.mjs"
+    ],
+    "tests": ["Joomla article image alt and caption are copy; alignment, keys and types remain structure"]
+  }
+}

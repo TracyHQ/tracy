@@ -1,0 +1,53 @@
+{
+  "id": "REG-PR-1739-build-speed",
+  "kind": "fix",
+  "title": "A build reads less, types less and waits less, and its words come from small structured page tasks applied with content.replace",
+  "pr": 1739,
+  "area": "website-opportunities/agent-demo",
+  "cms": ["wp", "jo", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: plan.add of one appended row, of a tone on a row with no image, of an image then its tone, of an image on a row that has one, of a whole plan.",
+    "S2: compactSource of a website source with 2 crawled pages, 449 crawled pictures and a cursor; one page whole; a page out of range.",
+    "S3: copyPagesOf over three pages sharing a phone and a copyright; unsourcedFacts and checkBlock on grounded, ungrounded, too long, sample and interface words; a run with a model that fails one page twice.",
+    "S4: applyCopy over a 25-pair page with one pair the job refuses and a shared pack; a refusal naming no pair.",
+    "S5: runDemoQa with five nav pages that finish in reverse order; the baseline of a page with a heading, a text, a form text and two buttons."
+  ],
+  "expect": [
+    "S1: 2 rows and 1 appended; 'row 0 has no image to tone'; tone accepted; 'row 0 has its image'; 'not plan'.",
+    "S2: no cursor, media {count:449}, page leads of 400 characters; the whole page answers; BAD_PAGE.",
+    "S3: the shared words split from the pages; (084) 555-0110, an e-mail and $56 unsourced; the failing page asked twice and listed as an issue.",
+    "S4: calls of 20, 19, 5 then 1 (shared from /); 24 placed, the refused pair under notPlaced; each pair tried alone after an unnamed refusal.",
+    "S5: home read alone, three at once after, pages and visited in page order; pageBlocks with heading, text and button, no form text, no nav button."
+  ],
+  "selectors": {
+    "files": "apps/tracy-web/src/opportunities-build/agent-demo.js apps/tracy-web/src/opportunities-build/demo-copy.js packages/tools/tracy-site-tools/src/host/copy-apply.mjs apps/tracy-host/src/demo-qa.js apps/tracy-host/src/demo-qa-browser.js",
+    "dom": ""
+  },
+  "evidence": "Local round 33 (26/10/2026, WordPress): 133 steps, 18 min of generation (208K output tokens), sources read of 518K characters, plan.save sent twice whole (65K), 5 checks × 145 s read one page after another.",
+  "fence": "joinPlan; compactSource; copyPagesOf/checkBlock/packOf/createDemoCopy; applyCopy; READ_AT_ONCE; pageBlocks",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-concurrency=1",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/wo-agent-demo.test.mjs",
+      "apps/tracy-web/test/wo-demo-copy.test.mjs",
+      "packages/tools/tracy-site-tools/test/copy-apply.test.mjs",
+      "apps/tracy-host/test/demo-qa.test.mjs"
+    ],
+    "tests": [
+      "plan.add appends rows, gives images to rows that had none and tones to saved images, never the whole plan again",
+      "a crawled source is read as its index of pages, and one page whole when asked",
+      "copy.start runs the copy tasks once, copy.status says each page, copy.read answers the packs",
+      "words on most pages are shared (header, footer); the rest belong to their page",
+      "a run asks a brief, then every page and the shared words in parallel, and a page that fails twice is an issue",
+      "pairs go twenty a call; a refused pair is set aside by its index and the rest sent again",
+      "runDemoQa reads home alone, then the rest a few at once, and keeps page order whatever finishes first",
+      "the baseline keeps each page's words in order, headings and buttons marked, forms and nav left out"
+    ],
+    "needs": ["postgres"]
+  }
+}

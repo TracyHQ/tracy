@@ -75,6 +75,14 @@ export interface HostContext {
       event: 'tools/pre-execute',
       listener: (exec: PreToolExecution, next: () => Promise<PreToolDecision>) => Promise<PreToolDecision>
     ): void
+    /** The waterfall resolving one model request's settings (`reasoningEffort`, the model) for one agent. */
+    (
+      event: 'agent/request',
+      listener: (
+        input: { agent?: { session?: { id?: string } } },
+        next: () => Promise<Record<string, unknown>>
+      ) => Promise<Record<string, unknown>>
+    ): void
     (
       event: 'tools/post-execute',
       listener: (

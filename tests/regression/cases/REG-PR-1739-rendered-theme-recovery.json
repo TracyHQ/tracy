@@ -1,0 +1,37 @@
+{
+  "id": "REG-PR-1739-rendered-theme-recovery",
+  "kind": "fix",
+  "title": "Theme recovery supersedes every inactive rule within the requested edits or refuses without writing",
+  "pr": 1739,
+  "area": "site-tools/replace",
+  "cms": ["wp"],
+  "needs": [],
+  "flaky_model": false,
+  "selectors": {
+    "files": "packages/tools/tracy-site-tools/src/host/rendered-words.mjs"
+  },
+  "steps": [
+    "Change the theme after two rendered-word edits; request one edit, then request all edits.",
+    "Try wrong anchors/kinds, duplicate or missing rule lists and an ordinary revision conflict."
+  ],
+  "expect": [
+    "Partial, malformed or unproven coverage returns STORE_CHANGED with zero writes.",
+    "Complete coverage uses a fresh raw proof and writes only requested destinations, reporting current-theme recovery.",
+    "Ordinary conflicts do not trigger raw fallback or claim READ_FAILED."
+  ],
+  "evidence": "After Restaurant1.0.2 update, Contact old rules became inactive and whole-output inspection was misreported as READ_FAILED.",
+  "fence": "Recovery requires every existing raw-rule identity to be superseded after DOM, count and region checks; native proof/revision/digest/theme/dry-render remain authoritative.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/tools/tracy-site-tools/test/replace-wordpress-rendered-words.test.mjs"
+    ],
+    "tests": [
+      "theme recovery requires every old raw rule to be superseded: full",
+      "theme recovery requires every old raw rule to be superseded: partial",
+      "an ordinary inspect conflict does not trigger raw recovery or claim a failed read"
+    ]
+  }
+}

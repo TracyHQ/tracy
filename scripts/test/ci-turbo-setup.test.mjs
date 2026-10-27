@@ -91,7 +91,7 @@ test('loses the race once', () => {
 `
   )
   writeFileSync(steady, `import { test } from 'node:test'\ntest('fine', () => {})\n`)
-  const argv = (files) => ['--test', ...files]
+  const argv = (files) => ['--test', '--test-reporter=spec', ...files]
   const command = {
     bin: node,
     args: argv([flaky, steady]),

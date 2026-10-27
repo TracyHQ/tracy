@@ -1,0 +1,2 @@
+{"id":"REG-PR-1739-audit-harness-lifecycle","verdict":"PASS","commit":"39e6bf12c9d42dc35319fc60c7ebb4b012bd1666","ran_at":"2026-10-27T01:29:28.630Z","evidence":"REG-PR-1739-audit-harness-lifecycle.log"}
+{"id":"REG-PR-1739-joomla-native-logo-guidance","verdict":"PASS","commit":"39e6bf12c9d42dc35319fc60c7ebb4b012bd1666","ran_at":"2026-10-27T01:30:58.800Z","evidence":"REG-PR-1739-joomla-native-logo-guidance.log"}

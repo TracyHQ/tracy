@@ -8,7 +8,7 @@
   "nav": "brand-centered",
   "hero": "cover",
   "updateSlug": "wp-ja-restaurant",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "roleReads": {
     "--bg": "--ds-c-bg",
     "--surface": "--ds-c-surface",

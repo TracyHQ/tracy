@@ -176,7 +176,10 @@ test('a layout keeps WHERE it answers beside WHICH page it is, and only when the
   }
 })
 
-test('a model that never answers is given up on, and says so', async () => {
+test('a model that never answers is given up on, and says so', async (t) => {
+  // The fake fetch has no socket to keep Node alive for AbortSignal.timeout's unreferenced timer.
+  const pendingSocket = setInterval(() => {}, 1000)
+  t.after(() => clearInterval(pendingSocket))
   const started = Date.now()
   const judged = await judgeCard({
     outline: { links: [] },

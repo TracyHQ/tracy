@@ -1,0 +1,33 @@
+{
+  "id": "REG-PR-1739-gallery-real-input",
+  "kind": "fix",
+  "title": "Gallery pictures remain reachable with real drag, touch and keyboard input",
+  "pr": 1739,
+  "area": "cms/carousel",
+  "cms": ["wp", "jo"],
+  "needs": ["browser:cdp"],
+  "flaky_model": false,
+  "steps": [
+    "Run the browser fixture with DEMO_QA_CDP pointing to the owned Chromium instance.",
+    "Drag across a linked image, swipe through all seven mobile pictures, cancel a gesture, scroll vertically and navigate under reduced motion."
+  ],
+  "expect": [
+    "Every gallery picture is reachable; a swipe does not activate a picture link and a plain click still does.",
+    "Vertical scrolling and pinch zoom remain native; cancellation does not strand the next swipe.",
+    "Tab reaches the carousel and arrow keys work with reduced motion."
+  ],
+  "selectors": {
+    "ui": ".tracy-motion-carousel .tracy-motion-slide"
+  },
+  "evidence": "Local Levain blue/green/pink/purple variants reproduced an unreachable seventh image before the fix; before/after logs and screenshots are in runs52.",
+  "fence": "Real browser Pointer Events test includes transfer of implicit touch capture from the image to its carousel.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "apps/tracy-host/test/cms-carousel-browser.test.mjs"
+    ]
+  }
+}

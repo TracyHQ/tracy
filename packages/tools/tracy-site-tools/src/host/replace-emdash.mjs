@@ -412,7 +412,7 @@ export const EMDASH_WHY = Object.freeze({
  */
 export const EMDASH_ELSEWHERE_NEXT = Object.freeze({
   [EMDASH_WHY.term]:
-    'tracy_emdash taxonomy_list_terms {taxonomy}, then taxonomy_update_term {taxonomy, termSlug, label}: the label changes in every language.',
+    'tracy_emdash taxonomy_list_terms {taxonomy}, then taxonomy_update_term {taxonomy, termSlug, label}: one language’s label, the first unless locale names another.',
   [EMDASH_WHY.form]: 'tracy_emdash form_list {id}, then form_words {id, fields:{…}}: the form stays a form.'
 })
 

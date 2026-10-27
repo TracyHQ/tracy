@@ -1,0 +1,1 @@
+{"id":"REG-PR-1739-empty-service-boxes","verdict":"PASS","commit":"bc467bdbae0e23228ec6c19e6e077bebcf0da15d","ran_at":"2026-10-26T18:23:42.194Z","evidence":"tests/regression/.runs/2026-10-26-bc467bdba/REG-PR-1739-empty-service-boxes.log"}

@@ -12,6 +12,7 @@ export const RESEARCH_PURPOSES = Object.freeze([
   'logo',
   'picture-labels',
   'demo-look',
+  'demo-copy',
   'other'
 ])
 /** `unrecorded`: a row from before the payer was stamped. */

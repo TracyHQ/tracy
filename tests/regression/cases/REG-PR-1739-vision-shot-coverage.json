@@ -1,0 +1,44 @@
+{
+  "id": "REG-PR-1739-vision-shot-coverage",
+  "kind": "fix",
+  "title": "Vision completes only acknowledged full-height desktop and phone coverage",
+  "pr": 1739,
+  "area": "website-opportunities/agent-demo",
+  "cms": ["wp", "jo", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "Run the stream parser, capture route, full-height vision consumer and real-browser coverage cases.",
+    "Exercise malformed fault JSON, partial view, range gaps, checksum corruption, missing terminal, slow consumers, queue cancellation and height exhaustion."
+  ],
+  "expect": [
+    "A 10604px page reaches the model input from top through footer at both widths, with at most three tiles plus one image-input check and 4MiB JSON per model call.",
+    "Malformed or incomplete evidence cannot PASS; successful partial views and real faults remain. Cancellation closes owned contexts before queue handoff; ordinary screenshot API stays JSON.",
+    "Missing or wrong imageCode prevents accepting labels and acknowledging tiles; pre-verification labels are not reused."
+  ],
+  "selectors": {
+    "files": "apps/tracy-web/src/opportunities-build/demo-look.js apps/tracy-web/src/host/client.js apps/tracy-host/src/vision-stream.js apps/tracy-host/src/vision-capture.js"
+  },
+  "evidence": "Capture fixture reproduced looked=true with one of four required page/viewport pairs decoded before the fix.",
+  "fence": "Coverage is derived from required layouts and both viewports, then acknowledged only after decoding/sending and a valid model verdict.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/wo-demo-look.test.mjs",
+      "apps/tracy-host/test/vision-stream.test.mjs",
+      "apps/tracy-web/test/vision-challenge.test.mjs",
+      "apps/tracy-web/test/picture-vision.test.mjs",
+      "apps/tracy-web/test/wo-demo-photo-labels.test.mjs"
+    ],
+    "tests": [
+      "every selected page and both widths are streamed through the footer, with three tiles plus one input check per model call",
+      "a partial phone capture retains coverage and real faults from the other three complete views",
+      "Node HTTP adapter propagates a disconnected slow consumer back to generator cleanup",
+      "valid-looking labels without the image-only code are never trusted",
+      "a clean verdict without a readable image code cannot acknowledge any tiles",
+      "labels from before image-input verification are not reused or exposed"
+    ]
+  }
+}
