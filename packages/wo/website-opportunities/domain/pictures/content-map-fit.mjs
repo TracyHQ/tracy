@@ -63,7 +63,7 @@ export function pictureReplaceOf(kind) {
 }
 
 // The rule table, first match wins. Words are the slot's label, field names and file path.
-const MAP_WORDS = /\bmaps?\b|google\.[a-z.]+\/maps/
+const MAP_WORDS = /\bmaps?\b|google\.[a-z]{2,12}(?:\.[a-z]{2,12}){0,2}\/maps/
 const LOGO_WORDS = /\blogos?\b|hp-brand|\bbrand\b|favicon/
 const SIGNATURE_WORDS = /signature|\bsign\b/
 const AVATAR_WORDS = /avatars?|author-img|\bfaces?\b|testimonial/
