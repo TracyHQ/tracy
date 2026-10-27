@@ -791,6 +791,7 @@ function makeHistoryHost(t) {
   mkdirSync(path.join(fleet, 'webroot'))
   copyFileSync(WEBROOT_SCRIPT, path.join(fleet, 'webroot/webroot-git.sh'))
   for (const lib of [
+    'heavy-slots.sh',
     'webroot-excludes.sh',
     'webroot-platform.sh',
     'webroot-repo-git.sh',
