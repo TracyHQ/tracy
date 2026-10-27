@@ -1,0 +1,34 @@
+{
+  "id": "REG-PR-1739-retry-deleted-demo",
+  "kind": "fix",
+  "title": "Retry cannot accept or charge an action against a deleted demo",
+  "pr": 1739,
+  "area": "wo/retry",
+  "cms": ["any"],
+  "needs": ["postgres"],
+  "flaky_model": false,
+  "selectors": {
+    "files": "apps/tracy-web/src/opportunities-build/demo-actions.js"
+  },
+  "steps": [
+    "Accept an action and give it a failed terminal state and a build marked deleted.",
+    "Retry with a new request ID, once with state deleted and once with demo_deleted_at set."
+  ],
+  "expect": [
+    "Both requests return 409 DEMO_DELETED and direct the caller to Rebuild.",
+    "Neither request creates an action or increases usage; live or never-provisioned retries keep existing behavior."
+  ],
+  "evidence": "The local Joomla acceptance received 202 for a deleted Via Carota build, then chat/prepare refused AGENT_DEMO_NOT_GRANTED.",
+  "fence": "Acceptance checks deletion under the existing build row lock, before action and usage writes.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=Retry refuses a deleted build",
+      "apps/tracy-web/test/website-opportunities-demo-actions.test.mjs"
+    ],
+    "needs": ["postgres"],
+    "tests": ["Retry refuses a deleted build before accepting or charging another action"]
+  }
+}

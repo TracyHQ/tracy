@@ -1,0 +1,1 @@
+{"id":"REG-PR-1739-retry-qa-before-submit","verdict":"PASS","commit":"c4d5e50142ad9715f7b7bbd1015f641fc4498896","ran_at":"2026-10-26T18:59:22.376Z","evidence":"tests/regression/.runs/2026-10-26-c4d5e5014/REG-PR-1739-retry-qa-before-submit.log"}

@@ -3,14 +3,15 @@
  * introduced by its id in the text right before it (an answer can never slide onto the wrong picture), a fixed JSON
  * answer held to the schema and to the ids asked, and the tokens it cost counted from the answer's own usage.
  *
- * OpenAI-compatible: DeepSeek by default (`deepseek-chat` takes `image_url` data URLs and `response_format: json_object`,
- * measured 18/10/2026), OpenRouter or another the same way. No key, no labels: the planner then works from words alone.
+ * OpenAI-compatible: Providers must read an image-only code in every request before any labels are trusted.
+ * An HTTP success or valid JSON alone does not prove image support. No key, no labels: the planner then works from words alone.
  * Labels are cached by the caller under `visionKey` — model, prompt, schema and preprocessing — so a change of any of them
  * labels again instead of reading an old answer.
  */
 import sharp from 'sharp'
+import { createVisionChallenge, IMAGE_CODE_INSTRUCTION, imageCodeMatches } from './vision-challenge.js'
 
-export const VISION_PROMPT_VERSION = 'p2'
+export const VISION_PROMPT_VERSION = 'p3'
 /** The thumbnail sent: long edge and JPEG quality (part of the cache key). */
 const THUMB = { edge: 512, quality: 70 }
 export const SUBJECTS = Object.freeze([
@@ -99,7 +100,7 @@ export function held(entry) {
 
 /**
  * @param {{door: {url: string, key: string, model: string}, pictures: Array<{id: string, bytes: Uint8Array}>,
- *   trade?: string | null, batch?: number, concurrency?: number, fetchImpl?: typeof fetch, signal?: AbortSignal}} input
+ *   trade?: string | null, batch?: number, concurrency?: number, fetchImpl?: typeof fetch, signal?: AbortSignal, challengeFor?: typeof createVisionChallenge}} input
  * @returns {Promise<{labels: Map<string, Record<string, any>>, usage: {calls: number, promptTokens: number, completionTokens: number}, failed: number}>}
  */
 export async function labelWithVision({
@@ -109,7 +110,8 @@ export async function labelWithVision({
   batch = 8,
   concurrency = 4,
   fetchImpl = fetch,
-  signal
+  signal,
+  challengeFor = createVisionChallenge
 }) {
   const labels = new Map()
   const usage = { calls: 0, promptTokens: 0, completionTokens: 0 }
@@ -130,7 +132,11 @@ export async function labelWithVision({
   for (let i = 0; i < thumbs.length; i += batch) batches.push(thumbs.slice(i, i + batch))
   const systemPrompt = pictureLabelSystem(trade)
   const run = async (group) => {
-    const content = [{ type: 'text', text: systemPrompt }]
+    const challenge = await challengeFor()
+    const content = [
+      { type: 'text', text: `${systemPrompt}\n${IMAGE_CODE_INSTRUCTION}` },
+      { type: 'image_url', image_url: { url: challenge.image } }
+    ]
     for (const p of group) {
       content.push({ type: 'text', text: `Picture id: ${p.id}` })
       content.push({
@@ -163,6 +169,7 @@ export async function labelWithVision({
       usage.promptTokens += Number(body?.usage?.prompt_tokens) || 0
       usage.completionTokens += Number(body?.usage?.completion_tokens) || 0
       const parsed = JSON.parse(String(body?.choices?.[0]?.message?.content ?? ''))
+      if (!imageCodeMatches(parsed, challenge)) throw new Error('VISION_IMAGE_UNREADABLE')
       for (const entry of Array.isArray(parsed?.pictures) ? parsed.pictures : []) {
         const one = held(entry)
         if (one && asked.has(one.id) && !labels.has(one.id)) labels.set(one.id, one.labels)

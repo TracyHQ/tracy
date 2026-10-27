@@ -1795,14 +1795,10 @@ test('the tracy_emdash description is the road (T9): within 1,500 chars, the wor
     /list:\s*true\}?\s*first|Start with \{list|ULID, never a slug|no content_get first|skip content_get/i
   )
   assert.doesNotMatch(EMDASH_DESCRIPTION, /On a Joomla or WordPress site/)
-  for (const phrase of [
-    'CONFIRM_FIRST',
-    'ask_user_question',
-    'confirm:true',
-    'status:"draft"',
-    'not writable'
-  ])
+  for (const phrase of ['CONFIRM_FIRST', 'ask_user_question', 'confirm:true', 'status:"draft"'])
     assert.ok(EMDASH_DESCRIPTION.includes(phrase), phrase)
+  // 26/10/2026: labels and form words have their own doors (`taxonomy_update_term`, `form_words`).
+  assert.doesNotMatch(EMDASH_DESCRIPTION, /not writable/i)
   // 🔒 27/09/2026: a customer's picture goes by the host's read, never by base64 the model types —
   // `media_upload {filename, contentType, base64}` here looped 24–40 steps on the stand. 29/09/2026:
   // the picture sent in the chat takes the same road (`attachment`).

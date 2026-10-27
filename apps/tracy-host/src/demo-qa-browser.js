@@ -13,6 +13,8 @@
  */
 import { createHash } from 'node:crypto'
 import { LAUNCH_ARGS } from './browser.js'
+import { DemoReadCache } from './demo-read-cache.js'
+import { qaDeadline, waitForQaSlot } from './demo-qa-deadline.js'
 import { DEMO_QA_LOAD_CAP_MS, FILLER_SOURCE, hostIn, navPathsOf, runDemoQa } from './demo-qa.js'
 import { readResidueInPage } from './demo-residue-page.js'
 import { selfNamedServer } from './self-named.js'
@@ -37,7 +39,7 @@ const HASH_MAX_BYTES = 16 * 1024 * 1024
  * @param {import('playwright').Page} page
  * @param {string} url
  * @param {string} path
- * @param {{demoHosts?: string[], siteHosts?: string[], serveFrom?: string | null, sentinels?: Record<string, string | null>, discover?: boolean, loadCapMs?: number, gotoMs?: number}} [options]
+ * @param {{demoHosts?: string[], siteHosts?: string[], serveFrom?: string | null, serveFromIsProxy?: boolean, proxySiteLabel?: string | null, sentinels?: Record<string, string | null>, discover?: boolean, loadCapMs?: number, gotoMs?: number}} [options]
  * @returns {Promise<import('./demo-qa.js').PageRead>}
  */
 export async function readDemoPage(
@@ -48,12 +50,15 @@ export async function readDemoPage(
     demoHosts = [],
     siteHosts = [],
     serveFrom = null,
+    serveFromIsProxy = false,
+    proxySiteLabel = null,
     sentinels = {},
     discover = false,
     wordmark = null,
     logoPicture = null,
     loadCapMs = DEMO_QA_LOAD_CAP_MS,
-    gotoMs = GOTO_MS
+    gotoMs = GOTO_MS,
+    previous = null
   } = {}
 ) {
   const own = new URL(url).origin
@@ -67,6 +72,8 @@ export async function readDemoPage(
   } = selfNamedServer({
     url,
     serveFrom,
+    serveFromIsProxy,
+    proxySiteLabel,
     siteHosts,
     onLanded: (requested, at) => landed.set(requested, at)
   })
@@ -126,7 +133,8 @@ export async function readDemoPage(
       try {
         return await serve(r, u)
       } catch {
-        // the reachable address did not answer: the browser's own attempt is what the read reports
+        if (serveFromIsProxy) return r.abort('failed').catch(() => {})
+        // Direct transports retain the browser's own attempt when their answering address fails.
       }
     }
     return r.continue().catch(() => {})
@@ -164,6 +172,22 @@ export async function readDemoPage(
         .catch(() => 0)
       read.loadMs = Math.round(measured > 0 ? measured : Date.now() - started)
     } else read.pending = [...new Set(inflight.values())].slice(0, 20)
+    // 🔒 A PAGE THAT DID NOT CHANGE IS NOT READ AGAIN (plan "10/10" §7 S6, 26/10/2026): the page as served — status
+    // and the whole document after load — is fingerprinted; when it is exactly what the previous check read
+    // (`previous`, kept by `makeDemoQa` per site), that read is the answer and the slow part (pictures waited for,
+    // words over pictures shot, the phone width) is skipped. A shared header, footer or menu changed changes every
+    // page's document, so every page is read again; a page whose scripts write a different document each load is
+    // simply read again. A check that passes this way is confirmed by a full one (`client-demo.js`).
+    if (loaded) {
+      const html = typeof page.content === 'function' ? await page.content().catch(() => null) : null
+      if (typeof html === 'string') {
+        read.fingerprint = createHash('sha256')
+          .update(`${read.status}\n${read.finalUrl}\n${html}`)
+          .digest('hex')
+        if (previous?.fingerprint === read.fingerprint && previous.read && !previous.read.error)
+          return { ...structuredClone(previous.read), fingerprint: read.fingerprint, reused: true }
+      }
+    }
     // Lazy pictures arrive as they scroll in; a visitor scrolls, so the read does too.
     await page
       .evaluate(async () => {
@@ -226,8 +250,16 @@ export async function readDemoPage(
     read.extraLinks = navPathsOf(read.extraHrefs ?? [], url, ownHosts, 12)
     delete read.navHrefs
     delete read.extraHrefs
+    await measureOverImage(page, read.contrast ?? [], 'under')
     await page.setViewportSize({ width: 390, height: 844 })
     await page.waitForTimeout(500)
+    await measureOverImage(page, read.contrast ?? [], 'underPhone')
+    await page
+      .evaluate(() => {
+        for (const el of document.querySelectorAll('[data-tracy-qa-over]'))
+          el.removeAttribute('data-tracy-qa-over')
+      })
+      .catch(() => {})
     Object.assign(
       read,
       await page.evaluate(() => {
@@ -272,6 +304,133 @@ export async function readDemoPage(
     page.off('requestfailed', onFailed)
     page.off('response', onResponse)
   }
+}
+
+/** Words over a picture measured on one page and width: the rest stays judged by eye (`looks-finished`). */
+const OVER_IMAGE_MAX = 12
+/** The attribute a hidden probe's words carry while the picture under them is shot. */
+const OVER_HIDE = 'data-tracy-qa-hide'
+
+/**
+ * WHAT LIES UNDER WORDS OVER A PICTURE, MEASURED (plan "10/10" P0-5, 26/10/2026). The page read marks such words
+ * (`overImage`) but had no colour to judge them against, so only the vision model saw a white heading on a bright
+ * photo — local rounds 27–31 on WordPress failed `looks-finished` on it and the build could not tell how far off it
+ * was. Each tagged text (`data-tracy-qa-over`) is brought to the middle of the screen, its words made transparent
+ * (layout unchanged: colour only), the box its words cover shot, and the shot read back IN THE PAGE
+ * (`createImageBitmap` on the bytes: no image library in this process, and a Blob is not a URL a site's CSP
+ * reads). What the template paints between the picture and the words — a gradient, a dimmed overlay — is in the
+ * shot, so it counts. Stored on the probe as relative luminance at the 15th, 50th and 85th percentile: the
+ * check reads the bright end under light words and the dark end under dark ones, never the mean.
+ * 🔒 NEVER THROWS, NEVER LEAVES THE WORDS HIDDEN: a probe that cannot be shot keeps no `key` and stays unjudged.
+ * @param {import('playwright').Page} page
+ * @param {{overImage?: boolean, over?: number}[]} contrast - the page read's probes; `key` is added to each.
+ * @param {'under' | 'underPhone'} key
+ */
+async function measureOverImage(page, contrast, key) {
+  const probes = contrast.filter((s) => s.overImage && Number.isInteger(s.over)).slice(0, OVER_IMAGE_MAX)
+  for (const s of probes) {
+    try {
+      const box = await page.evaluate(
+        ([n, hide]) => {
+          const el = document.querySelector(`[data-tracy-qa-over="${n}"]`)
+          if (!el) return null
+          el.scrollIntoView({ block: 'center', inline: 'nearest' })
+          const range = document.createRange()
+          range.selectNodeContents(el)
+          const r = range.getBoundingClientRect()
+          const left = Math.max(0, r.left)
+          const top = Math.max(0, r.top)
+          const width = Math.min(innerWidth, r.right) - left
+          const height = Math.min(innerHeight, r.bottom) - top
+          if (width < 4 || height < 4) return null
+          // Identify the actual painted element at this width, not its image URL: two cards can reuse one file.
+          let frame = null
+          const stack = document.elementsFromPoint(
+            (left + Math.min(innerWidth, r.right)) / 2,
+            (top + Math.min(innerHeight, r.bottom)) / 2
+          )
+          const at = stack.indexOf(el)
+          for (const painted of at < 0 ? [] : stack.slice(at)) {
+            const cs = getComputedStyle(painted)
+            if (
+              ['IMG', 'VIDEO', 'CANVAS', 'PICTURE', 'IFRAME', 'svg'].includes(painted.tagName) ||
+              cs.backgroundImage !== 'none'
+            ) {
+              const path = []
+              for (let node = painted; node && node !== document.documentElement; node = node.parentElement) {
+                let nth = 1
+                for (
+                  let sibling = node.previousElementSibling;
+                  sibling;
+                  sibling = sibling.previousElementSibling
+                )
+                  nth++
+                path.unshift(`${node.tagName.toLowerCase()}:nth-child(${nth})`)
+              }
+              frame = path.join('>')
+              break
+            }
+            const colour = cs.backgroundColor.match(/[\d.]+/g)?.map(Number)
+            if (colour && (colour.length === 3 || colour[3] >= 0.5)) break
+          }
+          if (!document.getElementById(hide)) {
+            const style = document.createElement('style')
+            style.id = hide
+            style.textContent = `[${hide}],[${hide}] *{color:transparent!important;text-shadow:none!important;-webkit-text-stroke:0!important;text-decoration-color:transparent!important}`
+            document.head.append(style)
+          }
+          el.setAttribute(hide, '')
+          return { clip: { x: left, y: top, width, height }, frame }
+        },
+        [s.over, OVER_HIDE]
+      )
+      if (box === null) continue
+      let shot = null
+      try {
+        shot = await page.screenshot({ clip: box.clip, type: 'png', animations: 'disabled', timeout: 5000 })
+      } finally {
+        await page.evaluate((hide) => {
+          for (const el of document.querySelectorAll(`[${hide}]`)) el.removeAttribute(hide)
+        }, OVER_HIDE)
+      }
+      const lum = await page.evaluate(async (b64) => {
+        const bin = atob(b64)
+        const bytes = new Uint8Array(bin.length)
+        for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i)
+        const bmp = await createImageBitmap(new Blob([bytes], { type: 'image/png' }))
+        const canvas = new OffscreenCanvas(bmp.width, bmp.height)
+        try {
+          const ctx = canvas.getContext('2d')
+          if (!ctx) return null
+          ctx.drawImage(bmp, 0, 0)
+          const data = ctx.getImageData(0, 0, bmp.width, bmp.height).data
+          const ch = (v) => {
+            const c = v / 255
+            return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4
+          }
+          const step = Math.max(1, Math.floor(data.length / 4 / 20_000))
+          const lums = []
+          for (let i = 0; i < data.length; i += 4 * step)
+            lums.push(0.2126 * ch(data[i]) + 0.7152 * ch(data[i + 1]) + 0.0722 * ch(data[i + 2]))
+          if (lums.length === 0) return null
+          lums.sort((x, y) => x - y)
+          const at = (f) => Number(lums[Math.min(lums.length - 1, Math.floor(f * lums.length))].toFixed(4))
+          return { p15: at(0.15), p50: at(0.5), p85: at(0.85) }
+        } finally {
+          // Release decoded pixels before the next probe instead of waiting for browser GC.
+          bmp.close()
+          canvas.width = canvas.height = 1
+        }
+      }, shot.toString('base64'))
+      if (lum !== null) {
+        s[key] = lum
+        if (box.frame) s[`${key}Frame`] = box.frame
+      }
+    } catch {
+      // A probe that moved, a shot that timed out: left unjudged, as it was before it was measured.
+    }
+  }
+  await page.evaluate(() => scrollTo(0, 0)).catch(() => {})
 }
 
 /**
@@ -423,6 +582,12 @@ async function readInPage({ sentinels, discover, wordmark, spot = false }) {
 
   // Every visible picture: <img> (currentSrc covers srcset and <picture>) and CSS backgrounds.
   const images = []
+  /** The element each entry of `images` was read from, so the words-over-picture pass can mark it. */
+  const imageEls = []
+  // A carousel's copies of its own slides (owl `.cloned`, slick, swiper, splide, glide, flickity) show no picture
+  // of their own (local round 35, 26/10/2026: a Joomla strip of five photos read as each one shown three times).
+  const CLONE =
+    '.cloned, .slick-cloned, .swiper-slide-duplicate, .splide__slide--clone, .glide__slide--clone, .flickity-clone'
   const all = [...document.body.querySelectorAll('*')].slice(0, 6000)
   for (const el of all) {
     const styled = el.getAttribute('style')
@@ -430,7 +595,12 @@ async function readInPage({ sentinels, discover, wordmark, spot = false }) {
       inline.push({ selector: sel(el), style: styled.slice(0, 2000) })
     if (!visible(el)) continue
     const r = el.getBoundingClientRect()
-    const size = { width: Math.round(r.width), height: Math.round(r.height) }
+    // Where on the page, so a judge can tell two frames a visitor sees together from two far apart.
+    const size = {
+      width: Math.round(r.width),
+      height: Math.round(r.height),
+      top: Math.round(r.top + scrollY)
+    }
     if (el.tagName === 'IMG') {
       const src = el.currentSrc || el.src
       // A picture set as a section's background (its frame or itself named `…-bg`, `background`: a WordPress
@@ -440,15 +610,18 @@ async function readInPage({ sentinels, discover, wordmark, spot = false }) {
       const asBackground = [el, el.parentElement].some((x) =>
         [...(x?.classList ?? [])].some((c) => /(?:^|[-_])(?:bg|background)(?:[-_]|$)/i.test(c))
       )
-      if (src && !src.startsWith('data:'))
+      if (src && !src.startsWith('data:')) {
         images.push({
           src,
           ...size,
           kind: asBackground ? 'background' : 'img',
           broken: el.complete && el.naturalWidth === 0,
           selector: sel(el),
-          ...linked(el)
+          ...linked(el),
+          ...(el.closest(CLONE) ? { clone: true } : {})
         })
+        imageEls.push(el)
+      }
     }
     const bg = getComputedStyle(el).backgroundImage
     // A background a drawn picture inside covers whole is not seen: a theme's default masthead under the page's own
@@ -465,30 +638,36 @@ async function readInPage({ sentinels, discover, wordmark, spot = false }) {
       })
     if (bg && bg !== 'none' && !covered)
       for (const m of bg.matchAll(/url\("?([^")]+)"?\)/g))
-        if (!m[1].startsWith('data:'))
+        if (!m[1].startsWith('data:')) {
           images.push({
             src: new URL(m[1], location.href).href,
             ...size,
             kind: 'background',
             broken: false,
             selector: sel(el),
-            ...linked(el)
+            ...linked(el),
+            ...(el.closest(CLONE) ? { clone: true } : {})
           })
+          imageEls.push(el)
+        }
     // 🔒 A PICTURE DRAWN BY A PSEUDO-ELEMENT IS ON THE PAGE TOO (round 4, 24/10/2026): ja-diner's masthead stamp,
     // the template's own words in a picture, is `.ja-masthead::after`'s background and no element's.
     for (const pseudo of ['::before', '::after']) {
       const ps = getComputedStyle(el, pseudo)
       if (ps.content === 'none' || ps.content === 'normal' || ps.backgroundImage === 'none') continue
       for (const m of ps.backgroundImage.matchAll(/url\("?([^")]+)"?\)/g))
-        if (!m[1].startsWith('data:'))
+        if (!m[1].startsWith('data:')) {
           images.push({
             src: new URL(m[1], location.href).href,
             width: Math.round(Number.parseFloat(ps.width)) || size.width,
             height: Math.round(Number.parseFloat(ps.height)) || size.height,
             kind: 'background',
             broken: false,
-            selector: `${sel(el)}${pseudo}`
+            selector: `${sel(el)}${pseudo}`,
+            ...(el.closest(CLONE) ? { clone: true } : {})
           })
+          imageEls.push(el)
+        }
     }
   }
 
@@ -531,6 +710,35 @@ async function readInPage({ sentinels, discover, wordmark, spot = false }) {
     }
     return false
   }
+  // Only a single semantic main can prove a shell-only destination. Missing/hidden/busy main is unknown.
+  const mains = [...new Set(document.querySelectorAll('main, [role="main"]'))]
+  const main = mains.length === 1 ? mains[0] : null
+  let hiddenMain = false
+  for (let el = main; el; el = el.parentElement) {
+    const style = getComputedStyle(el)
+    if (
+      el.hasAttribute('hidden') ||
+      el.getAttribute('aria-hidden') === 'true' ||
+      style.display === 'none' ||
+      style.visibility === 'hidden'
+    )
+      hiddenMain = true
+  }
+  const busyMain =
+    main &&
+    (main.matches('[aria-busy="true"], [data-loading="true"]') ||
+      main.querySelector('[aria-busy="true"], [role="progressbar"], [data-loading="true"]'))
+  const mainContent = { state: 'unknown', selector: main ? sel(main) : null }
+  if (main && !hiddenMain && !busyMain) {
+    const words = (main.innerText ?? '').replace(/[\s\u200b-\u200d\ufeff]+/g, '')
+    const controls = [
+      ...main.querySelectorAll(
+        'form, input, select, textarea, button, [contenteditable="true"], [role="button"]'
+      )
+    ].some(visible)
+    mainContent.state = words || controls || drawsPicture(main) ? 'present' : 'empty'
+  }
+
   const emptySlots = []
   for (const el of all) {
     if (emptySlots.length >= 40) break
@@ -563,6 +771,60 @@ async function readInPage({ sentinels, discover, wordmark, spot = false }) {
       size: `${Math.round(r.width)}×${Math.round(r.height)}`,
       kind: el.tagName === 'FIGURE' ? 'figure' : 'frame'
     })
+  }
+
+  // A box the template made for a service — a booking or contact form, a feed, a map, a newsletter — shown with
+  // nothing in it: local round 31 (WordPress, JA Restaurant) shipped an orange band under the hero, an OpenTable
+  // form group with no restaurant behind it (`.ot-form`, empty at install). Named by its class, as picture frames
+  // are (`SLOT_CLASS`): a decorative band names no service. Innermost only.
+  const SERVICE_CLASS =
+    /(?:^|[-_\s])(?:form|booking|book-?now|reserv(?:e|ation)s?|widget|feed|embed|map|newsletter|subscribe|sign-?up|opentable|calendar)(?:[-_\s]|$)/i
+  const holds = (el) =>
+    (el.innerText ?? '').trim().length > 0 ||
+    drawsPicture(el) ||
+    el.querySelector('input,select,textarea,button,iframe,object,embed,video,canvas,form,a[href]') !== null
+  const emptyBoxes = []
+  for (const el of all) {
+    if (emptyBoxes.length >= 20) break
+    if (['BODY', 'MAIN', 'HEADER', 'FOOTER', 'NAV', 'FORM', 'IFRAME'].includes(el.tagName)) continue
+    // A form's own parts are the form working: an empty field is how a field looks (local round 35, 26/10/2026: the
+    // inputs of an EmDash and a Joomla contact form, `ec-form-input` and `form-control`, read as five empty boxes, and
+    // the EmDash build took the form off its page to pass).
+    if (
+      ['INPUT', 'SELECT', 'TEXTAREA', 'BUTTON', 'OPTION', 'LABEL'].includes(el.tagName) ||
+      el.closest('form')
+    )
+      continue
+    if (!SERVICE_CLASS.test(el.getAttribute('class') ?? '') || holds(el)) continue
+    let box = el
+    let r = box.getBoundingClientRect()
+    // An empty widget can collapse to zero height while its wrapper still paints a padded band.
+    // Follow only empty wrappers, never a hidden widget or a parent holding other content.
+    if (
+      r.width >= 120 &&
+      r.height === 0 &&
+      el.checkVisibility?.({ opacityProperty: true, visibilityProperty: true })
+    ) {
+      for (let parent = el.parentElement; parent; parent = parent.parentElement) {
+        if (['BODY', 'MAIN', 'HEADER', 'FOOTER', 'NAV'].includes(parent.tagName) || holds(parent)) break
+        const area = parent.getBoundingClientRect()
+        if (visible(parent) && area.width >= 120 && area.height >= 24) {
+          box = parent
+          r = area
+          break
+        }
+      }
+    }
+    if (!visible(box) || r.width < 120 || r.height < 24) continue
+    const same = emptyBoxes.find((b) => b.el === box)
+    if (same) {
+      same.selector = sel(el)
+      continue
+    }
+    if (emptyBoxes.some((b) => box.contains(b.el))) continue
+    for (let i = emptyBoxes.length - 1; i >= 0; i--)
+      if (emptyBoxes[i].el.contains(box)) emptyBoxes.splice(i, 1)
+    emptyBoxes.push({ el: box, selector: sel(el), size: `${Math.round(r.width)}×${Math.round(r.height)}` })
   }
 
   // Blocks of text, innermost only: a <li> holding a <p> is read as the <p>.
@@ -631,8 +893,9 @@ async function readInPage({ sentinels, discover, wordmark, spot = false }) {
     // is a link to the article (pilot 24/10/2026: "Corn or flour: how to order a taco" read as booking).
     const booking = BOOKING.test(text) && text.split(' ').length <= 6
     const button = BUTTON.test(typeof a.className === 'string' ? a.className : '')
-    if (!booking && !button) continue
     const nav = !button && Boolean(a.closest('nav, [role="navigation"], .wp-block-navigation'))
+    const navigation = nav || Boolean(a.closest('footer'))
+    if (!booking && !button && !navigation) continue
     const opens = nav && Boolean(a.closest('li')?.querySelector(SUBMENU))
     // A button inside a form submits it from script (`javascript:void(0)`): it goes to the form's own action.
     const submits = Boolean(a.closest('form'))
@@ -642,8 +905,15 @@ async function readInPage({ sentinels, discover, wordmark, spot = false }) {
       booking,
       button,
       nav,
+      navigation,
       ...(opens ? { opens } : {}),
       ...(submits ? { submits } : {}),
+      ...(nav &&
+      a.matches(
+        '[role="button"][aria-expanded], [aria-controls][aria-expanded], [data-toggle="dropdown"], [data-bs-toggle="dropdown"]'
+      )
+        ? { toggles: true }
+        : {}),
       selector: sel(a)
     })
   }
@@ -838,6 +1108,8 @@ async function readInPage({ sentinels, discover, wordmark, spot = false }) {
     }
   }
   const contrast = []
+  /** Pictures some words lie on: a photo set under a heading as `<img>` (a WordPress cover block) is a section's ground. */
+  const underWords = new Set()
   const overlaps = []
   for (const { where, el } of probes) {
     const box = el.getBoundingClientRect()
@@ -867,14 +1139,21 @@ async function readInPage({ sentinels, discover, wordmark, spot = false }) {
     if (at === -1) continue
     let bg = null
     let overImage = false
+    /** The picture the words lie on, so a judge can tell the template's own from one the build placed. */
+    let underSrc = null
     for (const e of stack.slice(at)) {
       if (['IMG', 'VIDEO', 'CANVAS', 'PICTURE', 'IFRAME', 'svg'].includes(e.tagName)) {
         overImage = true
+        const img = e.tagName === 'PICTURE' ? (e.querySelector('img') ?? e) : e
+        underWords.add(img)
+        underSrc = img.currentSrc || img.src || null
         break
       }
       const cs = getComputedStyle(e)
       if (cs.backgroundImage !== 'none') {
         overImage = true
+        const m = /url\("?([^")]+)"?\)/.exec(cs.backgroundImage)
+        if (m && !m[1].startsWith('data:')) underSrc = new URL(m[1], location.href).href
         break
       }
       const c = rgba(cs.backgroundColor)
@@ -885,11 +1164,18 @@ async function readInPage({ sentinels, discover, wordmark, spot = false }) {
     }
     const fg = rgba(getComputedStyle(el).color)
     if (!fg) continue
+    // Words over a picture are tagged so the reader can shoot what lies under them (`measureOverImage`), and say
+    // whether they are large text in WCAG's sense (24 px, or 18.66 px bold), which reads at a lower contrast.
+    const cs = getComputedStyle(el)
+    const px = Number.parseFloat(cs.fontSize) || 0
+    const large = px >= 24 || (px >= 18.66 && Number(cs.fontWeight) >= 700)
+    if (overImage) el.setAttribute('data-tracy-qa-over', String(contrast.length))
     contrast.push({
       where,
       fg,
       bg: overImage ? null : (bg ?? [255, 255, 255]),
       overImage,
+      ...(overImage ? { over: contrast.length, large, ...(underSrc ? { underSrc } : {}) } : {}),
       selector: sel(el),
       text
     })
@@ -926,9 +1212,9 @@ async function readInPage({ sentinels, discover, wordmark, spot = false }) {
       return false
     }
   }
-  // A plain text link home in a row of links like it is that row's "Home" item, wherever the row is (Iron Fence,
+  // A plain text link home in a row of links like it is that row's "Home" item, wherever the row is (Barb Wire,
   // 24/10/2026: a header rebuilt as paragraphs of links, no <nav>, no brand left). Like it = the same class: a name's
-  // link styled on its own beside the menu, a search button and a call to action is the brand (q. patisserie, local
+  // link styled on its own beside the menu, a search button and a call to action is the brand (b. patisserie, local
   // rounds 24–25, 25/10/2026). The row is looked for inside the header, never in a top bar of contacts above it.
   const inLinkRow = (a) => {
     const like = (o) => o !== a && !home(o) && !o.closest(IN_NAV) && o.className === a.className
@@ -968,8 +1254,12 @@ async function readInPage({ sentinels, discover, wordmark, spot = false }) {
     text: brandText
   }
 
+  imageEls.forEach((el, i) => {
+    if (underWords.has(el)) images[i].underWords = true
+  })
   return {
     reach,
+    mainContent,
     brand,
     sheets,
     styles,
@@ -989,6 +1279,7 @@ async function readInPage({ sentinels, discover, wordmark, spot = false }) {
     extraHrefs,
     hiddenImages,
     emptySlots: emptySlots.map(({ el: _el, ...slot }) => slot),
+    emptyBoxes: emptyBoxes.map(({ el: _el, ...box }) => box),
     contrast,
     overlaps,
     ...(wordmark ? { wordmark: drawWordmark(wordmark) } : {}),
@@ -1278,6 +1569,7 @@ function drawWordmarkInPage({ fit, font, colour, box, scale }) {
  * The QA reader `/_host/demo-qa` is wired with on a host: one Chromium for the process, one fresh
  * context per run. Null when Playwright is absent, so the route answers 503 NO_BROWSER.
  */
+
 export async function makeDemoQa({ log = console, playwright = null } = {}) {
   try {
     playwright ??= await import('playwright')
@@ -1292,18 +1584,79 @@ export async function makeDemoQa({ log = console, playwright = null } = {}) {
     browser = await playwright.chromium.launch({ headless: true, args: LAUNCH_ARGS })
     return browser
   }
-  return async ({ asked, base, serveFrom = null }) => {
+  /** The last read of each page, per site, for an incremental check (`readDemoPage` `previous`). */
+  const lastReads = new DemoReadCache()
+  const run = async ({
+    asked,
+    base,
+    serveFrom = null,
+    serveFromIsProxy = false,
+    proxySiteLabel = null,
+    signal
+  }) => {
+    signal.throwIfAborted()
     const b = await launched()
+    signal.throwIfAborted()
     const context = await b.newContext({ viewport: { width: 1440, height: 900 } })
+    let closing
+    const close = () => (closing ??= context.close().catch(() => {}))
+    const abort = () => {
+      void close()
+    }
+    signal.addEventListener('abort', abort, { once: true })
+    const siteKey = `${asked.label ?? ''}|${base}`
     try {
-      const page = await context.newPage()
-      return await runDemoQa({
+      signal.throwIfAborted()
+      // Each page has its own tab; `runDemoQa` reads one at a time to bound decoded images.
+      const result = await runDemoQa({
         asked,
         base,
-        read: (url, path, options) => readDemoPage(page, url, path, { ...options, serveFrom })
+        read: async (url, path, options) => {
+          signal.throwIfAborted()
+          const page = await context.newPage()
+          try {
+            const r = await readDemoPage(page, url, path, {
+              ...options,
+              serveFrom,
+              serveFromIsProxy,
+              proxySiteLabel,
+              previous: asked.incremental ? lastReads.get(JSON.stringify([siteKey, path])) : null
+            })
+            signal.throwIfAborted()
+            if (r.fingerprint && !r.error && !r.reused)
+              lastReads.set(JSON.stringify([siteKey, path]), { fingerprint: r.fingerprint, read: r })
+            return r
+          } finally {
+            await page.close().catch(() => {})
+          }
+        }
       })
+      signal.throwIfAborted()
+      return result
     } finally {
-      await context.close().catch(() => {})
+      signal.removeEventListener('abort', abort)
+      await close()
+    }
+  }
+  // A browser context and its decoded images are the expensive part. A host owns only one QA run at a time,
+  // including requests for different sites; the queue holds request metadata, never page payloads.
+  let queue = Promise.resolve()
+  return async (input) => {
+    const deadline = qaDeadline(input.asked, input.signal)
+    const before = queue
+    let release
+    const done = new Promise((resolve) => {
+      release = resolve
+    })
+    // An expired waiter may release its own placeholder immediately, but later requests still wait
+    // for its predecessor. They must never pass a run whose context is still closing.
+    queue = before.then(() => done)
+    try {
+      await waitForQaSlot(before, deadline.signal)
+      return await run({ ...input, signal: deadline.signal })
+    } finally {
+      deadline.dispose()
+      release()
     }
   }
 }

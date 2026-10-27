@@ -12,8 +12,9 @@
 # install, and the job has to say so where the Demos screen reads it.
 #
 # Asked both ways, like WordPress's `site_answers`: host-networked on a fleet host only the published
-# loopback port answers; on the macOS stack only the docker-network name does. No `-L`: a redirect
-# is the site answering.
+# loopback port answers; on the macOS stack the docker-network name may answer. Isolated sites
+# can deny both roads, so the last probe runs inside the verified PHP web container. This proves
+# CMS rendering, not customer proxy health. No `-L`: a redirect is the site answering.
 #
 # 🔒 THE NAME IS `tracy_web_dns_name`, NOT the raw `<label>-web-1` (issue #165). A label longer than
 # 57 characters makes `<label>-web-1` exceed the 63-octet DNS-label cap, so it never resolves; such a
@@ -26,16 +27,23 @@ if ! declare -F tracy_web_dns_name >/dev/null; then
 fi
 
 # tracy_front_page_status <label> <port>
-# Prints the HTTP status of the front page, or 000 when neither road answered at all.
+# Prints the HTTP status of the front page, or 000 when no road answered at all.
 tracy_front_page_status() {
-  local label="$1" port="$2" code
+  local label="$1" port="$2" code identity id running project service extra
+  if [[ ! "$label" =~ ^[a-z0-9][a-z0-9-]*$ ]]; then printf '000\n'; return 0; fi
   for url in "http://$(tracy_web_dns_name "$label")/" "http://127.0.0.1:${port}/"; do
-    code="$(curl -s -m 20 -o /dev/null -w '%{http_code}' "$url" 2>/dev/null || true)"
-    case "$code" in
-      '' | 000) continue ;;
-      *) printf '%s\n' "$code"; return 0 ;;
-    esac
+    if code="$(curl -s -m 20 -o /dev/null -w '%{http_code}' "$url" 2>/dev/null)"; then
+      if [[ "$code" =~ ^[1-5][0-9]{2}$ ]]; then printf '%s\n' "$code"; return 0; fi
+    fi
   done
+  # Pin the exec to the inspected container ID: a replacement must not change the target.
+  identity="$(docker inspect --type container --format '{{.Id}}|{{.State.Running}}|{{index .Config.Labels "com.docker.compose.project"}}|{{index .Config.Labels "com.docker.compose.service"}}' "${label}-web-1" 2>/dev/null)" || identity=''
+  IFS='|' read -r id running project service extra <<< "$identity"
+  if [[ "$id" =~ ^[a-f0-9]{64}$ && "$running" == true && "$project" == "$label" && "$service" == web && -z "$extra" && "$identity" == "$id|true|$label|web" ]]; then
+    if code="$(docker exec "$id" curl --noproxy '*' -s --max-time 20 -o /dev/null --write-out '%{http_code}' --header "Host: $(tracy_web_dns_name "$label")" http://127.0.0.1/ 2>/dev/null)"; then
+      if [[ "$code" =~ ^[1-5][0-9]{2}$ ]]; then printf '%s\n' "$code"; return 0; fi
+    fi
+  fi
   printf '000\n'
 }
 
@@ -45,7 +53,7 @@ tracy_front_page_refusal() {
   local code
   code="$(tracy_front_page_status "$1" "$2")"
   case "$code" in
-    000) echo "the front page did not answer at all (http://$(tracy_web_dns_name "$1")/ and 127.0.0.1:$2)"; return 1 ;;
+    000) echo "the front page did not answer at all (http://$(tracy_web_dns_name "$1")/, 127.0.0.1:$2, or the verified site web container)"; return 1 ;;
     5??) echo "the front page answers $code — the install finished but the site does not render"; return 1 ;;
   esac
   return 0

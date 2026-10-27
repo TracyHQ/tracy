@@ -1,0 +1,1 @@
+{"id":"REG-PR-1739-build-asks-nobody","verdict":"PASS","commit":"20f81fb7c7776145ea465587f689ade5b68f7cf4","ran_at":"2026-10-25T17:14:06.517Z","evidence":"tests/regression/.runs/2026-10-25-20f81fb7c/REG-PR-1739-build-asks-nobody.log"}

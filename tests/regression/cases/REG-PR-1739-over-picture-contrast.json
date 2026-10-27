@@ -1,0 +1,50 @@
+{
+  "id": "REG-PR-1739-over-picture-contrast",
+  "kind": "fix",
+  "title": "Words over a picture are judged against the picture shot under them, at desktop and phone width, by its worst part",
+  "pr": 1739,
+  "area": "website-opportunities/agent-demo",
+  "cms": ["wp", "jo", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: overImageRatio for white words over a dark picture with one bright part (p15 0.01, p50 0.03, p85 0.62), over a calm dark one (p85 0.05), and dark words over a bright one.",
+    "S2: checkContrastReadable on a heading measured calm at desktop and bright at phone; on calm at both; on a grey picture (p85 0.26) as a heading and as body text.",
+    "S3: the same words unreadable at baseline (the template's own), then readable at baseline and unreadable after the build.",
+    "S4: group orange/white and brown/white text by the measured painted frame; include a passing neighbour and separate frames that reuse one image URL.",
+    "S5: a vision quote omits CITY from the measured hero; try two targets, an unmeasured viewport, clipping, two omissions, a replacement word, a number and a negation.",
+    "S6: a real Offers finding names an unquoted section heading and quotes its measured body; try unmatched, multiple and malformed quotes, possessive apostrophes and geometry."
+  ],
+  "expect": [
+    "S1: the bright part fails (< 3:1), the calm picture passes; dark words fail on the bright picture.",
+    "S2: one finding, viewport phone, overImage true, needs 3; calm at both passes; the grey picture passes as a heading (3.39 \u2265 3) and fails as body text (< 4.5).",
+    "S3: the template's own unreadable words pass; words readable at baseline and unreadable later fail.",
+    "S4: both contrast directions remain available; orange and white share a dark range; incompatible uniform grounds are explicit; a passing neighbour constrains repair; different frames and missing frame identity are never inferred from the URL. Verdict thresholds stay unchanged.",
+    "S5: only the unique contrast quote with one non-critical omitted word at a successfully measured viewport defers to the contrast judge. All ambiguous, geometric, substituted, numeric or negated cases remain.",
+    "S6: the unique quoted body defers without false ambiguity from its section label. Duplicate measured targets, unmatched/multiple/malformed quotes and geometry remain findings; possessive apostrophes preserve correct quote boundaries."
+  ],
+  "selectors": {
+    "files": "apps/tracy-host/src/demo-qa.js apps/tracy-host/src/demo-qa-browser.js",
+    "dom": "[data-tracy-qa-over] (removed after the read)"
+  },
+  "evidence": "Local rounds 27\u201331 (WordPress, JA Restaurant): looks-finished failed white headings over bright photos with no measured number; contrast-readable skipped every text over a picture.",
+  "fence": "overImageRatio (p85 under light words, p15 under dark); MIN_CONTRAST_OVER_IMAGE 3 large / 4.5 text; OVER_IMAGE_WIDTHS; baseline unreadable over-image keys; groundRepair intersects both allowed ranges for every measured text in one frame; deferToMeasure requires one actual viewport measurement, keeps geometry faults and permits one non-critical omitted word only inside a quote",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-host/test/demo-qa.test.mjs",
+      "apps/tracy-web/test/wo-demo-look.test.mjs"
+    ],
+    "tests": [
+      "contrast-readable judges words over a picture against the worst of what lies under them, at both widths",
+      "contrast-readable and no-text-overlap: white on white fails, text over a picture is not judged",
+      "contrast repair considers both ground directions and all texts in each measured background frame",
+      "contrast vision defers a unique measured quote with one omitted word only at its measured viewport",
+      "a unique measured quote is not made ambiguous by its unquoted section heading",
+      "quote identity keeps multiple, malformed, apostrophe and geometry boundaries"
+    ],
+    "needs": []
+  }
+}

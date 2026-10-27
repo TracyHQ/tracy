@@ -712,3 +712,89 @@ test('🔒 a build is steered at most twice between two checks, and again after 
   failedCheck(2)
   assert.equal(await stops(1), 3, 'a new check opens two more')
 })
+
+test('a completed build does not steer an ordinary owner follow-up into its closed demo checks', async () => {
+  const host = boot({ signed: true })
+  const log = [{ type: 'turn/start', data: { turn: 3 } }]
+  const a = agent(site(), { wrote: false })
+  a.session.snapshotEvents = () => log
+  await host.tools.get('tracy_demo').execute({ operation: 'read', part: 'catalogue' }, { agent: a })
+  await stopping(host, a)
+  assert.equal(a.steered.filter((m) => m.source.producer === 'tracy-site-tools:check-again').length, 1)
+  log.push({ type: 'turn/end', data: { turn: 3 } }, { type: 'turn/start', data: { turn: 4 } })
+  for (const fn of host.listeners.get('agent/turn-stopping') ?? [])
+    await fn({ agent: a, turn: 4, signal: new AbortController().signal })
+  assert.equal(
+    a.steered.filter((m) => m.source.producer === 'tracy-site-tools:check-again').length,
+    1,
+    'the new owner turn has no assigned build'
+  )
+})
+
+test('a closed demo response revokes only its current-turn build behavior, and a Retry can earn it again', async () => {
+  let answer = { ok: true }
+  const host = boot({
+    signed: true,
+    plugin: {
+      fetch: async () =>
+        new Response(JSON.stringify(answer), {
+          status: 200,
+          headers: { 'content-type': 'application/json' }
+        })
+    }
+  })
+  const log = [{ type: 'turn/start', data: { turn: 3 } }]
+  const a = agent(site(), { wrote: false })
+  a.session.snapshotEvents = () => log
+  const read = () =>
+    host.tools.get('tracy_demo').execute({ operation: 'read', part: 'catalogue' }, { agent: a })
+  await read()
+  answer = { ok: false, code: 'AGENT_DEMO_ACTION_CLOSED' }
+  await read()
+  await stopping(host, a)
+  assert.equal(a.steered.length, 0)
+  log.push({ type: 'turn/start', data: { turn: 4 } })
+  answer = { ok: true }
+  await read()
+  for (const fn of host.listeners.get('agent/turn-stopping') ?? [])
+    await fn({ agent: a, turn: 4, signal: new AbortController().signal })
+  assert.deepEqual(
+    a.steered.map((m) => m.source.producer),
+    ['tracy-site-tools:check-again']
+  )
+})
+
+test('native write guards and copy.apply lifecycle refusals revoke an active build before its stop hook', async () => {
+  for (const road of ['native-write', 'copy.apply']) {
+    let answer = { ok: true }
+    const host = boot({
+      signed: true,
+      plugin: {
+        fetch: async () =>
+          new Response(JSON.stringify(answer), {
+            status: 200,
+            headers: { 'content-type': 'application/json' }
+          })
+      }
+    })
+    const a = agent(site(), { wrote: false })
+    await host.tools.get('tracy_demo').execute({ operation: 'read', part: 'catalogue' }, { agent: a })
+    answer = { ok: false, code: 'AGENT_DEMO_ACTION_CLOSED' }
+    if (road === 'copy.apply') await host.tools.get('tracy_demo').execute({ operation: road }, { agent: a })
+    else {
+      for (const fn of host.listeners.get('tools/pre-execute') ?? []) {
+        const decision = await fn(
+          { name: 'bash', arguments: { command: 'touch note.txt' }, agent: a },
+          async () => ({ kind: 'allow' })
+        )
+        if (decision?.kind === 'deny') break
+      }
+    }
+    await stopping(host, a)
+    assert.equal(
+      a.steered.filter((m) => m.source.producer === 'tracy-site-tools:check-again').length,
+      0,
+      road
+    )
+  }
+})

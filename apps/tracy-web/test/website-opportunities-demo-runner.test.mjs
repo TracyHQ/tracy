@@ -1912,7 +1912,29 @@ test(
     assert.equal(retried.status, 202)
     assert.equal(retried.body.actions[0].chatMode, 'client-send/1')
     const retryId = retried.body.actions[0].id
+    // A scheduler can poll a Retry before prepare or while the browser has not submitted its brief yet.
+    // The previous action's failed QA must not close the newly accepted action in either window.
+    await w.pool.query(`update wo_build set qa=qa||$1::jsonb`, [
+      JSON.stringify({
+        state: 'failed',
+        machinePassed: false,
+        humanAccepted: true,
+        clientCheckAttempts: 8
+      })
+    ])
+    const assertRetryWaiting = async () => {
+      await w.advance()
+      await w.runner().drain()
+      assert.equal(
+        (await w.pool.query('select status from wo_demo_action where id=$1', [retryId])).rows[0].status,
+        'queued'
+      )
+      assert.equal(w.messages.size, 0)
+      assert.equal(w.creates(), 1)
+    }
+    await assertRetryWaiting()
     const retryPrepared = await w.deps.clientDemo.prepare({ accountId: w.account, actionId: retryId })
+    await assertRetryWaiting()
     assert.deepEqual(retryPrepared.chat, prepared.chat)
     assert.equal(retryPrepared.submission, null)
     assert.equal(w.creates(), 1)
@@ -1930,6 +1952,26 @@ test(
     const retryBuild = (await w.pool.query('select * from wo_build')).rows[0]
     assert.deepEqual(retryBuild.qa.baseline, build.qa.baseline)
     assert.equal(retryBuild.qa.expectedRequestIds[0], 'retry-native-user')
+    assert.equal(retryBuild.qa.clientCheckAttempts, 0)
+    assert.equal(retryBuild.qa.clientCheck, undefined)
+    assert.equal(retryBuild.qa.clientChecks, undefined)
+    assert.equal(retryBuild.qa.humanAccepted, false)
+    // A failed provision belongs to the action whose create receipt recorded it. The new
+    // agent has submitted its brief but has not asked provision.start yet.
+    await w.pool.query(`update wo_build set state='failed',receipt=receipt||$1::jsonb`, [
+      JSON.stringify({ demoActionId: actionId, failure: { code: 'PROVISION_FAILED' } })
+    ])
+    await assertRetryWaiting()
+    // A new create receipt for THIS action is authoritative, including its failure.
+    await w.pool.query(`update wo_build set receipt=receipt||$1::jsonb`, [
+      JSON.stringify({ demoActionId: retryId })
+    ])
+    await w.advance()
+    await w.runner().drain()
+    assert.equal(
+      (await w.pool.query('select status from wo_demo_action where id=$1', [retryId])).rows[0].status,
+      'failed'
+    )
   }
 )
 

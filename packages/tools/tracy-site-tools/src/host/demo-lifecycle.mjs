@@ -14,6 +14,7 @@ export async function runDemoLifecycle(
 ) {
   if (signal?.aborted) return stoppedAnswer()
   if (params.operation === 'check') return sweptCheck(send, { signal, sleep, now, sweep })
+  if (params.operation === 'copy.write') return startCopy(send)
   if (params.operation !== 'provision.wait') return send(params)
   const seconds = params.waitSeconds ?? 30
   if (typeof seconds !== 'number' || !Number.isInteger(seconds) || seconds < 1 || seconds > 30)
@@ -248,4 +249,54 @@ export function demoToolNeedsReady(name, args) {
       args.command === 'view'
     )
   )
+}
+
+/** What `copy.write` answers while the words are being written: the photos meanwhile, then `copy.apply`. */
+export const COPY_STARTED_NEXT =
+  'The words are being written (a minute or two): place the photos now; tracy_demo {operation:"copy.apply"} waits for the words and puts them on the site.'
+
+/**
+ * 🔒 THE WORDS ARE WRITTEN WHILE THE AGENT PLACES THE PHOTOS (local round 36, 26/10/2026): `copy.write` held the turn
+ * 71–104 s polling tracy-web's copy tasks, the agent idle. It starts them and answers; `copy.apply` waits for them
+ * (`copyWritten`). Words already written answer their summary at once.
+ * @param {(params: Record<string, unknown>) => Promise<any>} send
+ */
+async function startCopy(send) {
+  const answer = await send({ operation: 'copy.start' })
+  return answer?.running === true ? { ok: true, running: true, next: COPY_STARTED_NEXT } : answer
+}
+
+/** How long `copy.apply` waits for the copy tasks before it answers that they still run. */
+const COPY_WAIT_MS = 600_000
+const COPY_POLL_MS = 3_000
+
+/**
+ * The words of every page written by tracy-web's copy tasks (`demo-copy.js`): started if they were not, then polled
+ * until written, as a check is — a whole site's tasks take longer than one request may stay open on dev. What
+ * `copy.apply` waits for before it reads the packs.
+ * @param {(params: Record<string, unknown>) => Promise<any>} send
+ * @param {{signal?: AbortSignal | null, sleep?: (ms: number, signal?: AbortSignal | null) => Promise<unknown>, now?: () => number}} [options]
+ */
+export async function copyWritten(send, { signal = null, sleep = pause, now = Date.now } = {}) {
+  let answer = await send({ operation: 'copy.start' })
+  const until = now() + COPY_WAIT_MS
+  let misses = 0
+  while (answer?.running === true) {
+    if (signal?.aborted) return stoppedAnswer({ lastReceipt: answer })
+    if (now() >= until)
+      return {
+        ...answer,
+        ok: false,
+        code: 'COPY_STILL_RUNNING',
+        error:
+          'The words are still being written. Call tracy_demo copy.apply again to wait for them; they are not started twice.'
+      }
+    await sleep(Math.min(COPY_POLL_MS, until - now()), signal)
+    if (signal?.aborted) return stoppedAnswer({ lastReceipt: answer })
+    const polled = await send({ operation: 'copy.status' })
+    if (onTheWay(polled) && ++misses < CHECK_POLL_MISSES) continue
+    answer = polled
+    misses = 0
+  }
+  return answer
 }

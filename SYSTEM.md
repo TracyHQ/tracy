@@ -2522,12 +2522,18 @@ or when fewer than min(collected photos, 3) of the place's photos appear on the 
 `replace-image` row at save time; only when the template has nowhere for a testimonial does the plan write
 `unplaced:[{item:"reviews",reason}]`, and the reason goes into the check result for the reviewer.
 
-After demo QA, `opportunities-build/demo-look.js` captures every page QA read (at most 15) at 1440 and 390 via
-`POST /_host/capture`, cutting each image top to bottom (footer included), sending two pages per turn to the `vision` model (same door and same research cost ledger as WO image labels).
+After demo QA, `opportunities-build/demo-look.js` captures every page QA read (up to 165) at 1440 and 390 via
+`POST /_host/capture`, cutting each image from top to bottom (footer included). Ordinary captures keep their JSON response;
+vision uses the opt-in `vision-tiles/1` NDJSON stream. At most two routes travel in a capture request, while rendering and model calls
+run one page at a time. The vision path bounds each model request to four images and 4 MiB, acknowledges tiles only after a valid
+verdict, and stops at the run budget with unread pages reported. Cancelling a request aborts capture and releases its browser context
+before another page starts. A page and viewport count as inspected only when their complete image was decoded and included in a
+successful model call; partial coverage can retain real findings but cannot pass. The calls use the same vision door and research cost
+ledger as WO image labels.
 The model only names visible defects from a closed list (hard-to-read text, broken/badly cropped images, duplicated images, template
 leftovers, broken layout, mixed languages); it does not judge aesthetics. The result is the `looks-finished` check returned to the agent
 along with the other checks. With no model, over budget or a failed capture, the check records `looked:false` (or `partly` with `unlooked`
-per page) and the reason, without failing the build; the build is still `needs-review`.
+per page and viewport) and the reason, without failing the build; the build is still `needs-review`.
 
 The check runs in the background so the agent does not hold one request for minutes (24/10/2026): dsh calls the Apply door through the public
 origin, and Cloudflare cuts at ~100 s (524), while a whole-site check runs for several minutes. dsh's `tracy_demo check` sends

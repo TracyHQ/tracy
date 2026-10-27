@@ -527,7 +527,10 @@ test("not_found: a URL that is not a profile of the provider's network", async (
   assert.equal(f.calls.length, 0)
 })
 
-test('timeout: the request is aborted after timeoutMs', async () => {
+test('timeout: the request is aborted after timeoutMs', async (t) => {
+  // The fake request has no socket to keep AbortSignal.timeout's timer alive.
+  const pendingSocket = setInterval(() => {}, 1000)
+  t.after(() => clearInterval(pendingSocket))
   const fetch = (_url, init) =>
     new Promise((_, reject) => init.signal.addEventListener('abort', () => reject(init.signal.reason)))
   await rejects(

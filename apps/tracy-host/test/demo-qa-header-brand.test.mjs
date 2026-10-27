@@ -35,6 +35,19 @@ test('header-brand: the collected logo in the header passes; the name alone, or 
   )
   assert.equal(photo.detail[0].code, 'LOGO_NOT_IN_HEADER')
   assert.ok(CHECK_IDS.includes('header-brand'))
+  // Local round 35: on Joomla the first finding names where a T4 or T3 template keeps its logo, once.
+  const joomla = checkHeaderBrand(
+    [
+      page({ brand: brand({ text: 'Death & Co' }) }),
+      page({ path: '/menu', brand: brand({ text: 'Death & Co' }) })
+    ],
+    { ...withLogo, platform: 'joomla' }
+  )
+  assert.match(joomla.detail[0].fix, /template\.siteSettings/)
+  assert.match(joomla.detail[0].fix, /operation:"read"[\s\S]*operation:"set"[\s\S]*site_logo/)
+  assert.doesNotMatch(joomla.detail[0].fix, /mkdir|\bcp\b/)
+  assert.doesNotMatch(joomla.detail[1].fix, /template\.siteSettings/)
+  assert.doesNotMatch(nameOnly.detail[0].fix, /template\.siteSettings/)
 })
 
 test("header-brand: the sweep's fitted copy of the logo passes when the page read matches it to the logo", () => {

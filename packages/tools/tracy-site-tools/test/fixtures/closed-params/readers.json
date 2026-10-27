@@ -202,8 +202,8 @@
     {
       "platform": "wordpress",
       "action": "content.renderedWords:inspect",
-      "params": ["operation", "path", "targets"],
-      "source": "claude-cowork feat/rendered-words: wordpress/cowork/lib/Engine.php renderedWordsInspect"
+      "params": ["operation", "path", "targets", "composition"],
+      "source": "claude-cowork PR242: wordpress/cowork/lib/Engine.php renderedWordsInspect; composition opt-in requires info.rendered_words.composition whole-output"
     },
     {
       "platform": "wordpress",

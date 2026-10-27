@@ -1,0 +1,1 @@
+{"id":"REG-PR-1739-article-address-date","verdict":"PASS","commit":"bd658e7abc5c6cbda7332e863b84b417b55e732a","ran_at":"2026-10-25T18:09:11.540Z","evidence":"tests/regression/.runs/2026-10-25-bd658e7ab/REG-PR-1739-article-address-date.log"}

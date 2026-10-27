@@ -41,6 +41,11 @@
   margin-top: 0;
 }
 
+/* Horizontal gallery swipes belong to the carousel; vertical scroll and pinch zoom stay native. */
+.gallery-slide .tracy-motion-carousel {
+  touch-action: pan-y pinch-zoom;
+}
+
 /* ---------- Slideshow (owl in the source, the motion carousel here) ---------- */
 .acm-slideshow .tracy-motion-carousel {
   position: relative;

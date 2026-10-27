@@ -384,6 +384,7 @@ function openerAt(body, span) {
   OPENER.lastIndex = span.start
   const m = OPENER.exec(body)
   if (m === null || m.index !== span.start) return null
+  /** @type {Record<string, unknown>} */
   let attrs = {}
   if (m[2] !== undefined) {
     try {
@@ -447,6 +448,107 @@ const COMMENT_ONLY_ATTRS = Object.freeze(['metadata', 'lock'])
 const commentOnlyAttrs = (name) =>
   name === 'core/query' ? [...COMMENT_ONLY_ATTRS, 'query'] : COMMENT_ONLY_ATTRS
 
+/** A picture's file name as a page or a check shows it, its size or `-scaled` WordPress cut and its type left out. */
+const pictureName = (/** @type {string} */ file) =>
+  String(file)
+    .split(/[?#]/)[0]
+    .split('/')
+    .pop()
+    ?.replace(/\.[a-z0-9]+$/i, '')
+    .replace(/-(?:\d+x\d+|scaled)$/i, '') ?? ''
+
+/**
+ * 🔒 A PICTURE IN A BLOCK IS SWAPPED, NOT THE BLOCK RE-TYPED (local round 36, 26/10/2026). A WordPress build put its
+ * photos into the template's sections by sending each section back whole: 19 writes, 124,000 characters typed to change
+ * a few `src`, and each retyped section was one more chance to lose a wrapper or a class (native-structure). `pictures`
+ * maps a picture the block shows — its file, or the file name a check names — to the new one, `"<path>"` or
+ * `{path, attachmentId}` (what `tracy_demo media.import` answers). In every `<img>` and `url()` showing it, the
+ * address becomes the new path (its origin and leading slash kept), the `<img>`'s `srcset` and `sizes` go (they list
+ * the old picture's sizes), and its attachment — the `wp-image-<id>` class and the image block's `"id"` — becomes the
+ * new one, or is taken out when none is given: WordPress rebuilds `srcset` from that id, so an old one would bring the
+ * template's picture back on wide screens.
+ * @param {string} markup @param {unknown} pictures
+ * @returns {{ ok: true, markup: string } | { ok: false, code: 'BAD_PARAMS' | 'NOT_FOUND', error: string }}
+ */
+function swapPictures(markup, pictures) {
+  if (!isPlainObject(pictures) || Object.keys(pictures).length === 0)
+    return {
+      ok: false,
+      code: 'BAD_PARAMS',
+      error:
+        'pictures is {"<the picture the block shows>": "<new path>" | {path, attachmentId}}, at least one'
+    }
+  let out = markup
+  for (const [from, to] of Object.entries(pictures)) {
+    const path = typeof to === 'string' ? to : isPlainObject(to) && typeof to.path === 'string' ? to.path : ''
+    const id =
+      isPlainObject(to) &&
+      typeof to.attachmentId === 'number' &&
+      Number.isInteger(to.attachmentId) &&
+      to.attachmentId > 0
+        ? to.attachmentId
+        : null
+    const name = pictureName(from)
+    if (name.length < 3 || !/\.(?:jpe?g|png|webp|gif|avif|svg)(?:[?#]|$)/i.test(path))
+      return {
+        ok: false,
+        code: 'BAD_PARAMS',
+        error: `pictures: "${String(from).slice(0, 60)}" goes to a picture's path (media.import answers it), not "${path.slice(0, 60)}"`
+      }
+    const escaped = name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+    const address = new RegExp(
+      `((?:https?:)?//[^\\s"'()<>/]+/|/)?((?:[^\\s"'()<>,]*/)?${escaped}(?:-\\d+x\\d+|-scaled)?\\.(?:jpe?g|png|webp|gif|avif|svg)(?:\\?[^\\s"'()<>]*)?)`,
+      'gi'
+    )
+    const target = path.replace(/^\/+/, '')
+    const at = (/** @type {string | undefined} */ origin) => `${origin ?? ''}${target}`
+    let found = 0
+    // Each <img> showing it: its address, no srcset or sizes, its attachment.
+    out = out.replace(/<img\b[^>]*>/gi, (tag) => {
+      address.lastIndex = 0
+      if (!address.test(tag)) return tag
+      found += 1
+      let changed = tag
+        .replace(/\s(?:srcset|sizes)\s*=\s*("[^"]*"|'[^']*')/gi, '')
+        .replace(address, (_m, origin) => at(origin))
+      changed =
+        id === null
+          ? changed.replace(/\s*\bwp-image-\d+\b/g, '')
+          : changed.replace(/\bwp-image-\d+\b/g, `wp-image-${id}`)
+      return changed.replace(/\sclass=(["'])\s*\1/g, '')
+    })
+    // Each CSS url() and each other address of it (a cover block's `url` attribute, a background in a style).
+    out = out.replace(address, (_whole, origin) => {
+      found += 1
+      return at(origin)
+    })
+    if (found === 0)
+      return {
+        ok: false,
+        code: 'NOT_FOUND',
+        error: `"${String(from).slice(0, 60)}" is not a picture this block shows: content.get {…, block:<i>} shows its markup as stored`
+      }
+    // The image or cover block that holds it names the same attachment in its comment.
+    out = out.replace(
+      /<!--\s+wp:(image|cover)\s+(\{[\s\S]*?\})\s+-->(\s*<(?:figure|div)\b[\s\S]*?<\/(?:figure|div)>)/g,
+      (whole, block, attrs, figure) => {
+        if (!figure.includes(target) && !String(attrs).includes(target)) return whole
+        let parsed
+        try {
+          parsed = JSON.parse(attrs)
+        } catch {
+          return whole
+        }
+        if (id === null) delete parsed.id
+        else parsed.id = id
+        const json = Object.keys(parsed).length ? ` ${JSON.stringify(parsed)}` : ''
+        return `<!-- wp:${block}${json} -->${figure}`
+      }
+    )
+  }
+  return { ok: true, markup: out }
+}
+
 /**
  * One block changed by a patch instead of its whole markup: `{find, replace}` (find stands exactly
  * once in the block's markup) or `{attrs:{…}}` (merged into the block's own attributes, RFC 7386: a
@@ -467,6 +569,20 @@ const commentOnlyAttrs = (name) =>
  * @returns {{ ok: true, markup: string } | { ok: false, code: 'BAD_PARAMS' | 'BLOCK_MARKUP' | 'NOT_FOUND' | 'AMBIGUOUS' | 'ATTRS_IN_HTML', error: string, keys?: string[] }}
  */
 function applyBlockPatch(body, span, value) {
+  if (Object.hasOwn(value, 'pictures')) {
+    if (Object.keys(value).length !== 1)
+      return {
+        ok: false,
+        code: 'BAD_PARAMS',
+        error:
+          'a block is its markup, null, {find, replace}, {attrs:{…}} or {pictures:{…}} — one of them, nothing else in it'
+      }
+    const swapped = swapPictures(body.slice(span.start, span.end), value.pictures)
+    if (!swapped.ok) return swapped
+    const problem = wholeBlocksProblem(swapped.markup)
+    if (problem !== null) return { ok: false, code: problem.code, error: problem.error }
+    return { ok: true, markup: swapped.markup }
+  }
   const hasFind = Object.hasOwn(value, 'find')
   const hasAttrs = Object.hasOwn(value, 'attrs')
   const allowed = hasFind ? ['find', 'replace'] : ['attrs']

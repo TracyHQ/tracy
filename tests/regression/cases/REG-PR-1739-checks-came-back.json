@@ -1,0 +1,40 @@
+{
+  "id": "REG-PR-1739-checks-came-back",
+  "kind": "fix",
+  "title": "A failed check names the findings an earlier check had repaired and the build undid since, before its next step",
+  "pr": 1739,
+  "area": "website-opportunities/agent-demo",
+  "cms": ["wp", "jo", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: a build log of two checks — native-structure on post/100 .post_content plus looks-finished, then looks-finished alone — and a third verdict with native-structure on post/100 again and look-kept new.",
+    "S2: the same log shapes with a finding never repaired, a finding new at this check, a looks-finished finding, and only one check before.",
+    "S3: eight no-demo-words findings repaired at the second check and all back at the third."
+  ],
+  "expect": [
+    "S1: findingsCameBack names native-structure (post/100 .post_content) as back after check 2; the next starts 'These came back after check 2 had them repaired' and carries the template-guard sentence.",
+    "S2: null in each case.",
+    "S3: six named and 'and 2 more'; no guard sentence."
+  ],
+  "selectors": {
+    "files": "packages/tools/tracy-site-tools/src/host/site-context.mjs packages/tools/tracy-site-tools/src/host/index.ts",
+    "dom": ""
+  },
+  "evidence": "Local round 31 (25/10/2026, WordPress): native-structure findings went 9 → 3 → 9 → 9 → 3 over five checks; replayed on that log, check 4 now names the tags_input findings check 3 had repaired.",
+  "fence": "checkVerdicts; findingsCameBack (FINDING_NAMES, looks-finished left out); cameBackNext (GUARD_CHECKS)",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/tools/tracy-site-tools/test/check-came-back.test.mjs"
+    ],
+    "tests": [
+      "a finding repaired at one check and back at the next is named, with the template guards said once",
+      "a finding seen for the first time, one never repaired, and the vision model findings do not come back",
+      "only guard checks bring the guard sentence; at most six are listed"
+    ],
+    "needs": []
+  }
+}

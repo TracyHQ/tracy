@@ -23,6 +23,32 @@ const FIND_MAX_FILE_BYTES = 512 * 1024
 const FIND_MAX_HITS = 40
 
 /**
+ * A WordPress translation call with its literal words and text domain: `__()`, `_e()`, `esc_html__()`,
+ * `esc_html_e()`, `esc_attr__()`, `esc_attr_e()`, and the `_x` family with its context between them.
+ */
+const GETTEXT =
+  /\b(?:__|_e|esc_html__|esc_html_e|esc_attr__|esc_attr_e|(_x|_ex|esc_html_x|esc_attr_x))\s*\(\s*(['"])((?:\\.|(?!\2).)*)\2\s*,\s*(?:(['"])((?:\\.|(?!\4).)*)\4\s*,\s*)?(['"])([\w.-]+)\6/g
+
+/**
+ * 🔒 A PHRASE A WORDPRESS THEME PRINTS THROUGH GETTEXT CHANGES THERE, NOT IN THE FILE (local round 35, 26/10/2026). The
+ * JA Restaurant theme prints its blog sidebar ("Most Read", "Only $5.99", "Book a Table") from PHP patterns as
+ * `esc_html_e( 'Only $5.99', 'wp-ja-restaurant' )`; no record holds the words, a build may not edit the theme, and
+ * the Claude Cowork plugin swaps such words on their way out (`StringOverrides`, `content.contract {operation:"string"}`).
+ * The call found on the matching line, with what that door needs; null for a line with none.
+ * @param {string} line @param {string} lower - the phrase, lower-cased.
+ * @returns {{ domain: string, msgid: string, context?: string } | null}
+ */
+export function gettextOf(line, lower) {
+  for (const m of String(line).matchAll(GETTEXT)) {
+    const unquote = (/** @type {string} */ t) => t.replace(/\\(['"\\])/g, '$1')
+    const msgid = unquote(m[3])
+    if (!msgid.toLowerCase().includes(lower)) continue
+    return { domain: m[7], msgid, ...(m[1] && m[5] !== undefined ? { context: unquote(m[5]) } : {}) }
+  }
+  return null
+}
+
+/**
  * `content.find`: which file-backed layer holds a string the customer can see, and which door
  * changes it.
  *
@@ -174,13 +200,25 @@ export async function contentFind(sitesRoot, label, params, detectPlatform) {
         }
         const found = findMatch(lines[i], lower)
         if (found === null) continue
+        const php = platform === 'wordpress' && here.endsWith('.php')
+        const gettext = php ? gettextOf(lines[i], lower) : null
+        // 🔒 A SETTING THE THEME READS IS SET, NOT THE FILE (local round 37, 26/10/2026): JA Restaurant picks its blog
+        // banner from option `wp_ja_restaurant_blog_banner_image`; the build guessed `tracy_blog_banner` and gave up.
+        const option =
+          php && gettext === null ? /\bget_option\(\s*['"]([\w.-]+)['"]/.exec(lines[i])?.[1] : undefined
         hits.push({
-          layer: where.layer,
-          door: where.door,
+          layer: gettext || option ? 'PHRASES' : where.layer,
+          door: gettext
+            ? `the theme prints this through gettext: content.contract {operation:"string", domain:${JSON.stringify(gettext.domain)}, msgid:${JSON.stringify(gettext.msgid)}${gettext.context ? `, context:${JSON.stringify(gettext.context)}` : ''}, locale:"<the site's: en_US unless WPLANG says>", value:"<new words>"} swaps it everywhere it shows; never edit this file`
+            : option
+              ? `the theme reads option "${option}" here: content.update {kind:"option", key:"${option}", fields:{value:<the new value — a picture's attachmentId>}} sets it; never edit this file`
+              : where.door,
           side,
           file: `.webroot/${here}`,
           line: i + 1,
-          ...found
+          ...found,
+          ...(gettext ? { gettext } : {}),
+          ...(option ? { option } : {})
         })
         if (hits.length >= FIND_MAX_HITS) {
           stopped = true

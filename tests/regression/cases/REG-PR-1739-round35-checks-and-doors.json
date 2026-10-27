@@ -1,0 +1,72 @@
+{
+  "id": "REG-PR-1739-round35-checks-and-doors",
+  "kind": "fix",
+  "title": "Round 35's build faults: false check failures (form fields, carousel copies, the template's own repeats, Joomla picture paths) and the doors a build lacked (copy status, T4 logo, theme gettext words, labels, the installed record)",
+  "pr": 1739,
+  "area": "website-opportunities/agent-demo",
+  "cms": ["wp", "jo", "em"],
+  "needs": ["postgres"],
+  "flaky_model": false,
+  "steps": [
+    "S1: copy.status after a copy run whose words are in the row but not in the build the request read.",
+    "S2: photos-fit over a carousel strip with two copies of one slide, a selfie under a cover block's words, and three cards showing one photo where the template showed one badge three times (and where it did not).",
+    "S3: collected-used with the business's logo in four frames of a page where the template showed its mark in four.",
+    "S4: native-structure of a Joomla article whose picture and data-path changed and a menu item whose browser title changed; then with show_page_heading changed.",
+    "S5: the build fence on T4's local/etc/site/default.json, a cp into it, and a PHP imagepng over images/joomlart/logo/logo.png.",
+    "S6: copy: a pastry's $5.25 against research holding \"price\": \"5.25\"; a page of 85 blocks; copy.apply with words shown twice on the page, one asking for its count.",
+    "S7: content.find of a WordPress theme pattern line esc_html_e('Only $5.99', 'wp-ja-restaurant'), an _x() heading and a plain line; content.contract string on a quickstart WordPress site and on Joomla.",
+    "S8: header-brand on Joomla over two pages; no-demo-words with two EmDash categories left; cta-real to /contact/phone-reservation/ with the plan naming another contact page; structure.read {record}; changedSinceCheck after an EmDash restart and a shell sed."
+  ],
+  "expect": [
+    "S1: the written pages, never COPY_NOT_STARTED.",
+    "S2: copies skipped; the selfie fails as a photo behind a section; the cards pass with the template's baseline and fail where the template had different pictures.",
+    "S3: no COLLECTED_MISPLACED.",
+    "S4: pass; then fail.",
+    "S5: local/etc/site open (file and cp); the PHP write refused naming media.import and local/etc/site.",
+    "S6: only $3.95 unsourced; three calls of 40, 40, 5 and one pack of 85; the repeated pairs placed with all:\"page\", then with expect 7.",
+    "S7: gettext {domain, msgid} and {domain, msgid, context}, the door names content.contract string; none for the plain line; relayed on WordPress, NOT_ON_THIS_PLATFORM on Joomla.",
+    "S8: the T4 local/etc/site place named once; taxonomy_update_term named once; the reservation page accepted; the record answered whole, an unknown one refused; both count as changes, a grep does not."
+  ],
+  "selectors": {
+    "files": "apps/tracy-host/src/demo-qa.js apps/tracy-host/src/demo-qa-browser.js apps/tracy-web/src/opportunities-build/agent-demo.js apps/tracy-web/src/opportunities-build/demo-copy.js apps/tracy-web/src/sites/agent-demo-inventory.js packages/tools/tracy-site-tools/src/host/build-fence.mjs packages/tools/tracy-site-tools/src/host/copy-apply.mjs packages/tools/tracy-site-tools/src/host/find.mjs packages/tools/tracy-site-tools/src/host/normalize.mjs packages/tools/tracy-site-tools/src/host/site-context.mjs",
+    "dom": ""
+  },
+  "evidence": "Local round 35 (26/10/2026): WordPress 31 min, failed after 8 checks (copy.write answered COPY_NOT_STARTED, 114 blocks retyped, native-structure 7 times, theme sidebar words with no door); EmDash 31 min, passed at check 7 after removing its contact form and hiding sector chips in /app; Joomla 28 min, failed after 8 checks (form inputs as empty boxes 8 times, 23 carousel-copy repeats, data-path and page_title as structure, logo written over the template's file).",
+  "fence": "copy.status fresh read; img.clone/underWords; designRepeats; PAGE_WORDS_KEY + picture attributes; T4_SITE_SETTINGS + buildPictureWrite; BLOCKS_PER_CALL + amount; copy.apply all:page; gettextOf + string on WordPress; LABEL_DOOR; JOOMLA_LOGO_PLACE; RESERVATION_SLUG; structure.read record; servesAgain/shellWrites",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-concurrency=1",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/wo-agent-demo.test.mjs",
+      "apps/tracy-web/test/wo-demo-copy.test.mjs",
+      "apps/tracy-web/test/agent-demo-native-inventory.test.mjs",
+      "apps/tracy-host/test/demo-qa.test.mjs",
+      "apps/tracy-host/test/demo-qa-header-brand.test.mjs",
+      "packages/tools/tracy-site-tools/test/build-fence.test.mjs",
+      "packages/tools/tracy-site-tools/test/copy-apply.test.mjs",
+      "packages/tools/tracy-site-tools/test/find.test.mjs",
+      "packages/tools/tracy-site-tools/test/normalize.test.mjs",
+      "packages/tools/tracy-site-tools/test/site-context.test.mjs"
+    ],
+    "tests": [
+      "copy.status that read the build before the run wrote it answers the written words, not \"not started\"",
+      "photos-fit skips carousel copies, sees a photo under words, and keeps the repeats the template has",
+      "collected-used: the name, phone, email, street, an opening time, a review and own photos must all show",
+      "Joomla: a picture's data-path and a page's browser title follow the build; a setting changed does not",
+      "T4's site settings in local/etc/site are the site's; a picture written by hand outside tracy-content is refused",
+      "a price is held by its amount, whatever currency the research wrote around it",
+      "a page longer than one call takes is written in parts and kept as one pack",
+      "words shown in more than one place go again alone with all:\"page\", and with the count when it asks",
+      "a WordPress theme line printing the words through gettext names the string override, with its domain and msgid",
+      "string override reaches a quickstart WordPress site too; on Joomla it is refused with the Joomla road",
+      "header-brand: the collected logo in the header passes; the name alone, or another picture, does not",
+      "no-demo-words: a category or tag the template named fails while the page still names it, unless the brief does",
+      "cta-real: with the plan naming its contact page, a slug saying contact is not enough",
+      "structure.read with a record answers that record as the template installed it; an unknown one is refused",
+      "changedSinceCheck: a write or a photo after the latest verdict counts; another check or a refused write does not"
+    ],
+    "needs": ["postgres"]
+  }
+}

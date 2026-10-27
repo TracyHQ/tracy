@@ -61,6 +61,7 @@ const PARTS = [
     'wp-ja-kinetic',
     'wp-ja-morgan',
     'wp-ja-nova',
+    'wp-ja-restaurant',
     'wp-ja-vega',
     'wp-tracy-business'
   ].map((slug) => ({

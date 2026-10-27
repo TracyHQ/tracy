@@ -1,0 +1,37 @@
+{
+  "id": "REG-PR-1739-empty-navigation-targets",
+  "kind": "fix",
+  "title": "Navigation to a verified empty main fails without guessing unread targets",
+  "pr": 1739,
+  "area": "wo/demo-qa",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "selectors": {
+    "files": "apps/tracy-host/src/demo-qa.js apps/tracy-host/src/demo-qa-browser.js"
+  },
+  "steps": [
+    "Read the same-origin navigation and footer target with an empty semantic main, then retarget it to the populated native page.",
+    "Repeat with unread, loading, hidden, form/media, query-distinct and trailing-slash-distinct destinations, a submenu toggle and an off-site redirect."
+  ],
+  "expect": [
+    "A navigation item to the read-confirmed empty main fails cta-real and identifies its source and destination; a populated target passes.",
+    "Unknown or uninspected targets stay in unknown coverage metadata, without claiming their main is empty; query, slash and redirect identity remain separate."
+  ],
+  "evidence": "Local WordPress /contact/ renders only header/footer while /contact/contact-us/ contains the business contact details.",
+  "fence": "The browser reports semantic main evidence separately from shared shell text; the judge uses only successful reads of the exact destination.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=cta-real:",
+      "apps/tracy-host/test/demo-qa.test.mjs"
+    ],
+    "tests": [
+      "cta-real: ordinary navigation cannot lead to a read-confirmed empty main",
+      "cta-real: unread, unknown, failed and query-distinct navigation destinations are not judged empty",
+      "cta-real: footer fragments and redirected aliases retain destination identity without trusting an off-site read"
+    ]
+  }
+}

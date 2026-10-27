@@ -1,3 +1,5 @@
+import { visionStream } from './vision-stream.js'
+import { qaDeadline } from './demo-qa-deadline.js'
 import { framePolicyRoute } from './frame-policy.js'
 import { publicOriginOf } from './public-origin.js'
 /**
@@ -966,19 +968,51 @@ function outlineRoute({ outline }) {
  * `503 NO_BROWSER` rather than 500 — a demo host without a browser is a configuration a caller
  * should read, not a crash.
  */
-function captureRoute({ shoot, timeoutMs, reach = reachableBase }) {
+function captureRoute({ shoot, timeoutMs, reach = reachableBase, proxyOrigin = null }) {
   return async (c) => {
     if (!shoot) return c.json({ code: 'NO_BROWSER' }, 503)
     const { body, refused } = bodyObject(c)
     if (refused) return refused
+    if (body.mode !== undefined && body.mode !== 'vision-tiles/1')
+      return badRequest(c, 'Unknown capture mode')
     const asked = captureBody(body)
     if (asked.error) return badRequest(c, asked.error)
     // Probed like `/demo-qa`, never assumed (23/10/2026): on the macOS stand tracy-host sits on the compose
     // network, the loopback port refuses, and every shot of a finished demo's vision look failed.
     // Opened at the name the demo gives itself when the caller names it (`publicOrigin`), as `/demo-qa` does: on the
     // stand WordPress redirected every page but home to `<label>-web-1:8080` (24/10/2026).
-    const { base, serveFrom } = await demoAddress(asked, { reach })
-    const result = await runCapture({ ...asked, shoot, timeoutMs, base, serveFrom })
+    if (body.mode === 'vision-tiles/1') {
+      if (!shoot.vision) return c.json({ code: 'VISION_STREAM_UNAVAILABLE' }, 503)
+      const controller = new AbortController()
+      const signal = AbortSignal.any([controller.signal, c.req.raw.signal])
+      const timer = setTimeout(() => controller.abort(new Error('Vision capture deadline')), 240_000)
+      try {
+        const address = await demoAddress(asked, { reach, signal, proxyOrigin })
+        signal.throwIfAborted()
+        return new Response(
+          visionStream(
+            shoot.vision({ ...asked, ...address, siteHosts: [asked.host].filter(Boolean), signal }),
+            {
+              signal,
+              cancel: () => controller.abort(),
+              close: () => clearTimeout(timer)
+            }
+          ),
+          {
+            headers: {
+              'content-type': 'application/x-ndjson',
+              'cache-control': 'no-store',
+              'x-accel-buffering': 'no'
+            }
+          }
+        )
+      } catch {
+        clearTimeout(timer)
+        return c.json({ code: 'VISION_CAPTURE_FAILED' }, 502)
+      }
+    }
+    const address = await demoAddress(asked, { reach, proxyOrigin })
+    const result = await runCapture({ ...asked, shoot, timeoutMs, ...address })
     return c.json(result, 200)
   }
 }
@@ -989,7 +1023,7 @@ function captureRoute({ shoot, timeoutMs, reach = reachableBase }) {
  * Synchronous like `/capture`: at most seven pages, each held to its own time box. Same target rule
  * as `/capture` — a label, a port, a hostname; never a URL.
  */
-function demoQaRoute({ demoQa }) {
+function demoQaRoute({ demoQa, proxyOrigin = null }) {
   return async (c) => {
     if (!demoQa) return c.json({ code: 'NO_BROWSER' }, 503)
     const { body, refused } = bodyObject(c)
@@ -1000,11 +1034,16 @@ function demoQaRoute({ demoQa }) {
     // macOS stand) reaches the web container's name — probe, never assume (18/10/2026).
     // The site's own name, when home writes one on its published host and it is not the reachable
     // address (the stand): pages open at that name and are served from the reachable one.
-    const { base, serveFrom } = await demoAddress(asked, { discover: true })
+    const deadline = qaDeadline(asked, c.req.raw.signal)
     try {
-      return c.json(await demoQa({ asked, base, serveFrom }), 200)
+      const address = await demoAddress(asked, { discover: true, signal: deadline.signal, proxyOrigin })
+      deadline.signal.throwIfAborted()
+      return c.json(await demoQa({ asked, ...address, signal: deadline.signal }), 200)
     } catch (error) {
-      return c.json({ code: 'DEMO_QA_FAILED', why: String(error?.message ?? error).slice(0, 400) }, 502)
+      const code = error?.code === 'DEMO_QA_DEADLINE' ? error.code : 'DEMO_QA_FAILED'
+      return c.json({ code, why: String(error?.message ?? error).slice(0, 400) }, 502)
+    } finally {
+      deadline.dispose()
     }
   }
 }
@@ -1208,9 +1247,12 @@ export function buildApp({
   app.post('/_host/address', addressRoute({ config, run }))
   app.post('/_host/go-live', goLiveRoute({ config, jobs, run }))
   app.post('/_host/routing-target', routingTargetRoute({ config }))
-  app.post('/_host/capture', captureRoute({ shoot, timeoutMs: captureTimeoutMs }))
+  app.post(
+    '/_host/capture',
+    captureRoute({ shoot, timeoutMs: captureTimeoutMs, proxyOrigin: config.siteProxyOrigin })
+  )
   app.post('/_host/outline', outlineRoute({ outline }))
-  app.post('/_host/demo-qa', demoQaRoute({ demoQa }))
+  app.post('/_host/demo-qa', demoQaRoute({ demoQa, proxyOrigin: config.siteProxyOrigin }))
 
   return app
 }

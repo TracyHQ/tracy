@@ -1,0 +1,46 @@
+{
+  "id": "REG-PR-1739-audit-harness-lifecycle",
+  "kind": "fix",
+  "title": "Audit fixtures retain pending work and select the reporter their parser expects",
+  "pr": 1739,
+  "area": "test/audit-harness",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "selectors": {
+    "files": "packages/site/tracy-website-opportunities/test/client-public-mode.test.mjs"
+  },
+  "steps": [
+    "Run the fake pending social request until its timeout fires.",
+    "Run the React 18 handover, suggestions and public Find fixtures with asynchronous act.",
+    "Run traced red-file isolation using the explicit spec reporter."
+  ],
+  "expect": [
+    "Timeout rejects rather than being cancelled with the event loop empty.",
+    "React interactions settle and teardown clears its keepalive.",
+    "The tracer identifies and reruns only the failing fixture, preserving the full read measurement."
+  ],
+  "evidence": "The serial whole-repository audit reproduced event-loop cancellations in four fixture files and reporter-dependent failure in the tracer test.",
+  "fence": "Only test-owned handles and reporter arguments change; production scheduling, timeouts and gate strictness remain unchanged.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-concurrency=1",
+      "--test-timeout=120000",
+      "--test-reporter=tap",
+      "packages/wo/website-opportunities/test/domain-social-stats-providers.test.mjs",
+      "packages/site/tracy-website-opportunities/test/client-find-build-handover.test.mjs",
+      "packages/site/tracy-website-opportunities/test/client-place-box-react18.test.mjs",
+      "packages/site/tracy-website-opportunities/test/client-public-mode.test.mjs",
+      "scripts/test/ci-turbo-setup.test.mjs"
+    ],
+    "tests": [
+      "timeout: the request is aborted after timeoutMs",
+      "wo-build on a buildable row: one create, one Build, through the template pick; the address forgets it",
+      "the suggestions open under the field: focus stays in it, the list is a listbox, not a dialog",
+      "public Find: nothing happens on its own, the search is the area alone, and Continue hands on at most 10",
+      "runTraced: a red test file is run again alone; green then is a whole measurement, red three times is refused"
+    ]
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "id": "REG-PR-1739-build-asks-nobody",
+  "kind": "fix",
+  "title": "A whole-site build asks nobody and writes none of the template's own files, a replace with no path says only the home page was read, and EmDash labels are named by their doors",
+  "pr": 1739,
+  "area": "website-opportunities/agent-demo",
+  "cms": ["wp", "jo", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: buildTemplateWrite on the round-31 commands: a Python heredoc writing patterns/contact-form.php and part-sidebar.php from inside the theme folder, sed -i on blog-banner.php, a redirect into style.css, php -r file_put_contents on wp-content/themes/t/functions.php, an edit of /var/www/html/wp-content/plugins/acm/acm.php; and on reads: grep and cat in the theme, wp post get 511, a script writing /tmp, a script under EmDash /app, a T4 templates/*/local/css/custom.css edit.",
+    "S2: the shipped site-tools bundle, in a conversation whose tracy_demo answered: ask_user_question with confirm-1a3161d97e and with an own id, bash `wp post delete 511 --force`, the sidebar heredoc, a grep in the theme, and a call a later listener answers `ask`.",
+    "S3: the same calls in a conversation that is not a build.",
+    "S4: planReplace + locateAll for {find:\"Most Read\"} with no path and with path \"/blog/\", on a page that does not hold the words.",
+    "S5: the tracy_emdash description and the emdash-site skill."
+  ],
+  "expect": [
+    "S1: every write names its template file (or the patterns folder for the heredocs); every read and the /tmp, /app and local stylesheet writes are null.",
+    "S2: the card and the own question are denied 'nobody answers during a build'; the delete is denied 'a build asks nobody' with no ask_user_question card; the heredoc is denied 'template's own file'; the grep is allowed; the approval becomes a deny 'approval nobody can give during a build'.",
+    "S3: the own question is allowed, the delete is denied with an ask_user_question card, the heredoc is allowed, the approval stays ask.",
+    "S4: no path → pathGiven false and next 'No path was given, so only the home page was read…' with no path:\"/\"; with path → pathGiven true and next page.text {path:\"/blog/\", match:\"Most\"}.",
+    "S5: the description holds no 'not writable'; the skill's bullet 'Labels change through their own tools.' names taxonomy_update_term, form_list and form_words and no 'Not writable here' remains."
+  ],
+  "selectors": {
+    "files": "packages/tools/tracy-site-tools/src/host/build-fence.mjs packages/tools/tracy-site-tools/src/host/index.ts packages/tools/tracy-site-tools/src/host/replace.mjs packages/tools/tracy-site-tools/src/host/emdash.mjs packages/design/tracy-design-skill/skills/emdash-site/SKILL.md",
+    "dom": ""
+  },
+  "evidence": "Local round 31 (25/10/2026, WordPress JA Restaurant): theme PHP edited by a Python heredoc, then a confirm card for `wp post delete 511 --force` held the turn 80 minutes.",
+  "fence": "isBuild; buildTemplateWrite (TEMPLATE_DIRS, JOOMLA_LOCAL, INTERPRETER + SCRIPT_WRITE); buildQuestionRefusal; buildShellRefusal; buildApprovalRefusal; pathGiven + notFoundNoPathNext",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-concurrency=1",
+      "--test-reporter=tap",
+      "packages/tools/tracy-site-tools/test/build-fence.test.mjs",
+      "packages/tools/tracy-site-tools/test/build-fence-wiring.test.mjs",
+      "packages/tools/tracy-site-tools/test/replace-core.test.mjs",
+      "packages/tools/tracy-site-tools/test/emdash.test.mjs",
+      "packages/tools/tracy-site-tools/test/site-context.test.mjs"
+    ],
+    "tests": [
+      "🔒 round 31: a Python heredoc rewriting a theme pattern from inside the theme folder is a template write",
+      "a script that names a theme file from the webroot, an in-place sed, a redirect and a file tool are template writes",
+      "reads, writes elsewhere, EmDash /app and a T4 local stylesheet pass",
+      "🔒 round 31 in a build: no question is shown, the delete runs with no card, the theme pattern is not rewritten",
+      "outside a build every road stays: the card is shown, the delete asks, the theme file may be edited",
+      "NOT_FOUND of a call with no path says only the home page was read and asks for the page that shows the words",
+      "the tracy_emdash description is the road (T9): within 1,500 chars, the words road verbatim, no contradiction",
+      "modes: the SEO/GEO mode, and only it, reads where the site keeps its head"
+    ],
+    "needs": []
+  }
+}

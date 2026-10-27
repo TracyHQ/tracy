@@ -1,0 +1,38 @@
+{
+  "id": "REG-PR-1739-closed-build-turn",
+  "kind": "fix",
+  "title": "Closed build turns cannot fall back to owner mutations or questions; native writes wait for readiness",
+  "pr": 1739,
+  "area": "site-tools/build-turns",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "selectors": {
+    "files": "packages/tools/tracy-site-tools/src/host/build-turns.mjs packages/tools/tracy-site-tools/src/host/closed-build.mjs packages/tools/tracy-site-tools/src/host/index.ts"
+  },
+  "steps": [
+    "Bind a native build turn, close its server action and attempt native, file, shell, wrapped writes and questions through the shipped pre-execute listeners.",
+    "Return late success/refusal responses, start a fresh owner or Retry turn, and attempt native local writes before provision and plan readiness."
+  ],
+  "expect": [
+    "The closed turn refuses all mutations and questions before owner confirmation; known reads survive without accepting an approval.",
+    "No late response changes the current turn; the new Retry must bind afresh, and ordinary owner turns retain their original behavior.",
+    "Native local writes are denied until provision and the frozen plan are ready; reads and unassigned owner writes remain available."
+  ],
+  "evidence": "Local EmDash turns 2 and 3 on 27 October 2026 reproduced a closed action falling through to CONFIRM_FIRST and a local content.replace writing before provision while tracy_emdash correctly returned AGENT_DEMO_NOT_READY.",
+  "fence": "A bounded turn-specific closedBuild latch is separate from build confirmation exemptions; readiness covers native local writes before their executors.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "packages/tools/tracy-site-tools/test/build-turns.test.mjs",
+      "packages/tools/tracy-site-tools/test/build-fence-wiring.test.mjs"
+    ],
+    "tests": [
+      "a closed build refuses mutations and questions before owner confirmation, while reads and fresh turns survive",
+      "native local writes wait for provision and the frozen plan, before they can reach owner confirmation"
+    ]
+  }
+}

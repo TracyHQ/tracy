@@ -1,7 +1,7 @@
 import { siteAccentOf, siteWhatsAppOf } from './brand-on-site.js'
-import { AGENT_DEMO, isAgentDemo, checkedResearch } from './agent-demo.js'
-import { researchOfRevision } from './revision-research.js'
+import { AGENT_DEMO, isAgentDemo, checkedResearch, agentDemoInventoryPolicy } from './agent-demo.js'
 import { withBuildChoice } from './build-choice.js'
+import { checkedFactText, demoFactEvidence } from './demo-fact-evidence.js'
 import { neutralWords } from 'website-opportunities/domain/neutral-copy.mjs'
 import { forbiddenFillers } from 'website-opportunities/domain/slot-fill-manifest.mjs'
 /**
@@ -109,17 +109,12 @@ export function briefOf(revision) {
   // Quotes travel separately from facts so testimonials cannot supply business claims. An agent build's evidence
   // is its frozen research too — its profile, sources and posts, never its reviews or ratings: the menu prices and
   // hours a build copies from the business's own pages are facts (pilot 24/10/2026, 31 of 102 read as invented).
-  // Read through the one resolver (`researchOfRevision`): a newer brief's referenced research and place profile, both
-  // checked against their hashes, or an older brief's embedded copy (#1791 V2).
-  const research = isAgentDemo(revision) ? researchOfRevision(revision).research : null
-  const evidence = research
-    ? `\n${JSON.stringify({ profile: research.profile, sources: research.sources, posts: research.posts })}`
-    : ''
+  const research = isAgentDemo(revision) ? checkedResearch(revision) : null
   const prose = `${md}\n${JSON.stringify(facts)}`
   return {
-    briefText: `${prose}${evidence}`,
+    briefText: research ? checkedFactText(prose, demoFactEvidence(research)) : prose,
     // Template text is judged against the brief alone (`no-demo-words`): the research's pages hold most everyday
-    // words, and 25 of 30 agency blocks read as the brief's with them (Fern Hollow, 24/10/2026).
+    // words, and 25 of 30 agency blocks read as the brief's with them (HideOut, 24/10/2026).
     briefProse: prose,
     ...(isAgentDemo(revision)
       ? {
@@ -299,12 +294,12 @@ const REPAIR = {
   'no-third-party-demo':
     'Disconnect requests to demo services and replace their visible widgets with supported place information or real contact actions, preserving the surrounding layout.',
   'contrast-readable':
-    'Make each text readable against what is behind it (contrast at least 3:1), in custom.css, with a rule that selects only the section named (its id or anchor), never a class other sections share. Over a photo, change the photo, never the words: darken it under light words and lighten it under dark ones (filter: brightness() below or above 1 on its picture), or put a calmer photo of the place there; an added colour, overlay or background fails look-kept.',
+    'Make each text readable against what is behind it (contrast at least 3:1), in custom.css, with a rule that selects only the section named (its id or anchor), never a class other sections share. Over a photo (overImage, measured at its viewport), change the photo, never the words: set its row’s tone with tracy_demo {operation:"plan.add", tones:{"<rowIndex>":"dark"}} ("dark" under light words, "light" under dark ones), import that photo again with rowIndex and write the path it returns; Tracy tones the photo itself until the words read (AGENT_DEMO_IMAGE_TONE_UNREACHABLE: put a calmer photo of the place there). Never a filter or style written into the block, an added colour, overlay or background: those fail native-structure or look-kept.',
   'no-text-overlap': 'Move or resize what covers each text so the words are not hidden (custom.css).',
   // Local round 23, 25/10/2026: one white-text rule for every happy-hours band fixed a dark band and
   // turned a light band's words white on grey (contrast 1.11), at the build's last check.
   'looks-finished':
-    'Fix each place named below and nothing else: a style rule selects only that section (its id or anchor), never a class other sections share, and never resizes the template’s pictures or moves its badges. Text over a photo is made readable by changing the photo, never the words: darkened under light words, lightened under dark ones (filter: brightness() below or above 1 on its picture), or a calmer photo of the place there — never an added colour, overlay or background, which fails look-kept. Darkening a photo under dark words makes them harder to read.',
+    'Fix each place named below and nothing else: a style rule selects only that section (its id or anchor), never a class other sections share, and never resizes the template’s pictures or moves its badges. Text over a photo is made readable by changing the photo, never the words: set its row’s tone with tracy_demo {operation:"plan.add", tones:{"<rowIndex>":"dark"}} ("dark" under light words, "light" under dark ones), import that photo again with rowIndex and write the path it returns; Tracy tones the photo itself until the words read (AGENT_DEMO_IMAGE_TONE_UNREACHABLE: put a calmer photo of the place there). Never a filter or style written into the block, an added colour, overlay or background: those fail native-structure or look-kept. Darkening a photo under dark words makes them harder to read.',
   'no-broken-assets-and-links':
     'Repair or replace each broken asset or destination, preserving its visible frame and layout.',
   'no-cms-error-leak': 'Find what prints this error and fix it; no PHP or database message may reach a page.',
@@ -312,6 +307,12 @@ const REPAIR = {
     'Replace each raw placeholder with real words from the brief; rewrite the topic when the original claim lacks supporting data.',
   'no-empty-picture-slots':
     'Fill every picture frame with a fitting supplied real photograph or a crop derived from one. Preserve the frame, its section and card count. Report any unresolved frame; never hide, empty or unpublish it to pass the check.',
+  // Plan "10/10" §5 (David 26/10/2026): a dead form becomes a real way to reach the business, never an empty band.
+  'no-empty-boxes':
+    'Each box below was made for a service (a booking or contact form, a feed, a map, a newsletter) and shows nothing. Put one button inside it, in the block that is empty, to the business’s real way to reach it: its booking or ordering link from the research, else its phone (tel:), else its Contact page — the words saying what it does ("Order online", "Call 917…", "Visit us"). Never a form of your own, never hidden, never left empty.',
+  // Plan "10/10" P1 (26/10/2026): a selfie behind a section, one photo on two posts side by side.
+  'photos-fit':
+    'Move each photo named below to where its subject fits: a photo of people, an event, a poster, a menu board or a logo goes in a card, a person’s frame or the gallery, never a section’s background — put a calm photo of the place or of its food there (tracy_demo media.look names what each photo shows). A photo repeated on a page while others are unused gives one of its frames another photo the page does not show yet.',
   'placed-pictures-visible':
     'Each picture below is on the site but sits in a hidden block (closed, collapsed or display:none): show it where a visitor sees it, or move it to a visible place.',
   'no-google-review-quoted':
@@ -392,6 +393,17 @@ export const summary = (checks) => checks.map((c) => ({ id: c.id, pass: c.pass, 
  * @param {{ok: boolean, status: number, body: any}} answer
  * @returns {{ok: true} | {ok: false, why: string}}
  */
+/**
+ * The baseline as the host judges against it: without each page's words (`pageBlocks`), which only the build's copy
+ * tasks read (`demo-copy.js`) — up to ~30 pages of text sent back with every check for nothing.
+ * @param {any} baseline
+ */
+export function baselineForHost(baseline) {
+  if (!baseline || typeof baseline !== 'object' || !('pageBlocks' in baseline)) return baseline
+  const { pageBlocks: _blocks, ...rest } = baseline
+  return rest
+}
+
 export function baselineTrust(answer) {
   if (!answer?.ok)
     return {
@@ -832,7 +844,8 @@ async function runRound(pool, deps, { build, lease }) {
       })
       nativeCheck = deps.compareNativeInventory?.(
         build.content?.agentDemo?.structure?.inventory,
-        current
+        current,
+        agentDemoInventoryPolicy(revisions[0], site.platform)
       ) ?? {
         id: 'native-structure',
         pass: false,
@@ -855,7 +868,7 @@ async function runRound(pool, deps, { build, lease }) {
       discover: true,
       plan: planPaths(build.receipt?.pagePlan ?? null),
       contactPaths: contactPaths(build.receipt?.pagePlan ?? null),
-      baseline: qa.baseline,
+      baseline: baselineForHost(qa.baseline),
       placed: placedPaths(build),
       ...briefOf(revisions[0]),
       ...(isAgentDemo(revisions[0])

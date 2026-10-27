@@ -11,6 +11,8 @@
         "$TURBO_ROOT$/scripts/ci/related-tests.mjs",
         "$TURBO_ROOT$/apps/.webroot/**",
         "$TURBO_ROOT$/apps/tracy-web/**",
+        "$TURBO_ROOT$/packages/cms/tracy-wordpress-theme/src/tracy/assets/js/tracy-motion.js",
+        "$TURBO_ROOT$/packages/cms/tracy-wordpress-theme/src/wp-ja-restaurant/assets/css/groups/home.css",
         "$TURBO_ROOT$/artifacts/.webroot",
         "$TURBO_ROOT$/changes/.webroot",
         "$TURBO_ROOT$/config/.webroot",

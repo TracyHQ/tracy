@@ -1,0 +1,41 @@
+{
+  "id": "REG-PR-1739-isolated-browser-proxy",
+  "kind": "fix",
+  "title": "QA and captures read isolated sites through the configured public proxy without acquiring site networks",
+  "pr": 1739,
+  "area": "wo/qa",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "selectors": {
+    "files": "apps/tracy-host/src/demo-qa.js,apps/tracy-host/src/self-named.js,apps/tracy-web/src/bar/site-proxy.js"
+  },
+  "steps": [
+    "Make every direct site road unreachable and read two site names through one configured proxy backend.",
+    "Try a wrong or absent site routing receipt, an external/control-plane redirect, a direct HTTP500 and cancellation during a pending HEAD request."
+  ],
+  "expect": [
+    "Host/protocol and site identity remain exact for concurrent sites; the CMS cannot forge the proxy routing receipt.",
+    "A direct HTTP error is measured without proxy fallback; each proxied navigation requires the same site receipt; a backend redirect is never site evidence.",
+    "Aborting a pending probe closes the request and response bytes are not retained.",
+    "A proxy transport failure aborts QA and capture navigation without an unchecked direct retry."
+  ],
+  "evidence": "Joomla Retry provisioned successfully but baseline could not open its private-network DNS from tracy-host; anonymous host-to-web proxy read returns the Joomla document while unknown label returns404.",
+  "fence": "The proxy origin comes only from validated TRACY_WEB_ORIGIN, not the request or site; no seat credential or network attachment is added.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-host/test/capture-self-named.test.mjs",
+      "apps/tracy-host/test/config.test.mjs"
+    ],
+    "tests": [
+      "isolated sites use the configured proxy with their own Host and require its routing receipt",
+      "a direct HTTP 500 remains the measured road instead of being hidden by a healthy proxy",
+      "each proxied navigation requires the same site receipt and disposes failed responses",
+      "cancelling a proxy probe while headers are pending closes its HTTP request",
+      "capture and QA abort a failed proxy navigation without trying the public address directly"
+    ]
+  }
+}

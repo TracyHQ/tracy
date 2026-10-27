@@ -1,0 +1,1 @@
+{"id":"REG-PR-1739-build-speed","verdict":"PASS","commit":"c093e14a97bac7aaeeae217f1a707d5e4c7d0d73","ran_at":"2026-10-25T19:57:21.144Z","evidence":"tests/regression/.runs/2026-10-25-c093e14a9/REG-PR-1739-build-speed.log"}

@@ -1,3 +1,4 @@
+import { visionKey } from '../src/lib/picture-vision.js'
 /** What the site's build did with the photographs, as the hand-off names it to the agent. */
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
@@ -61,7 +62,7 @@ test('the pictures left for the agent: no poster, menu board, logo or words on i
     kind: 'image',
     width: w,
     height: h,
-    labels: vision ? { vision: { labels: vision } } : null
+    labels: vision ? { vision: { model: 'v', key: visionKey({ model: 'v' }), labels: vision } } : null
   })
   const media = [
     m('poster', 2000, 2000, { subject: 'poster', textPresence: 'present' }),

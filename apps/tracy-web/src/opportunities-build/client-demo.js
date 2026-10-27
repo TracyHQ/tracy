@@ -3,6 +3,7 @@ import { createHash, randomUUID } from 'node:crypto'
 import { mintSession } from '../lib/session.js'
 import {
   agentDemoCollected,
+  agentDemoInventoryPolicy,
   checkedResearch,
   DEMO_CHECKS,
   inventoryRoutes,
@@ -20,10 +21,12 @@ import { deterministicBuildId, suggestedLabel, startBuild, settleBuild } from '.
 import { revisionForAction } from './revisions.js'
 import { logoResearchDoor, logoResearchNote } from './logo-research.js'
 import { withBuildChoice } from './build-choice.js'
-import { insertBuild, saveBuildLabel } from './build-store.js'
+import { buildPlaced, insertBuild, saveBuildLabel } from './build-store.js'
+import { deferToMeasure, reusableLookPages } from './demo-look.js'
+import { visionLabelOf } from './demo-photo-labels.js'
 import { demoActionOf } from './demo-actions.js'
 import { handOff, pictureWorth, poorPicture, videoFrameIds } from './handoff.js'
-import { baselineTrust, briefOf, summary } from './demo-qa.js'
+import { baselineForHost, baselineTrust, briefOf, summary } from './demo-qa.js'
 import { planSweep, routePath, siteLocaleOf, sweepOf } from './residue-sweep.js'
 import { currentPostRoutes, postMoves } from './post-routes.js'
 import { contactOf, pinnedCopy } from 'website-opportunities/domain/pinned-copy.mjs'
@@ -109,7 +112,7 @@ const doneCheck = (job, result) => ({ ...job, state: 'done', result, resultText:
 /**
  * The agent's plan with the structure it was checked against. 🔒 `plan.save` KEEPS THE STRUCTURE BESIDE THE PLAN,
  * NEVER IN IT (`agent-demo.js`), so every reader of the template's posts (`templatePostsLeft`, `templatePostTitles`,
- * `postCoverage`) read none from the saved plan: the sweep never dated a post the check did not open (The Willow Nook
+ * `postCoverage`) read none from the saved plan: the sweep never dated a post the check did not open (The Living Room
  * local, 25/10/2026: eight posts kept 2021).
  * @param {{plan: Record<string, any>, structure?: unknown}} agentDemo
  */
@@ -340,8 +343,12 @@ export function createClientDemoService(deps) {
         baselineTries: state.build.qa?.baseline ? state.build.qa.baselineTries : 0,
         baselineError: null,
         machinePassed: false,
+        humanAccepted: false,
         reason: null
       }
+      // A Retry keeps the untouched baseline, never the previous turn's check job or verdict.
+      delete qa.clientCheck
+      delete qa.clientChecks
       await pool.query(
         `update wo_build set content=jsonb_set(content,'{agentDemo,clientChat}',$2::jsonb),qa=$3::jsonb where id=$1`,
         [
@@ -352,6 +359,36 @@ export function createClientDemoService(deps) {
       )
       return { action: await demoActionOf(pool, accountId, actionId), ...view, submission }
     })
+  }
+  /**
+   * The demo's site provisioned (`startBuild`, idempotent by the action's request id), asked by the agent's
+   * `provision.start` only: 🔒 a chat sent reserves the request, and only the agent's tool inside that real turn
+   * installs a site (a reservation whose turn never comes costs no container). Plan "10/10" §7 S4 (26/10/2026) keeps
+   * this and moves the wait instead: the brief has the agent start the install first and read the research while it
+   * runs (it waited 40–140 s on `provision.wait` doing nothing).
+   */
+  async function startProvision(state, accountId, proof) {
+    const held = await pool.query(
+      `update wo_build set content=jsonb_set(content,'{agentDemo,clientChat,provisionRequested}',$2::jsonb)
+      where id=$1 and exists(select 1 from wo_demo_action where id=$3 and status='queued') returning id`,
+      [state.build.id, JSON.stringify(proof), state.action.id]
+    )
+    if (!held.rowCount) throw error('AGENT_DEMO_ACTION_CLOSED')
+    const result = await startBuild({
+      pool,
+      request,
+      origin,
+      cookie: state.cookie,
+      domain: await loadDomain(),
+      config,
+      accountId,
+      revision: state.revision,
+      requestId: state.action.build_request_id,
+      label: state.build.label,
+      demoActionId: state.action.id
+    })
+    if (result.status >= 300) throw error(result.body.code ?? 'PROVISION_FAILED')
+    return result
   }
   async function stopped(state) {
     const expected =
@@ -384,7 +421,7 @@ export function createClientDemoService(deps) {
     if (stop) throw error(stop)
   }
   /**
-   * 🔒 A TURN THAT ENDED WITHOUT A PASSING CHECK ENDS THE BUILD (Fern Hollow 41cfe7d9, 24/10/2026): the agent closed its
+   * 🔒 A TURN THAT ENDED WITHOUT A PASSING CHECK ENDS THE BUILD (HideOut 41cfe7d9, 24/10/2026): the agent closed its
    * turn `completed` after one failed check and the job read "fill" until the 2 h timeout. Its last expected turn
    * closed normally, no turn of the chat is open (an owner follow-up keeps it) and no check still runs.
    *
@@ -438,7 +475,7 @@ export function createClientDemoService(deps) {
       )
       return { terminal: true, state: 'failed', error: 'AGENT_DEMO_ENDED_UNCHECKED' }
     }
-    // 🔒 AN EARLIER ACTION'S VERDICT IS NOT ITS RETRY'S (The Willow Nook local, 25/10/2026): the build's QA still read
+    // 🔒 AN EARLIER ACTION'S VERDICT IS NOT ITS RETRY'S (The Living Room local, 25/10/2026): the build's QA still read
     // the turn that ended unchecked, so the Retry closed with QA_NEEDS_REVIEW before its chat could be prepared, and
     // the demo could never go again. `send` stamps `qa.since` with the sending action's `accepted_at`, so a verdict
     // older than this Retry is the earlier action's and ends neither rule below (`send` resets QA).
@@ -471,7 +508,7 @@ export function createClientDemoService(deps) {
     }
   }
   /**
-   * 🔒 AN UNREAD STARTING INVENTORY IS A BASELINE TRY (Reverb 4d53fccd, 24/10/2026): every read hit the inventory's
+   * 🔒 AN UNREAD STARTING INVENTORY IS A BASELINE TRY (Bebop 4d53fccd, 24/10/2026): every read hit the inventory's
    * time cap, `baselineTries` stayed 0, the agent read again forever and told the person to create a new site.
    */
   async function inventoryFailed(state, body) {
@@ -559,32 +596,12 @@ export function createClientDemoService(deps) {
         throw error('AGENT_DEMO_NOT_GRANTED')
       await throwIfStopped(state)
       if (params.operation === 'provision.start') {
-        const proof = {
+        const result = await startProvision(state, auth.accountId, {
           actionId: state.action.id,
           nativeRequestId: build.current_rpc_id,
           turnId: auth.turnId,
           at: new Date(now()).toISOString()
-        }
-        const held = await pool.query(
-          `update wo_build set content=jsonb_set(content,'{agentDemo,clientChat,provisionRequested}',$2::jsonb)
-          where id=$1 and exists(select 1 from wo_demo_action where id=$3 and status='queued') returning id`,
-          [state.build.id, JSON.stringify(proof), state.action.id]
-        )
-        if (!held.rowCount) throw error('AGENT_DEMO_ACTION_CLOSED')
-        const result = await startBuild({
-          pool,
-          request,
-          origin,
-          cookie: state.cookie,
-          domain: await loadDomain(),
-          config,
-          accountId: auth.accountId,
-          revision: state.revision,
-          requestId: state.action.build_request_id,
-          label: state.build.label,
-          demoActionId: state.action.id
         })
-        if (result.status >= 300) throw error(result.body.code ?? 'PROVISION_FAILED')
         return {
           ok: true,
           state: result.body.build.state,
@@ -613,17 +630,47 @@ export function createClientDemoService(deps) {
     if (!state.build.qa?.baseline || !state.build.content?.agentDemo?.plan)
       throw error('AGENT_DEMO_PLAN_REQUIRED')
   }
+  /** Each photo of the build's research by its subject, where a label says it; never fails a check run. */
+  async function sourceSubjectsOf(pool, state) {
+    try {
+      const rows = await buildPlaced(pool, state.build.account_id, state.revision)
+      return Object.fromEntries(
+        rows
+          .map((row) => [row.id, visionLabelOf(row)?.subject])
+          .filter(([, subject]) => typeof subject === 'string')
+      )
+    } catch {
+      return {}
+    }
+  }
   /** Reads, shoots and looks at the site: minutes on a whole site. Saves nothing. */
+  /**
+   * One check of the site: incremental after the first (pages whose document did not change keep their last read,
+   * plan "10/10" §7 S6), and a pass found that way is confirmed by a full read before it counts — the last check
+   * that passes a build has read every page anew (council 26/10/2026).
+   */
   async function measure(auth, state) {
+    const incremental = (state.build.qa?.clientCheckAttempts ?? 0) > 0
+    const first = await measureOnce(auth, state, incremental)
+    if (!incremental || !first.pass) return first
+    return measureOnce(auth, state, false)
+  }
+  async function measureOnce(auth, state, incremental) {
     const site = (await pool.query('select * from site where site_key=$1', [state.build.site_key])).rows[0]
-    const inventory = await deps.readNativeInventory({
-      site,
-      email: state.account.email,
-      structure: state.build.content.agentDemo.structure
-    })
+    // 🔒 The live records first: the QA reads each template post where it answers now (`currentQaRoutes`), and a
+    // rewritten post takes a slug from its new title. The photo labels are read beside them (plan "10/10" §7 S3).
+    const [inventory, sourceSubjects] = await Promise.all([
+      deps.readNativeInventory({
+        site,
+        email: state.account.email,
+        structure: state.build.content.agentDemo.structure
+      }),
+      sourceSubjectsOf(pool, state)
+    ])
     const structure = deps.compareNativeInventory(
       state.build.content.agentDemo.structure.inventory,
-      inventory
+      inventory,
+      agentDemoInventoryPolicy(state.revision, site.platform)
     )
     // The business's own logo where the research found one; else its name, drawn as a wordmark in the theme's type.
     const logo = importedLogo(state.build, state.revision.brief?.brand)
@@ -631,7 +678,8 @@ export function createClientDemoService(deps) {
     const measured = await deps.demoQa(site, {
       pages: ['/'],
       discover: true,
-      baseline: state.build.qa.baseline,
+      incremental,
+      baseline: baselineForHost(state.build.qa.baseline),
       ...currentQaRoutes(state.build, inventory, site.platform, CHECK_ROUTES_MS),
       ...briefOf(state.revision),
       ...(!logo && typeof name === 'string' && name.trim() ? { wordmark: name.trim() } : {}),
@@ -640,22 +688,34 @@ export function createClientDemoService(deps) {
       // A heading repeating a template post's title is residue the sweep plans, not the page's frame.
       templateTitles: templatePostTitles(checkedPlan(state.build.content.agentDemo)),
       // `collected-used`: everything the research collected is on the site, not only nothing false.
-      ...agentDemoCollected(state.revision, state.build)
+      ...agentDemoCollected(state.revision, state.build),
+      // `photos-fit`: what each photo shows, from the labels `media.look` made (`demo-photo-labels.js`).
+      sourceSubjects
     })
     if (!measured.ok || !Array.isArray(measured.body?.checks)) throw error('DEMO_QA_UNAVAILABLE')
-    // What a visitor sees: the pages the QA read, shot at both widths and looked at (`demo-look.js`).
-    const look = deps.demoLook
+    // What a visitor sees: the pages the QA read, shot at both widths and looked at (`demo-look.js`). In an incremental
+    // check a page whose document did not change keeps the faults the last look found on it (plan "10/10" §7 S6).
+    const readPages = [
+      ...(Array.isArray(measured.body.pages) ? measured.body.pages : ['/']),
+      ...(Array.isArray(measured.body.routes) ? measured.body.routes : [])
+    ]
+    const reused =
+      incremental && Array.isArray(measured.body.reused) ? new Set(measured.body.reused) : new Set()
+    const lastLook = reused.size
+      ? (state.build.qa?.clientCheck?.result?.checks ?? []).find((c) => c?.id === 'looks-finished')
+      : null
+    const kept = reusableLookPages(lastLook, readPages, reused)
+    const fresh = readPages.filter((p) => !kept.includes(p))
+    const lookNow = deps.demoLook
       ? await deps.demoLook(site, {
-          pages: [
-            ...(Array.isArray(measured.body.pages) ? measured.body.pages : ['/']),
-            ...(Array.isArray(measured.body.routes) ? measured.body.routes : [])
-          ],
+          pages: fresh.length ? fresh : ['/'],
           accountId: auth.accountId,
           opportunityId: state.action.opportunity_id,
           budgetMs: LOOK_MS,
           buildId: state.build.id
         })
       : null
+    const look = lookNow && kept.length ? keptLook(lookNow, lastLook, kept) : lookNow
     const sourced = checkResearchSourced(state.build.content.agentDemo.structure.inventory, inventory, {
       research: checkedResearch(state.revision),
       business: state.revision.brief?.business ?? null
@@ -664,6 +724,9 @@ export function createClientDemoService(deps) {
     const read = deps.picturesWhere
       ? deps.picturesWhere(measured.body.checks, inventory)
       : measured.body.checks
+    // Words the host measured over a photo are judged by that measure, never also by the look (`deferToMeasure`).
+    const contrast = read.find((c) => c?.id === 'contrast-readable')
+    const judged = look ? deferToMeasure(look, contrast?.measuredOver) : null
     const checks = [
       ...read,
       structure,
@@ -677,7 +740,7 @@ export function createClientDemoService(deps) {
         ],
         records: Array.isArray(inventory?.records) ? inventory.records : []
       }),
-      ...(look ? [look] : []),
+      ...(judged ? [judged] : []),
       ...[logoResearchNote(state.action.selection?.logoResearch)].filter(Boolean)
     ]
     const records = Array.isArray(inventory?.records) ? inventory.records : []
@@ -736,6 +799,18 @@ export function createClientDemoService(deps) {
       // What a sweep with no call to run still names unresolved (a slot the replace job refuses to empty, a linked
       // title with no sourced words): kept on the check's answer, so the QA lists it (`sweepUnresolvedOf`).
       unswept: worn.calls.length === 0 ? worn.unresolved : []
+    }
+  }
+  /** This look with the faults the last look found on the pages kept unchanged (`kept`), judged as one. */
+  function keptLook(now, last, kept) {
+    const carried = (Array.isArray(last?.detail) ? last.detail : []).filter((f) => kept.includes(f?.page))
+    const detail = [...(Array.isArray(now.detail) ? now.detail : []), ...carried]
+    return {
+      ...now,
+      pass: now.pass === true && carried.length === 0,
+      detail,
+      kept,
+      measured: `${now.measured ?? ''}; ${kept.length} unchanged pages keep the last look (${carried.length} faults)`
     }
   }
   /**

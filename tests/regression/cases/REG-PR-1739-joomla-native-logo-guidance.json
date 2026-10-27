@@ -1,0 +1,36 @@
+{
+  "id": "REG-PR-1739-joomla-native-logo-guidance",
+  "kind": "fix",
+  "title": "Joomla T4 logo findings name the native recorded settings door",
+  "pr": 1739,
+  "area": "wo/qa-guidance",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "selectors": {
+    "files": "apps/tracy-host/src/demo-qa.js,apps/tracy-web/src/sites/agent-demo-inventory.js"
+  },
+  "steps": [
+    "Read a header with the template logo while the business logo is already imported.",
+    "Locate a template picture held by no content record."
+  ],
+  "expect": [
+    "Both findings name template.siteSettings read and set with site_logo per profile.",
+    "The header finding does not tell the agent to copy or edit template files."
+  ],
+  "evidence": "Real Joomla Retry exhausted its checks after following the old file-copy hint; the build fence correctly refused those writes while the existing native settings door remained available.",
+  "fence": "Guidance follows an existing Undo-recorded native door; no new write path or file fence exemption.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-host/test/demo-qa-header-brand.test.mjs",
+      "apps/tracy-web/test/agent-demo-native-inventory.test.mjs"
+    ],
+    "tests": [
+      "header-brand: the collected logo in the header passes; the name alone, or another picture, does not",
+      "picturesWhere names the record and the WordPress block of each template picture, numbered as the outline is"
+    ]
+  }
+}

@@ -1,0 +1,2 @@
+{"id":"REG-PR-1739-emdash-isolated-setup","verdict":"PASS","commit":"cbea06c6814260dd3854fde2f98f08ec22d7fc0c","ran_at":"2026-10-26T23:22:32.715Z","evidence":"tests/regression/.runs/2026-10-26-cbea06c68/REG-PR-1739-emdash-isolated-setup.log"}
+{"id":"REG-PR-1739-retry-qa-before-submit","verdict":"PASS","commit":"cbea06c6814260dd3854fde2f98f08ec22d7fc0c","ran_at":"2026-10-26T23:22:35.553Z","evidence":"tests/regression/.runs/2026-10-26-cbea06c68/REG-PR-1739-retry-qa-before-submit.log"}
