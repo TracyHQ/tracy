@@ -1,0 +1,33 @@
+{
+  "id": "REG-PR-13-owned-vendor-trees-inventory",
+  "kind": "fix",
+  "title": "The reviewed skill tree guard treats the owned vendor tree list and its test fixtures as inventory, and still fails on a real read of a skill tree",
+  "pr": 13,
+  "area": "ci/related-tests",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the repository checkout run: node --test scripts/test/related-tests.test.mjs",
+    "S2: Read the pass/fail counts and the two reviewed skill tree guard cases."
+  ],
+  "expect": [
+    "0 failures.",
+    "'only declared readers read a reviewed skill tree; inventory lines may name one' passes although scripts/test/owned-vendor-trees.test.ts names the WordPress theme skill and EmDash skill trees as path fixtures.",
+    "'no test reaches a reviewed skill tree through a module that reads it' passes although that test imports scripts/lib/owned-vendor-trees.ts, whose path rows name those trees.",
+    "Before the fix (develop at 3807bf609) both cases failed with 'reads vendor/wordpress/tracy-wordpress-theme/' and 'loads scripts/lib/owned-vendor-trees.ts'."
+  ],
+  "selectors": {
+    "inventory": "scripts/test/related-tests.test.mjs INVENTORY_LINE",
+    "test": "scripts/test/related-tests.test.mjs"
+  },
+  "evidence": "CI on every pull request after the move to the public repository: the two guard cases in the tests rows were red.",
+  "fence": "The INVENTORY_LINE patterns match only line shapes (path rows, scope fixture rows, the Markdown fixture call) and never spell a tree path; a line in either file that reads a file inside a skill tree still fails the guard (checked by hand, not by this case).",
+  "run": {
+    "cmd": ["node", "--test", "--test-reporter=tap", "scripts/test/related-tests.test.mjs"],
+    "tests": [
+      "only declared readers read a reviewed skill tree; inventory lines may name one",
+      "no test reaches a reviewed skill tree through a module that reads it"
+    ]
+  }
+}
