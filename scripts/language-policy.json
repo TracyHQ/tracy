@@ -67,6 +67,16 @@
       "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-boxing/j6/1.0.6/presentation-lock.json",
       "oid": "976fd27e671cb92c7ce0748adc98ca9af227990e",
       "reason": "Third-party template demo content captured verbatim; the contract must match the demo byte for byte."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-boxing/j6/1.0.7/content-map.json",
+      "oid": "3575b301defc3f0440ef0d87c4f297f46b6895af",
+      "reason": "Third-party template demo content captured verbatim; the contract must match the demo byte for byte."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-boxing/j6/1.0.7/presentation-lock.json",
+      "oid": "976fd27e671cb92c7ce0748adc98ca9af227990e",
+      "reason": "Third-party template demo content captured verbatim; the contract must match the demo byte for byte."
     }
   ]
 }
