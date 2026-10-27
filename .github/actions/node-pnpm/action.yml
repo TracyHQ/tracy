@@ -38,7 +38,11 @@ runs:
         COREPACK_ENABLE_DOWNLOAD_PROMPT: '0'
       run: |
         set -euo pipefail
+        # The corepack bundled with Node fails to verify newer pnpm releases ("Cannot find matching
+        # keyid"); the team's runner image installs the released one for the same reason.
+        npm install --global --no-audit --no-fund --loglevel=error corepack@0.36.0
         corepack enable pnpm
+        corepack --version
         echo "path=$(pnpm store path --silent)" >> "$GITHUB_OUTPUT"
         echo "key=pnpm-store-${RUNNER_OS}-${RUNNER_ARCH}-${{ hashFiles('pnpm-lock.yaml', 'vendor/tracy/deepseek-harness/pnpm-lock.yaml') }}" >> "$GITHUB_OUTPUT"
         df -h / | tail -1 | awk '{print "disk: " $4 " free of " $2}'

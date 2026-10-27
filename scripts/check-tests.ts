@@ -526,8 +526,11 @@ export function ensureDeps(): void {
 }
 
 /**
- * Try to open a browser the same way the suite opens it: the machine's `chrome` channel first, Playwright's
- * Chromium second (`tools/qa-browser.mjs`). `createRequire` from the package's own directory, not a bare
+ * Try to open Playwright's own Chromium, the browser every suite falls back to and most suites open
+ * directly (`chromium.launch()`). Not the machine's `chrome` channel: a machine with Google Chrome
+ * but no Playwright Chromium (a GitHub-hosted runner, measured 27/10/2026) passed that probe, nothing
+ * was installed, and every suite that launches the bundled browser failed with "Executable doesn't
+ * exist". `createRequire` from the package's own directory, not a bare
  * `import('playwright')`: a bare specifier inside `node -e` resolves against the process's working
  * directory, and a probe must never depend on who called it.
  */
@@ -538,7 +541,7 @@ function browserOpens(dir: string): { ok: boolean; why: string } {
       '-e',
       `const { createRequire } = require('node:module');` +
         `const pw = createRequire(${JSON.stringify(join(dir, 'probe.cjs'))})('playwright');` +
-        `pw.chromium.launch({ channel: 'chrome' }).catch(() => pw.chromium.launch())` +
+        `pw.chromium.launch()` +
         `.then((b) => b.close()).then(() => process.exit(0))` +
         `.catch((e) => { console.error(String(e && e.message || e)); process.exit(1); });`
     ],
