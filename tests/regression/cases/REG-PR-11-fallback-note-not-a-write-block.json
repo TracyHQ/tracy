@@ -4,9 +4,7 @@
   "title": "The note sent with a pin switched from a subscription says only which model answers; it never reads as an outage or a write block",
   "pr": 11,
   "area": "ai-accounts/fallback-note",
-  "cms": [
-    "any"
-  ],
+  "cms": ["any"],
   "needs": [],
   "flaky_model": false,
   "steps": [
