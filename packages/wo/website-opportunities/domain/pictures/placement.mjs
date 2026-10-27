@@ -207,6 +207,50 @@ export function outputSize(crop, aspect, demoWidth) {
   return null
 }
 
+/**
+ * Whether a picture of `size` can take a frame of the demo's shape at all, by the planner's hard limits alone (C9): the
+ * crop that keeps the demo's shape loses at most `CROP_MAX_LOSS` of the picture, is enlarged at most `MAX_SCALE` to reach
+ * `min` (the role's target width, never more than the demo's), and has a whole-pixel output of the demo's shape. What the
+ * picture shows is not judged here; `fitOf` adds that. Null when no such crop exists.
+ * @param {{width: number, height: number}} size - the picture's
+ * @param {{width: number, height: number}} demo - the frame's (the demo picture's, or the box it is drawn in)
+ * @param {{min?: number}} [opts]
+ * @returns {{aspect: number, box: {width: number, height: number, loss: number}, output: {width: number, height: number}, scale: number} | null}
+ */
+export function shapeFit(size, demo, { min = ROLES.section.min } = {}) {
+  if (!size?.width || !size?.height || !demo?.width || !demo?.height) return null
+  const aspect = demo.width / demo.height
+  const box = cropBox(size.width, size.height, aspect)
+  if (box.loss > CROP_MAX_LOSS) return null
+  const scale = Math.min(demo.width, min) / box.width
+  if (scale > MAX_SCALE) return null
+  const output = outputSize(box, aspect, demo.width)
+  if (!output) return null
+  return { aspect, box, output, scale }
+}
+
+/**
+ * The crop recipe that cuts a picture of `size` to the demo's shape, keeping its subject where its label says (`focus`,
+ * subject), else by attention. Null when `shapeFit` says no crop is acceptable.
+ * @param {{width: number, height: number}} size
+ * @param {{width: number, height: number}} demo
+ * @param {{min?: number, label?: object}} [opts]
+ */
+export function fitCrop(size, demo, { min, label = {} } = {}) {
+  const fit = shapeFit(size, demo, min === undefined ? {} : { min })
+  if (!fit) return null
+  const strategy =
+    label.focus || label.subject
+      ? cropStrategy({ focus: label.focus, subject: label.subject })
+      : { strategy: 'attention' }
+  return {
+    aspect: Number(fit.aspect.toFixed(6)),
+    source: { width: fit.box.width, height: fit.box.height },
+    output: fit.output,
+    ...strategy
+  }
+}
+
 function cropStrategy(label) {
   if (label.focus && label.focus !== 'center') return { strategy: 'anchor', anchor: label.focus }
   if (['food', 'drink', 'dessert', 'work-result', 'product'].includes(label.subject))
@@ -228,13 +272,10 @@ function topicSubject(topic) {
  */
 export function fitOf(label, group) {
   const role = ROLES[group.role] ?? ROLES.section
-  if (!group.demo || !label.width || !label.height) return null
-  const aspect = group.demo.width / group.demo.height
-  const box = cropBox(label.width, label.height, aspect)
-  if (box.loss > CROP_MAX_LOSS) return null
+  const shape = shapeFit(label, group.demo, { min: role.min })
+  if (!shape) return null
+  const { aspect, box, output, scale } = shape
   const targetW = Math.min(group.demo.width, role.min)
-  const scale = targetW / box.width
-  if (scale > MAX_SCALE) return null
   if (label.collage) return null
   if (role.noText && (label.graphic || label.textPresence === 'present')) return null
   if (['logo', 'menu-board', 'poster'].includes(label.subject)) return null
@@ -246,9 +287,6 @@ export function fitOf(label, group) {
   const wanted = topicSubject(group.topic)
   // A section that names its subject takes that subject only: a steak is not an ice cream (C13).
   if (role.strict && (label.subjectFrom === 'none' || (wanted && label.subject !== wanted))) return null
-  const output = outputSize(box, aspect, group.demo.width)
-  if (!output) return null
-
   const trust = TRUST[label.subjectFrom] ?? TRUST.none
   let score = 4 * want * trust
   score += 1.5 * (1 - box.loss) - (box.loss > CROP_WARN ? 1.5 : 0)

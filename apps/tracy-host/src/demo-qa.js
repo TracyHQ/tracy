@@ -95,7 +95,8 @@ const CHECK_IDS = Object.freeze([
   'collected-used',
   'withheld-not-shown',
   'header-brand',
-  'no-copied-reviews'
+  'no-copied-reviews',
+  'picture-frames-kept'
 ])
 export { CHECK_IDS }
 
@@ -124,6 +125,19 @@ function planPath(platform, p) {
 
 /** One key for `/index.php/x` and `/x`, so a page nav and the plan both name is read once. */
 const routeKey = (p) => p.replace(/^\/index\.php(?=\/|$)/, '') || '/'
+
+/** The kept pictures a request names: `{file, kind, reason}` each, anything else dropped. */
+function keptOf(value) {
+  if (!Array.isArray(value)) return []
+  return value
+    .filter((k) => k && typeof k.file === 'string' && k.file && k.file.length <= 400)
+    .slice(0, 500)
+    .map((k) => ({
+      file: k.file.replace(/^\/+/, ''),
+      kind: typeof k.kind === 'string' ? k.kind.slice(0, 40) : 'keep',
+      reason: typeof k.reason === 'string' ? k.reason.slice(0, 300) : 'kept by the template'
+    }))
+}
 
 /**
  * Read the request into what a QA run needs, or the first thing wrong with it. Same target grammar as
@@ -187,6 +201,8 @@ export function demoQaBody(body) {
     maxPages: DEMO_QA_MAX_PAGES + planned.length,
     baseline,
     placed: strings(body.placed, 500, 400),
+    // The template pictures no build path replaces, each with why (`agent-demo-slot-fit.js` `keptPictures`).
+    kept: keptOf(body.kept),
     // Each placed file's source photo (`agentDemoCollected`): crops of one photo are one photo (`collected-used`).
     placedSources: Object.fromEntries(
       Object.entries(body.placedSources && typeof body.placedSources === 'object' ? body.placedSources : {})
@@ -1077,9 +1093,11 @@ function baselinePictures(reads, placed) {
 /**
  * No VISIBLE picture (an `<img>` at any size, `srcset`/`<picture>` through `currentSrc`, a CSS
  * background) is one the template already showed before the agent's turn, unless Tracy's own build
- * placed it. Not per template, not per CMS: the difference against the site's own baseline. Cut-outs,
- * avatars and the template's logo are not exempt — they state facts about a restaurant that are not its
- * own (pic-hill6: `hero/chef.png`, a "RES est 1982" logo).
+ * placed it. Not per template, not per CMS: the difference against the site's own baseline. The template's
+ * logo is not exempt — it states a fact about another business (pic-hill6: a "RES est 1982" logo).
+ * 🔒 A PICTURE THE TEMPLATE KEEPS STAYS (Slot fit, 27/10/2026): an icon, an avatar strip, a signature, a cut-out and a
+ * slot the contract keeps (`kept`, or an avatar or signature by its file's name) are never photos to replace; asking
+ * for them put a single portrait in a strip of faces. Each is named `unresolved` as kept, never a finding.
  * @param {PageRead[]} reads
  */
 /** Pixels under which a picture is an icon on both sides: part of the template's design, never a photo. */
@@ -1129,7 +1147,19 @@ function designWhy(file) {
  */
 const LIBRARY_UPLOAD = /^wp-content\/uploads\/\d{4}\/\d{2}\//
 
-export function checkNoDemoPictures(reads, { baseline = null, placed = [] } = {}) {
+/** A picture the template keeps by its file's name alone: a face or a hand of somebody's (`slot-map.mjs` NEVER). */
+const KEPT_BY_NAME = /(?:avatars?|author-img|signature)[^/]*$/i
+
+/** Why a template file is kept, or null: the request's kept list first, then its name. */
+function keptWhy(file, kept) {
+  const hit = kept.find((k) => matchesFile(file, [k.file]))
+  if (hit) return `the template picture ${file.split('/').at(-1)} is kept: ${hit.reason}`
+  if (KEPT_BY_NAME.test(file))
+    return `the template picture ${file.split('/').at(-1)} is kept: a face or a signature`
+  return null
+}
+
+export function checkNoDemoPictures(reads, { baseline = null, placed = [], kept = [] } = {}) {
   const before = baseline?.pictures
   // Unknown is not a pass: without the pictures the template showed, nothing here can be judged.
   if (!before)
@@ -1154,6 +1184,19 @@ export function checkNoDemoPictures(reads, { baseline = null, placed = [] } = {}
       const byBytes = Boolean(img.sha256 && shas.has(img.sha256))
       const unshown = !byName && !byBytes && LIBRARY_UPLOAD.test(file)
       if (!byName && !byBytes && !unshown) continue
+      const keep = keptWhy(file, kept)
+      if (keep) {
+        if (!exempt.has(file))
+          exempt.set(file, {
+            page: r.path,
+            file,
+            kind: img.kind,
+            size: `${img.width}×${img.height}`,
+            selector: img.selector ?? null,
+            why: keep
+          })
+        continue
+      }
       if (decoration(img, file)) {
         if (!exempt.has(file))
           exempt.set(file, {
@@ -1198,6 +1241,76 @@ export function checkNoDemoPictures(reads, { baseline = null, placed = [] } = {}
       .join(', ')}`,
     unresolved: unresolved.slice(0, DETAIL_MAX)
   }
+}
+
+// ── picture-frames-kept ────────────────────────────────────────────────────────────────────────
+
+/** How far a frame's shape may move, relative, before it is another shape (a rounding pixel or two is not). */
+const FRAME_TOLERANCE = 0.05
+/** Boxes smaller than this on a side are not judged: a spacer, a tracking pixel. */
+const FRAME_MIN_PX = 24
+
+/**
+ * 🔒 EVERY TEMPLATE PICTURE KEEPS ITS FRAME'S SHAPE (Slot fit, 27/10/2026): a built sports club placed phone portraits
+ * whole into wide class cards and square trainer cards, and every box grew with its photo (sections up to 133% taller),
+ * while each picture check passed. Each picture box the baseline measured before the agent's turn (`imageFrames`) is
+ * found again by its page, its selector and its place among boxes of that selector: its width / height may move at most
+ * `FRAME_TOLERANCE`, and a picture the template keeps (`kept`, an avatar or a signature by name) must still be its file.
+ * @param {PageRead[]} reads
+ * @param {{baseline?: any, kept?: Array<{file: string, reason: string}>}} asked
+ */
+export function checkPictureFramesKept(reads, { baseline = null, kept = [] } = {}) {
+  const id = 'picture-frames-kept'
+  const expected = "every picture box keeps the template's shape, and the pictures the template keeps stay"
+  const frames = Array.isArray(baseline?.imageFrames) ? baseline.imageFrames : []
+  if (frames.length === 0)
+    return { ...verdict(id, [], 'no measured frames', expected), skipped: 'no measured frames' }
+  const key = (route, selector) => `${routeKey(String(route ?? '/'))} ${selector ?? ''}`
+  const was = new Map()
+  for (const f of frames) was.set(key(f.route, f.selector), [...(was.get(key(f.route, f.selector)) ?? []), f])
+  const findings = []
+  let judged = 0
+  for (const r of reads) {
+    const now = new Map()
+    for (const i of r.images ?? [])
+      now.set(key(r.path, i.selector), [...(now.get(key(r.path, i.selector)) ?? []), i])
+    for (const [k, list] of now) {
+      const before = was.get(k) ?? []
+      for (let n = 0; n < Math.min(before.length, list.length); n += 1) {
+        const b = before[n]
+        const a = list[n]
+        if (!(b.width >= FRAME_MIN_PX && b.height >= FRAME_MIN_PX && a.width > 0 && a.height > 0)) continue
+        judged += 1
+        const file = fileOf(a.src)
+        const keep = keptWhy(String(b.path ?? ''), kept)
+        if (keep && b.path && file !== b.path) {
+          findings.push({
+            page: r.path,
+            selector: a.selector ?? null,
+            was: b.path,
+            now: file,
+            why: `${keep}; it was replaced`
+          })
+          continue
+        }
+        const change = a.width / a.height / (b.width / b.height)
+        if (Math.abs(change - 1) > FRAME_TOLERANCE)
+          findings.push({
+            page: r.path,
+            selector: a.selector ?? null,
+            was: b.path,
+            now: file,
+            why: `its frame was ${b.width}×${b.height} and is now ${a.width}×${a.height}`
+          })
+      }
+    }
+  }
+  return verdict(
+    id,
+    findings,
+    `${findings.length} of ${judged} picture frames changed shape or lost a kept picture`,
+    expected
+  )
 }
 
 // ── no-demo-words ──────────────────────────────────────────────────────────────────────────────
@@ -3829,7 +3942,8 @@ function judgeWith(reads, asked, routeReads = []) {
     checkCollectedUsed(reads, asked),
     checkWithheldNotShown(reads, asked),
     checkHeaderBrand(reads, asked),
-    checkNoCopiedReviews(reads, asked)
+    checkNoCopiedReviews(reads, asked),
+    checkPictureFramesKept(reads, asked)
   ]
 }
 
