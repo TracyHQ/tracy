@@ -1,0 +1,1 @@
+{"id":"REG-PR-11-fallback-note-not-a-write-block","verdict":"PASS","commit":"912cee430b9b486743f9267b2e9fb149a184f110","ran_at":"2026-10-27T16:36:51.048Z","evidence":"tests/regression/.runs/2026-10-27-912cee430/REG-PR-11-fallback-note-not-a-write-block.log"}

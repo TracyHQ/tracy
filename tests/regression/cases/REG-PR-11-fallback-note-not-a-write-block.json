@@ -1,0 +1,40 @@
+{
+  "id": "REG-PR-11-fallback-note-not-a-write-block",
+  "kind": "fix",
+  "title": "The note sent with a pin switched from a subscription says only which model answers; it never reads as an outage or a write block",
+  "pr": 11,
+  "area": "ai-accounts/fallback-note",
+  "cms": [
+    "any"
+  ],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Stream through the account-subscriptions adapter with a broker answer {fallback: true, route: {switchedFrom: {vendor: 'Claude', reason: 'limit'}}} and read the text of the last message sent to the Tracy AI model.",
+    "S2: Call switchedNote with {vendor: 'ChatGPT Codex'}, with no vendor, and with a vendor that is not a plain name; and read FALLBACK_NOTE.",
+    "S3: Stream again with switchedFrom: null and read the last message."
+  ],
+  "expect": [
+    "S1: the note says the customer's own AI account (Claude) is not serving this response, that tools, site access, site writes and the current task are unaffected, and contains none of unavailable / suspended / cannot.",
+    "S2: the vendor is named only in the first; every note keeps the Tracy AI identity facts and contains no outage wording.",
+    "S3: no note about the customer's own AI account and no 'unavailable'."
+  ],
+  "selectors": {
+    "file": "packages/ui/tracy-mode-picker/src/host/account-subscriptions.mjs",
+    "exports": "switchedNote, FALLBACK_NOTE"
+  },
+  "evidence": "Dev 27/10/2026: a WordPress build session pinned to Tracy AI after a ChatGPT Codex limit read 'The customer subscription is unavailable', told the customer their Tracy subscription was down and stopped with 7 of 8 checks left, while 380 site writes had succeeded",
+  "fence": "The note text built by the host adapter for a switched pin",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/ui/tracy-mode-picker/test/account-subscriptions.test.mjs"
+    ],
+    "tests": [
+      "the switched note names the vendor only when the route carries a plain name",
+      "broker fallback uses the normal Tracy runtime once"
+    ]
+  }
+}
