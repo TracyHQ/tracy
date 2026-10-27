@@ -187,6 +187,13 @@ const ROLES_MISSING = {
   rolesCount: 3,
   rolesShown: ['module-183.9', 'module-191.2', 'module-236.5']
 }
+/** The Slot fit group (ADR 0039 decision 7): ten slots of a map that declares Slot fit have no fit. */
+const FIT_MISSING = {
+  ...COVERAGE_BASE,
+  fitState: 'missing',
+  fitCount: 10,
+  fitShown: ['module-183.9', 'module-191.2']
+}
 const COVERAGE_HOLES = {
   ...COVERAGE_BASE,
   coverage: { text: 88.4, images: 61.5, links: 100 },
@@ -250,6 +257,23 @@ const EVERY_CODE = [
     'content-coverage',
     'coverage-roles',
     { ...COVERAGE_BASE, rolesState: 'stale', rolesReason: 'the contract files changed', rolesShown: [] }
+  ],
+  ['content-coverage', 'coverage-fit', FIT_MISSING],
+  ['content-coverage', 'coverage-live-fit', { ...FIT_MISSING, live: true }],
+  [
+    'content-coverage',
+    'coverage-fit',
+    { ...COVERAGE_BASE, fitState: 'none', fitCount: 1521, fitShown: ['a'] }
+  ],
+  [
+    'content-coverage',
+    'coverage-fit',
+    {
+      ...COVERAGE_BASE,
+      fitState: 'invalid',
+      fitReason: 'slot "a" (image) needs customize "keep"',
+      fitShown: []
+    }
   ],
   ['customize', 'customize-waiting', { passed: 0, total: 0, mustFix: [], worthFixing: [] }],
   ['customize', 'customize-not-checked', { passed: 0, total: 0, mustFix: [], worthFixing: [] }],
@@ -1388,4 +1412,121 @@ test('Slot roles group of Content coverage: guides, lists and ONE prompt that bi
     ['Not declared', 'Slots without a role']
   )
   assert.match(both.outside.text, /5a\. Slot roles: bind roles in content-map\.json during capture/)
+})
+
+test('Slot fit group of Content coverage: guides, lists and ONE prompt that measures Slot fit with the audit', () => {
+  const missing = mod.guideOf(
+    { step: 'content-coverage', state: 'todo', code: 'coverage-fit', params: FIT_MISSING },
+    JOOMLA
+  )
+  assert.equal(missing.title, 'Content coverage · 10 slots without a fit')
+  assert.equal(missing.detail, 'Every text and image slot needs a measured fit in content-map.json.')
+  assert.deepEqual(missing.lists, [
+    { heading: 'Slots without a fit', count: 10, lines: ['module-183.9', 'module-191.2'] }
+  ])
+  assert.equal(missing.outside.label, 'Paste into Claude Code')
+  const prompt = missing.outside.text
+  assert.match(prompt, /Slot fit of the release quickstart\/ja-restaurant\/j6 \(Joomla 1\.0\.2\)/)
+  assert.match(prompt, /leaves 10 text or image slots without a fit \(module-183\.9, module-191\.2, \.\.\.\)/)
+  assert.match(prompt, /content-coverage\/cli\.mjs .*--write --fit/)
+  assert.match(prompt, /Never write a fit by hand/)
+  assert.match(prompt, /next contract version/)
+  assert.match(
+    prompt,
+    /node scripts\/slot-roles\/check\.mjs packages\/cms\/tracy-joomla-quickstart\/contracts\/ja-restaurant\/j6\//
+  )
+  assert.match(prompt, /wait for my go/)
+  assert.ok(existsSync(path.join(repoRoot, 'packages/cms/tracy-quickstart-tools/content-coverage/cli.mjs')))
+  assert.ok(existsSync(path.join(repoRoot, 'docs/adr/0039-slot-fit-lives-in-content-map.md')))
+
+  const live = mod.guideOf(
+    {
+      step: 'content-coverage',
+      state: 'warn',
+      code: 'coverage-live-fit',
+      params: { ...FIT_MISSING, live: true }
+    },
+    JOOMLA
+  )
+  assert.equal(live.title, 'Content coverage · 10 slots without a fit')
+  assert.equal(live.detail, 'Live, so it stays published. Fix it in the next version.')
+
+  const none = mod.guideOf(
+    {
+      step: 'content-coverage',
+      state: 'todo',
+      code: 'coverage-fit',
+      params: { ...COVERAGE_BASE, fitState: 'none', fitCount: 1521, fitShown: ['a', 'b'] }
+    },
+    JOOMLA
+  )
+  assert.equal(none.title, 'Content coverage · no Slot fit')
+  assert.equal(none.detail, 'Captured before Slot fit existed. Measure it for the next version.')
+  assert.equal(none.lists, undefined)
+  assert.match(none.outside.text, /declares no Slot fit/)
+
+  const invalid = mod.guideOf(
+    {
+      step: 'content-coverage',
+      state: 'todo',
+      code: 'coverage-fit',
+      params: {
+        ...COVERAGE_BASE,
+        fitState: 'invalid',
+        fitReason:
+          'slot "p" (image) is kind photo, which a build replaces, so it must not carry customize "keep"',
+        fitShown: []
+      }
+    },
+    JOOMLA
+  )
+  assert.equal(invalid.title, 'Content coverage · Slot fit invalid')
+  assert.match(invalid.outside.text, /must not carry customize "keep"/)
+
+  // roles and fit together: one prompt, both groups' steps
+  const both = mod.guideOf(
+    {
+      step: 'content-coverage',
+      state: 'todo',
+      code: 'coverage-roles',
+      params: { ...ROLES_MISSING, ...FIT_MISSING }
+    },
+    JOOMLA
+  )
+  assert.match(both.title, /3 slots without a role, 10 slots without a fit/)
+  assert.deepEqual(
+    both.lists.map((l) => l.heading),
+    ['Slots without a role', 'Slots without a fit']
+  )
+  assert.match(both.outside.text, /Slot roles: bind roles/)
+  assert.match(both.outside.text, /Slot fit: measure it/)
+
+  // holes and fit together: the fit steps join the coverage fix loop
+  const holes = mod.guideOf(
+    {
+      step: 'content-coverage',
+      state: 'todo',
+      code: 'coverage-holes',
+      params: { ...COVERAGE_HOLES, ...FIT_MISSING }
+    },
+    JOOMLA
+  )
+  assert.match(holes.title, /holes.*10 slots without a fit/)
+  assert.deepEqual(
+    holes.lists.map((l) => l.heading),
+    ['Not declared', 'Slots without a fit']
+  )
+  assert.match(holes.outside.text, /5a\. Slot fit: measure it/)
+
+  // a platform the audit does not measure: the group says nothing
+  const wp = mod.guideOf(
+    {
+      step: 'content-coverage',
+      state: 'todo',
+      code: 'coverage-roles',
+      params: { ...ROLES_MISSING, fitState: 'not-applicable', fitShown: [] }
+    },
+    JOOMLA
+  )
+  assert.doesNotMatch(wp.title, /fit/i)
 })
