@@ -57,6 +57,16 @@
       "path": "packages/site/tracy-add-site/lib/client.js",
       "oid": "c6f4cf910d8471f31a691168120bdb91fe247898",
       "reason": "Reviewed generated Add site bundle for PR #5; reproducible from source and retains existing language-detection character ranges on changed minified lines."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-boxing/j6/1.0.6/content-map.json",
+      "oid": "d390fd04b742260407f98e2095260518d7e9659d",
+      "reason": "Third-party template demo content captured verbatim; the contract must match the demo byte for byte."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-boxing/j6/1.0.6/presentation-lock.json",
+      "oid": "976fd27e671cb92c7ce0748adc98ca9af227990e",
+      "reason": "Third-party template demo content captured verbatim; the contract must match the demo byte for byte."
     }
   ]
 }
