@@ -54,6 +54,32 @@ const MEDIA_LIMIT = 8 * 1024 * 1024
 const DEFAULT_LIMIT = 200
 /** Items written through a door of their own, never in a `content.batch` (a file is not in a transaction). */
 const OWN_DOOR = new Set(['file', 'media', 'siteIdentity', 'templateSettings'])
+/**
+ * How many items written alone (`single`) go to the live site at once. Each is a read, a write and a
+ * read back: one after the other, a push of 150 WordPress items took minutes. 1 is the old behaviour.
+ */
+const CONCURRENCY = (() => {
+  const n = Number(process.env.TRACY_LIVE_WRITE_CONCURRENCY ?? 4)
+  return Number.isInteger(n) && n >= 1 && n <= 16 ? n : 4
+})()
+/** Joomla's nested trees (categories, menu items, tags: `lft`/`rgt` the engine rebuilds) and moves. */
+const NESTED = new Set(['category', 'menuItem', 'tag'])
+/**
+ * The one item of a lane that may be written at a time: everything that touches one live record (a
+ * post and its meta, a theme row by slug), a WordPress menu, the terms, the options, a Joomla tree,
+ * and the items that go through a door of their own — each lane keeps the changeset's order.
+ */
+function laneOf(item, platform) {
+  if (OWN_DOOR.has(item.kind) || item.op === 'upload') return 'own-door'
+  if (item.op === 'move' || (platform === 'joomla' && NESTED.has(item.kind))) return 'tree'
+  if (item.kind === 'menuItem') return 'menu'
+  if (item.kind === 'term') return 'term'
+  if (item.kind === 'option' || item.kind === 'themeMods') return 'option'
+  if (item.kind === 'templatePart' || item.kind === 'template') return `theme:${item.key}`
+  const record = item.op === 'create' ? item.id : JSON.stringify(item.ident ?? item.liveId ?? item.id)
+  if (item.kind === 'postmeta' || item.kind === 'post') return `post:${record}`
+  return `${item.kind}:${record}`
+}
 /** A WordPress block theme's parts and templates: addressed by slug, a row of the active theme over its file. */
 const THEME_ROWS = new Set(['templatePart', 'template'])
 /**
@@ -165,12 +191,13 @@ async function call(endpoint, token, action, params = {}) {
   return reply
 }
 
-async function retried(fn, tries = TRIES) {
+async function retried(fn, tries = TRIES, onTransient = () => {}) {
   for (let attempt = 1; ; attempt++) {
     try {
       return await fn()
     } catch (error) {
       if (!(error instanceof Transient)) throw error
+      onTransient()
       if (attempt >= tries) throw new WriteFailed('SITE_RESOURCE_LIMIT', error.message)
       await sleep(500 * 2 ** attempt)
     }
@@ -325,7 +352,17 @@ async function apply(previewDir, pushDir, { confirmDeletes, confirmPhp, limit, w
   const applyId = `tracy-push-${pushId}`
   const live = await door(endpoint, token)
   const platform = changeset.platform
-  const ask = (action, params) => retried(() => call(live, token, action, params))
+  // A live site that answered busy or slow even once (a 429, a 5xx, a timeout) is written one item
+  // at a time from then on: a small shared host is the customer's, and its visitors come first.
+  let strained = false
+  const ask = (action, params) =>
+    retried(
+      () => call(live, token, action, params),
+      TRIES,
+      () => {
+        strained = true
+      }
+    )
 
   // What an earlier run of this push already did (a restart cut it): written items stay written.
   const journalPath = join(pushDir, 'journal.jsonl')
@@ -926,6 +963,64 @@ async function apply(previewDir, pushDir, { confirmDeletes, confirmPhp, limit, w
     }
   }
 
+  // Where a Joomla lot of updates starts (the walk below): its first item may go in `content.batch`.
+  const lotStarts = (item) =>
+    platform === 'joomla' &&
+    item.op === 'update' &&
+    !OWN_DOOR.has(item.kind) &&
+    !item.dependsOn.some((d) => !done.has(d))
+
+  /**
+   * Items written alone, at most CONCURRENCY at once (one when the live site has shown strain): an
+   * item starts once every item of this run it depends on has its journal entry, and only while no
+   * earlier item of its lane is still waiting or running. Each one's journal entry and before.json
+   * are written as it ends (both synchronous), and the answer keeps the changeset's order.
+   */
+  async function sideBySide(run) {
+    const ids = new Set(run.map((i) => i.id))
+    const pending = [...run]
+    const running = new Map()
+    const lanes = new Set()
+    // Ended AND counted: a dependant waits for this, not for the journal line alone, so it never
+    // starts between its dependency's failure and that failure blocking it.
+    const finished = new Set()
+    const finish = (item) => {
+      const entry = done.get(item.id)
+      if (entry && entry.state !== 'written') blocked.add(item.id)
+      finished.add(item.id)
+    }
+    while (pending.length || running.size) {
+      const held = new Set()
+      for (let i = 0; i < pending.length && running.size < (strained ? 1 : CONCURRENCY); ) {
+        const item = pending[i]
+        const lane = laneOf(item, platform)
+        const ready = item.dependsOn.every((d) => !ids.has(d) || finished.has(d))
+        if (lanes.has(lane) || held.has(lane) || !ready) {
+          held.add(lane)
+          i++
+          continue
+        }
+        pending.splice(i, 1)
+        lanes.add(lane)
+        running.set(
+          item.id,
+          single(item).finally(() => {
+            lanes.delete(lane)
+            running.delete(item.id)
+            finish(item)
+          })
+        )
+      }
+      if (running.size) await Promise.race(running.values())
+      else if (pending.length) {
+        // Nothing can start (what the first waits on never comes): it goes alone, and says so itself.
+        const item = pending.shift()
+        await single(item)
+        finish(item)
+      }
+    }
+  }
+
   let at = 0
   while (at < queue.length) {
     const item = queue[at]
@@ -952,8 +1047,11 @@ async function apply(previewDir, pushDir, { confirmDeletes, confirmPhp, limit, w
       }
       await lot(group)
     } else {
-      await single(item)
-      at++
+      // Every item up to the next template file or Joomla lot is written alone: side by side, by lane.
+      const run = []
+      while (at < queue.length && !isTemplateFile(queue[at]) && !lotStarts(queue[at])) run.push(queue[at++])
+      if (!run.length) run.push(queue[at++])
+      await sideBySide(run)
     }
     for (const g of queue.slice(0, at)) {
       const entry = done.get(g.id)
