@@ -53,7 +53,9 @@ const PROVEN_SINCE = {
   // JA Boxing 1.0.5 (27/10/2026): an empty footer column is not drawn, the same row and the same proof
   'quickstart/ja-boxing/j6@1.0.5': { footer: true },
   // JA Boxing 1.0.6 (27/10/2026): phone and tablet layout rules only, the same row and the same proof
-  'quickstart/ja-boxing/j6@1.0.6': { footer: true }
+  'quickstart/ja-boxing/j6@1.0.6': { footer: true },
+  // JA Boxing 1.0.7 (28/10/2026): the 1.0.6 installer byte for byte with a Slot fit contract, the same row and proof
+  'quickstart/ja-boxing/j6@1.0.7': { footer: true }
 }
 
 /** `darkSpotsOf` as it read the table above. */
