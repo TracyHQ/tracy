@@ -27,6 +27,7 @@ import {
   brandWithoutName,
   nameHeldOf,
   nameHeldReasonsOf,
+  siteBusinessOf,
   siteNameOf
 } from 'website-opportunities/domain/held-name.mjs'
 import { canonicalJson } from '../lib/questions-schema.mjs'
@@ -50,6 +51,7 @@ import { templateProfileOf } from '../lib/template-profiles.js'
 import { brandOnSiteSteps } from './brand-on-site.js'
 import { pageGroundsOfRevision } from './brand-on-site-grounds.js'
 import { researchOfRevision } from './revision-research.js'
+import { researchWithoutHeld } from './held-research.js'
 
 /** The approved neutral words and the banned fillers, in English, as the agent is told them (plan §7, 26/10/2026). */
 const NEUTRAL_EN = neutralWords('en')
@@ -269,11 +271,38 @@ export function checkedResearch(revision) {
   const nameHeld = nameHeldOf(revision.brief)
     ? { missing: 'name', reasons: nameHeldReasonsOf(revision.brief) }
     : null
+  // 🔒 The research itself drops what the brief holds (`held-research.js`): no raw source, review or business reading
+  // quote hands the agent a held review's words or the held name; the held name is named only by `nameHeld` here.
+  const cleaned = researchWithoutHeld(research, {
+    heldPeople,
+    heldName: nameHeld ? heldNameOf(revision.brief) : null,
+    siteName: nameHeld ? siteNameOf(revision.brief) : null
+  })
+  const counts =
+    cleaned === research || !cleaned.counts
+      ? cleaned.counts
+      : {
+          ...cleaned.counts,
+          ...Object.fromEntries(
+            ['reviews', 'ratings'].map((part) => [
+              part,
+              reviewEvidence(cleaned.profile, cleaned.sources ?? [], cleaned.opportunity, heldPeople)[part]
+                .length
+            ])
+          )
+        }
   return {
-    ...research,
+    ...cleaned,
+    ...(counts ? { counts } : {}),
     ...(heldPeople.length ? { heldPeople } : {}),
-    ...(nameHeld ? { nameHeld, brand: brandWithoutName(research.brand) } : {})
+    ...(nameHeld ? { nameHeld, brand: brandWithoutName(cleaned.brand) } : {})
   }
+}
+
+/** The business name a brief holds off the site: its `name` fact's value, else the brief's business name. */
+const heldNameOf = (brief) => {
+  const fact = (Array.isArray(brief?.facts) ? brief.facts : []).find((f) => f?.field === 'name')
+  return typeof fact?.value === 'string' ? fact.value : (brief?.business?.name ?? null)
 }
 
 /** The name the build shows: while the brief holds the business name, its neutral identity (`siteNameOf`), never the name. */
@@ -2675,13 +2704,13 @@ export function clientSendSteps(revision, { ownSite = false, retry = false } = {
 /** The catalogue's `instructions` for a customer's own site: the business, its counts, then the steps. */
 export function ownSiteInstructions(revision, { retry = false } = {}) {
   const bundle = checkedResearch(revision)
-  return `This is the customer's own business; the site you build is theirs, never a demo. Reply to them in plain words.\nBusiness: ${JSON.stringify(revision.brief?.business ?? bundle.profile ?? {})}\nFrozen research counts: ${JSON.stringify(bundle.counts)}. Research SHA256: ${bundle.hash}. Template: ${revision.cms} ${revision.template?.quickstart ?? ''} (${revision.template?.reason ?? 'chosen'}).\n${clientSendSteps(revision, { ownSite: true, retry })}`
+  return `This is the customer's own business; the site you build is theirs, never a demo. Reply to them in plain words.\nBusiness: ${JSON.stringify(revision.brief?.business ? siteBusinessOf(revision.brief) : (bundle.profile ?? {}))}\nFrozen research counts: ${JSON.stringify(bundle.counts)}. Research SHA256: ${bundle.hash}. Template: ${revision.cms} ${revision.template?.quickstart ?? ''} (${revision.template?.reason ?? 'chosen'}).\n${clientSendSteps(revision, { ownSite: true, retry })}`
 }
 
 /** The catalogue's `instructions` for a demo: the business, its counts, then the steps. */
 export function demoInstructions(revision) {
   const bundle = checkedResearch(revision)
-  return `Build a complete demo website for this business using ${revision.cms} and the chosen ${revision.template?.quickstart ?? ''} quickstart.\nBusiness: ${JSON.stringify(revision.brief?.business ?? bundle.profile ?? {})}\nFrozen research counts: ${JSON.stringify(bundle.counts)}. Research SHA256: ${bundle.hash}.\n${clientSendSteps(revision)}`
+  return `Build a complete demo website for this business using ${revision.cms} and the chosen ${revision.template?.quickstart ?? ''} quickstart.\nBusiness: ${JSON.stringify(revision.brief?.business ? siteBusinessOf(revision.brief) : (bundle.profile ?? {}))}\nFrozen research counts: ${JSON.stringify(bundle.counts)}. Research SHA256: ${bundle.hash}.\n${clientSendSteps(revision)}`
 }
 
 /** `ownSite`: the customer's own business (Build from my business, `own-site.js`), a website rather than a demo. */
