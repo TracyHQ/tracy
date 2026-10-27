@@ -15,17 +15,18 @@
  * answer before it.
  */
 import { Check, Copy, Sparkles, X } from 'lucide-react'
-import { type ComponentType, type ReactNode, useState } from 'react'
+import { type ComponentType, type ReactNode, useRef, useState } from 'react'
 import { type Block, blocksOf, type Inline, type NavLink } from './chat'
 import { SentChips } from './FileChips'
 import { answerTextOf, COMMAND, controllerOf, type HelpData } from './help'
 import type { Translate } from './strings'
+import { draftProblem } from './onboarding'
 
 /** A start action's address (`apps/tracy-web/src/assistant/prompt.js`, `ACTION_SCHEME`). */
 export const ACTION_SCHEME = 'tracy-action:'
 
 /** What pressing a start action does: opens its step on the page (`index.tsx`). */
-export type OnAction = (href: string) => void
+export type OnAction = (href: string, turn?: HelpData) => void | Promise<void>
 
 /** Suggested questions under the greeting. */
 const CHIPS = ['chip.what', 'chip.undo', 'chip.sites', 'chip.report'] as const
@@ -33,7 +34,15 @@ const CHIPS = ['chip.what', 'chip.undo', 'chip.sites', 'chip.report'] as const
 /** The Discord invite Help offers; the same address the server lists among the allowed links. */
 const DISCORD = 'https://discord.gg/BM9TMRcEBb'
 
-function InlineView({ inline, onAction }: { inline: Inline[]; onAction?: OnAction }) {
+function InlineView({
+  inline,
+  onAction,
+  disabled
+}: {
+  inline: Inline[]
+  onAction?: OnAction
+  disabled?: boolean
+}) {
   return (
     <>
       {inline.map((part, i) => {
@@ -42,7 +51,13 @@ function InlineView({ inline, onAction }: { inline: Inline[]; onAction?: OnActio
         // A start action is text to press, never an address to follow; with no handler it is plain text.
         if (part.kind === 'link' && part.href.startsWith(ACTION_SCHEME))
           return onAction ? (
-            <button key={i} type="button" className="tv-help-action" onClick={() => onAction(part.href)}>
+            <button
+              key={i}
+              type="button"
+              className="tv-help-action"
+              disabled={disabled}
+              onClick={() => onAction(part.href)}
+            >
               {part.text}
             </button>
           ) : (
@@ -95,8 +110,10 @@ function Answer({
   text,
   links,
   t,
-  onAction
+  onAction,
+  disabled
 }: {
+  disabled?: boolean
   text: string
   links: NavLink[]
   t: Translate
@@ -111,12 +128,12 @@ function Answer({
         if (block.kind === 'paragraph')
           return (
             <p key={i}>
-              <InlineView inline={block.inline} onAction={onAction} />
+              <InlineView inline={block.inline} onAction={onAction} disabled={disabled} />
             </p>
           )
         const items = block.items.map((item, j) => (
           <li key={j}>
-            <InlineView inline={item} onAction={onAction} />
+            <InlineView inline={item} onAction={onAction} disabled={disabled} />
           </li>
         ))
         return block.ordered ? <ol key={i}>{items}</ol> : <ul key={i}>{items}</ul>
@@ -176,6 +193,25 @@ export function HelpNode({
   onboarding = false,
   onAction
 }: { node: { data: HelpData; anchorSeq?: number }; t: Translate } & HelpRowDeps) {
+  const [preparing, setPreparing] = useState(false)
+  const [problem, setProblem] = useState<ReturnType<typeof draftProblem> | null>(null)
+  const actionLock = useRef(false)
+  const pressAction: OnAction | undefined = onAction
+    ? async (href) => {
+        if (actionLock.current) return
+        actionLock.current = true
+        setPreparing(true)
+        setProblem(null)
+        try {
+          await onAction(href, node.data)
+        } catch (error) {
+          setProblem(draftProblem(error instanceof Error ? error.message : null))
+        } finally {
+          actionLock.current = false
+          setPreparing(false)
+        }
+      }
+    : undefined
   const d = node.data
   const control = controllerOf(d.sessionId)
   const copyText = answerTextOf(d, t)
@@ -240,7 +276,17 @@ export function HelpNode({
         )}
         {d.variant === 'askBack' && <p>{t('askBack.text')}</p>}
         {d.variant === 'turn' && d.answer !== '' && (
-          <Answer text={d.answer} links={d.links} t={t} onAction={onAction} />
+          <Answer text={d.answer} links={d.links} t={t} onAction={pressAction} disabled={preparing} />
+        )}
+        {preparing && (
+          <p role="status" className="tv-help-note">
+            {t('draft.preparing')}
+          </p>
+        )}
+        {problem && (
+          <p role="alert" className="tv-help-error">
+            {t(problem)}
+          </p>
         )}
         {d.status === 'queued' && <p className="tv-help-note">{t('status.queued')}</p>}
         {busy && d.answer === '' && <p className="tv-help-note">{t('status.thinking')}</p>}

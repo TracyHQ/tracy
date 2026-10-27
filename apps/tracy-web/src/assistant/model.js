@@ -36,10 +36,10 @@ export function assistantModel({ pool, config, fetchImpl = fetch }) {
      * Stream one answer. Yields text pieces; ends normally only once the provider has said it
      * finished (`finish_reason` other than `length`). A cut or dropped stream throws `TRUNCATED`.
      * Throws `{ code }` (an Error with a `code` property) on anything that is not an answer.
-     * @param {{ messages: Array<{role: string, content: string}>, signal?: AbortSignal }} input
+     * @param {{ messages: Array<{role: string, content: string}>, signal?: AbortSignal, maxOutputTokens?: number }} input
      * @returns {AsyncGenerator<{ text?: string, model?: string }>}
      */
-    async *stream({ messages, signal }) {
+    async *stream({ messages, signal, maxOutputTokens = MAX_OUTPUT_TOKENS }) {
       const model = await credential()
       if (!model) throw coded('NOT_CONFIGURED')
       let res
@@ -53,7 +53,7 @@ export function assistantModel({ pool, config, fetchImpl = fetch }) {
             // Asked for so the last event carries the token counts; a vendor that ignores it just sends none.
             stream_options: { include_usage: true },
             temperature: 0.3,
-            max_tokens: MAX_OUTPUT_TOKENS,
+            max_tokens: Math.min(4096, Math.max(MAX_OUTPUT_TOKENS, maxOutputTokens)),
             messages
           }),
           ...(signal ? { signal } : {})

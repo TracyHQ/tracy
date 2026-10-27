@@ -810,7 +810,7 @@ test('onboarding conversation lets dsh size its answer buttons like the site tra
 
 // ── the creation screen's chat (David, 26/10/2026) ──────────────────────────────────────────────
 
-test('a start action in an answer is text to press that opens its step; with no handler it is plain text', () => {
+test('a start action in an answer is text to press that opens its step; with no handler it is plain text', async () => {
   const href = 'tracy-action:create?platform=wordpress'
   const data = {
     variant: 'turn',
@@ -831,7 +831,9 @@ test('a start action in an answer is text to press that opens its step; with no 
     null,
     'never an address to follow'
   )
-  lib.act(() => lib.propsOf(buttons[0]).onClick())
+  await lib.act(async () => {
+    await lib.propsOf(buttons[0]).onClick()
+  })
   assert.deepEqual(pressed, [href])
   mounted.stop()
   const plain = lib.markup(lib.h(lib.HelpNode, { node: { data }, t }))
@@ -943,5 +945,58 @@ test('a file the chat box cannot take is refused at once with its name, and neve
   assert.equal(uploads, 0)
   assert.match(mounted.container.innerHTML, /data-state="error"/)
   assert.ok(mounted.container.textContent.includes(t('file.type', { name: 'page.html' })))
+  mounted.stop()
+})
+
+test('a draft action locks duplicate clicks, shows failure and permits retry', async () => {
+  let calls = 0
+  let finish
+  const data = {
+    variant: 'turn',
+    sessionId: 'draft-lock',
+    userTurnId: '12',
+    rowId: 'q',
+    question: 'Create',
+    answer: '[Continue](tracy-action:create)',
+    status: 'done',
+    links: [{ href: 'tracy-action:create', label: 'Create' }]
+  }
+  const mounted = lib.mount(
+    lib.h(lib.HelpNode, {
+      node: { data },
+      t,
+      onAction: async (href, turn) => {
+        calls++
+        assert.equal(turn.userTurnId, '12')
+        await new Promise((resolve) => {
+          finish = resolve
+        })
+        if (calls === 1) throw new Error('DRAFT_FAILED')
+      }
+    })
+  )
+  const click = () => lib.propsOf(mounted.container.querySelector('button.tv-help-action')).onClick()
+  let pending
+  lib.act(() => {
+    pending = click()
+    void click()
+  })
+  assert.equal(calls, 1)
+  assert.equal(mounted.container.querySelector('button.tv-help-action').disabled, true)
+  assert.ok(mounted.container.textContent.includes(t('draft.preparing')))
+  await lib.act(async () => {
+    finish()
+    await pending
+  })
+  assert.ok(mounted.container.textContent.includes(t('draft.failed')))
+  lib.act(() => {
+    pending = click()
+  })
+  assert.equal(calls, 2)
+  await lib.act(async () => {
+    finish()
+    await pending
+  })
+  assert.ok(!mounted.container.textContent.includes(t('draft.failed')))
   mounted.stop()
 })
