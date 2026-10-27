@@ -489,7 +489,7 @@ test('nothing is removed: no call deletes, hides or unpublishes', () => {
 })
 
 test('a site already swept plans nothing', () => {
-  const none = { calls: [], unresolved: [], thinLeads: 0, left: 0, shown: [] }
+  const none = { calls: [], unresolved: [], renamed: [], thinLeads: 0, left: 0, shown: [] }
   assert.deepEqual(planSweep({ items: [] }, options), none)
   assert.deepEqual(planSweep(null, options), none)
 })
@@ -1418,18 +1418,67 @@ test("a template category takes a name from the written posts' topics, once per 
     { items: [] },
     { ...options, categories, topicNames: ['News', 'Food', 'Food', 'Drinks'] }
   )
-  // "Drinks" is already a topic's name; "Breakfast" twice is one rename; "Dinner" has no topic left.
+  // "Drinks" is already a topic's name; "Breakfast" twice is one rename; "Dinner" has no topic left. Each rename is
+  // written on the category's own archive, where the replace job reads the term (`replace-wordpress.mjs` `archiveOf`).
   assert.deepEqual(
     calls.map((c) => [c.action, c.params.find, c.params.replace, c.params.path]),
     [
-      ['content.replace', 'Breakfast', 'News', '/our-blog/'],
-      ['content.replace', 'Lunch', 'Food', '/our-blog/']
+      ['content.replace', 'Breakfast', 'News', '/category/breakfast/'],
+      ['content.replace', 'Lunch', 'Food', '/category/lunch/']
     ]
   )
   assert.deepEqual(
     unresolved.map((u) => [u.field, u.name]),
     [['category', 'Dinner']]
   )
+})
+
+test('dev 27/10/2026: a template category shown on posts is renamed once, on its own archive, never per post page', () => {
+  // ja-diner: "Restaurant Marketing" planned on each post page that showed it, six rounds, and still shown.
+  const categories = ['/would-you-throw-a-glass-at-your-boss/', '/vi-soger-nye-bartendere-baristaer/'].map(
+    (page) => ({
+      page,
+      words: 'restaurant marketing',
+      name: 'Restaurant Marketing',
+      category: '/category/restaurant-marketing/'
+    })
+  )
+  const plan = planSweep({ items: [] }, { ...options, categories, topicNames: ['Seasonal menus'] })
+  assert.deepEqual(
+    plan.calls.map((c) => [c.params.find, c.params.replace, c.params.path]),
+    [['Restaurant Marketing', 'Seasonal menus', '/category/restaurant-marketing/']]
+  )
+  assert.deepEqual(plan.renamed, ['Restaurant Marketing'])
+  assert.equal(plan.left, 1)
+})
+
+test('a template category no text replace can rename is reported on the first check that sees it, never planned, never in `left`', () => {
+  const category = {
+    page: '/blog/a-post/',
+    words: 'restaurant news',
+    name: 'Restaurant News',
+    category: '/category/restaurant-news/'
+  }
+  const left = (o) => planSweep({ items: [] }, { ...options, topicNames: ['Seasonal menus'], ...o })
+  // Joomla keeps a category title in no content slot, EmDash's taxonomy labels are not a replace's to write.
+  for (const platform of ['joomla', 'emdash']) {
+    const plan = left({ platform, categories: [category] })
+    assert.deepEqual(plan.calls, [], platform)
+    assert.equal(plan.left, 0, platform)
+    assert.deepEqual(
+      plan.unresolved.map((u) => [u.field, u.name]),
+      [['category', 'Restaurant News']]
+    )
+    assert.match(plan.unresolved[0].why, /not words a text replace can write/)
+  }
+  // A link to no page of the site: no archive to rename it on.
+  const offSite = left({ categories: [{ ...category, category: 'https://elsewhere.example/c/news' }] })
+  assert.deepEqual([offSite.calls.length, offSite.left, offSite.unresolved.length], [0, 0, 1])
+  // On WordPress, a rename an earlier round of this counted check sent whose name still shows did not take: reported
+  // at once, never planned a second time, and out of `left`, so it keeps no round going.
+  const again = left({ categories: [category], renamedBefore: ['Restaurant News'] })
+  assert.deepEqual([again.calls.length, again.left, again.renamed], [0, 0, []])
+  assert.match(again.unresolved[0].why, /earlier round/)
 })
 
 test("the template's logo becomes the business's: its imported logo, else its drawn wordmark, once per site", () => {
@@ -1594,6 +1643,27 @@ test('a sweep goes on while each round plans fewer calls, and stops on no progre
   assert.match(stopped.unresolved[1].why, /bound of 6 rounds with 3 calls/)
   assert.deepEqual(stopped.shown, ['/a/\u0000x'])
   assert.match(sweepStopped(sweep, 'no-progress', 2).unresolved[1].why, /round 2 cleared nothing/)
+})
+
+test("dev 27/10/2026: the check after a sweep round keeps every page the sweep left unchanged; a new build's first check reads all", async () => {
+  const { checkIsIncremental, renamedBeforeOf } = await import('../src/opportunities-build/client-demo.js')
+  // The agent's first check reads every page: nothing was read before it.
+  assert.equal(checkIsIncremental(null), false)
+  assert.equal(checkIsIncremental({ clientCheckAttempts: 0 }), false)
+  // Its sweep rounds' checks read again only the pages whose document changed (`demo-qa-browser.js` `previous`).
+  assert.equal(checkIsIncremental({ clientCheckAttempts: 0, residueSweeps: { attempt: 0, n: 1 } }), true)
+  // A sweep of an earlier counted check says nothing; a counted check before does.
+  assert.equal(checkIsIncremental({ clientCheckAttempts: 1, residueSweeps: { attempt: 0, n: 6 } }), true)
+  assert.equal(checkIsIncremental({ clientCheckAttempts: 0, residueSweeps: { attempt: 0, n: 0 } }), false)
+  // The renames sent stay with the counted check whose rounds sent them.
+  assert.deepEqual(
+    renamedBeforeOf({ clientCheckAttempts: 0, residueSweeps: { attempt: 0, renamed: ['Restaurant News'] } }),
+    ['Restaurant News']
+  )
+  assert.deepEqual(
+    renamedBeforeOf({ clientCheckAttempts: 1, residueSweeps: { attempt: 0, renamed: ['Restaurant News'] } }),
+    []
+  )
 })
 
 test("the plan says how many calls it holds before the cap, and every page's words a replace would clear", () => {

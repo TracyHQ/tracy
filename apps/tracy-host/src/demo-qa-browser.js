@@ -13,7 +13,7 @@
  */
 import { createHash } from 'node:crypto'
 import { LAUNCH_ARGS } from './browser.js'
-import { DemoReadCache } from './demo-read-cache.js'
+import { DemoReadCache, pagesWithFindings } from './demo-read-cache.js'
 import { qaDeadline, waitForQaSlot } from './demo-qa-deadline.js'
 import { DEMO_QA_LOAD_CAP_MS, FILLER_SOURCE, hostIn, navPathsOf, runDemoQa } from './demo-qa.js'
 import { readResidueInPage } from './demo-residue-page.js'
@@ -1610,6 +1610,8 @@ export async function makeDemoQa({ log = console, playwright = null } = {}) {
     }
     signal.addEventListener('abort', abort, { once: true })
     const siteKey = `${asked.label ?? ''}|${base}`
+    /** The reads this run kept: a run that ends without its checks never vouched for them, so none stays. */
+    const keptNow = new Set()
     try {
       signal.throwIfAborted()
       // Each page has its own tab; `runDemoQa` reads one at a time to bound decoded images.
@@ -1619,17 +1621,29 @@ export async function makeDemoQa({ log = console, playwright = null } = {}) {
         read: async (url, path, options) => {
           signal.throwIfAborted()
           const page = await context.newPage()
+          const key = JSON.stringify([siteKey, path])
+          // A read is kept for the same read only: a page read as an inventory route (no discovery) or with another
+          // wordmark, logo or sentinel words measured other things than this read asks.
+          const asks = JSON.stringify([
+            options?.discover === true,
+            options?.wordmark ?? null,
+            options?.logoPicture ?? null,
+            options?.sentinels ?? null
+          ])
+          const last = asked.incremental ? lastReads.get(key) : null
           try {
             const r = await readDemoPage(page, url, path, {
               ...options,
               serveFrom,
               serveFromIsProxy,
               proxySiteLabel,
-              previous: asked.incremental ? lastReads.get(JSON.stringify([siteKey, path])) : null
+              previous: last?.asks === asks ? last : null
             })
             signal.throwIfAborted()
-            if (r.fingerprint && !r.error && !r.reused)
-              lastReads.set(JSON.stringify([siteKey, path]), { fingerprint: r.fingerprint, read: r })
+            if (r.fingerprint && !r.error && !r.reused) {
+              lastReads.set(key, { fingerprint: r.fingerprint, read: r, asks })
+              keptNow.add(key)
+            }
             return r
           } finally {
             await page.close().catch(() => {})
@@ -1637,7 +1651,12 @@ export async function makeDemoQa({ log = console, playwright = null } = {}) {
         }
       })
       signal.throwIfAborted()
+      // A page a finding names is read in full next time, never kept (`pagesWithFindings`).
+      for (const path of pagesWithFindings(result)) lastReads.drop(JSON.stringify([siteKey, path]))
       return result
+    } catch (failure) {
+      for (const key of keptNow) lastReads.drop(key)
+      throw failure
     } finally {
       signal.removeEventListener('abort', abort)
       await close()
