@@ -236,7 +236,16 @@ const INVENTORY_LINE = {
   'scripts/ci/plan-ci.mjs': [/^const EMDASH_INPUTS = String\.raw`[^`]+`$/],
   'scripts/check-tests.ts': [/^\s*tree: '[^']+',?$/, /Its home is /],
   // The shard installer test only checks that the sparse-checkout path list names the tree.
-  'scripts/test/install-shard.test.mjs': [/^\s*\/sparse-checkout set deploy /]
+  'scripts/test/install-shard.test.mjs': [/^\s*\/sparse-checkout set deploy /],
+  // The language gate's list of Tracy-owned vendor trees names each tree by path; the module is pure
+  // (no file system) and `check-language.ts` in the checks row is what scans the files.
+  'scripts/lib/owned-vendor-trees.ts': [/^\s*path: '[^']+',?$/],
+  // Its test passes repo paths as string fixtures to a pure path classifier and only probes that each
+  // listed tree exists; it never opens a file inside one.
+  'scripts/test/owned-vendor-trees.test.ts': [
+    /^\s*\['vendor\/[^']+', (?:true|false)\],?$/,
+    /^\s*assert\.deepEqual\(kinds\('vendor\/[^']+', md\), \[\[\d+, 'prose'\]\]\)$/
+  ]
 }
 
 function treeReferences(text, prefix) {
