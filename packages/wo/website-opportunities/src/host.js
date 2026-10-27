@@ -43,9 +43,11 @@
  *   OPTIONAL: how much of each `overLimitOrClosed` bucket the window starting at `windowStart` used. Without it a
  *   provider's daily cap is never shown as reached.
  * @property {(pool: any, args: {accountId: string, opportunityId: string}) => Promise<{revisionId: string, profile: any,
- *   origin: string, at: string | null, seenAt: Record<string, string>, factIds: string[] | null} | null>} [frozenPlaceProfileOf]
+ *   origin: string, at: string | null, seenAt: Record<string, string>, factIds: string[] | null, siteName?: string} | null>}
+ *   [frozenPlaceProfileOf]
  *   OPTIONAL: the place profile the opportunity's latest brief revision froze, with its assessment's time and dates and
- *   the ids of the facts its brief states (#1791). With it the Profile card judges exactly the brief's facts; without
+ *   the ids of the facts its brief states (#1791) and, while that brief holds the business name, the neutral identity
+ *   the site goes by instead (`siteName`, `held-name.mjs siteNameOf`). With it the Profile card judges exactly the brief's facts; without
  *   it the card reads the place profile of the current research.
  */
 

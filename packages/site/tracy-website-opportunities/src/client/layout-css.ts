@@ -100,6 +100,7 @@ export const CSS = `
 .tracy-wo-badge-live { background: color-mix(in oklab, var(--success) 14%, transparent); color: color-mix(in oklab, var(--success) 70%, var(--foreground)); }
 .tracy-wo-name-chip.is-check { background: color-mix(in oklab, var(--warning) 16%, transparent); border-color: color-mix(in oklab, var(--warning) 40%, transparent); color: color-mix(in oklab, var(--warning) 45%, var(--foreground)); }
 .tracy-wo-name-chip.is-checked { background: color-mix(in oklab, var(--success) 14%, transparent); border-color: transparent; color: color-mix(in oklab, var(--success) 70%, var(--foreground)); }
+.tracy-wo-name-chip.is-held { background: color-mix(in oklab, var(--muted-foreground) 10%, transparent); border-color: transparent; color: var(--muted-foreground); }
 .tracy-wo-name-actions { gap: 12px; }
 .tracy-wo-name-actions [data-slot='button'] { padding-inline: 0; height: auto; }
 .tracy-wo-hours-lines { display: flex; flex-direction: column; }

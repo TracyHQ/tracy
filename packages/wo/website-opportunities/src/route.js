@@ -1335,7 +1335,15 @@ export function websiteOpportunitiesRoutes(deps) {
         decidedBy: f.decidedBy,
         reasons: f.reasons
       }))
-    return json(c, { profile, decisions, ...(frozen ? { revisionId: frozen.revisionId } : {}) })
+    // While the name is held (the brief froze it off and the owner has not shown it since), the card names the neutral
+    // identity the site goes by instead (`siteNameOf`), so it never reads as the name on the site.
+    const nameOff = decisions.some((d) => d.field === 'name' && d.onSite === false)
+    return json(c, {
+      profile,
+      decisions,
+      ...(frozen ? { revisionId: frozen.revisionId } : {}),
+      ...(nameOff && frozen?.siteName ? { siteName: frozen.siteName } : {})
+    })
   })
 
   // ── One opportunity (after the fixed paths above) ─────────────────────────────────────────

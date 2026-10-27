@@ -301,7 +301,14 @@ export function makeSiteBrief(domain, read, { opportunity, madeAt, placeProfile 
     read.profile
   )
   // How the photographs were labelled when this brief was made (F08), failure included: the brief says it.
-  if (read.assetLabelling) brief.assetLabelling = read.assetLabelling
+  // Each asset left unlabelled carries the reason the labelling step gave for it; the note keeps the counts.
+  if (read.assetLabelling) {
+    const { unlabelled = {}, ...note } = read.assetLabelling
+    brief.assetLabelling = note
+    for (const a of brief.assets ?? [])
+      if (a.content === 'unlabelled' && typeof unlabelled[a.id] === 'string')
+        a.unlabelledReason = unlabelled[a.id]
+  }
   // A source row that counted nothing (Google Places) reports what the brief holds of it (`suppliedBySource`).
   return withAttemptedSources(brief, read.attemptedSources, {
     supplied: suppliedBySource({ googlePlace: brief.googlePlace, media: read.media, posts: read.posts })

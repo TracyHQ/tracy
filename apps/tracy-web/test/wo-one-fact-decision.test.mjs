@@ -168,6 +168,35 @@ test(
 )
 
 test(
+  'while the brief holds the business name, the card says which neutral name the site goes by instead',
+  opts,
+  async () => {
+    const { call, opp, revise } = await world()
+    const first = await revise()
+    const name = first.brief.facts.find((f) => f.field === 'name')
+    assert.equal(name.onSite, true)
+    assert.equal('siteName' in (await call('GET', `${BASE}/${opp.id}/place-profile`)).body, false)
+    assert.equal(
+      (await call('PUT', `${BASE}/${opp.id}/facts`, { factId: name.id, onSite: false })).status,
+      200
+    )
+    const held = await revise()
+    const neutral = held.brief.sitemap.find((p) => p.slug === 'home').seo.title
+    assert.equal(held.brief.business.name, neutral)
+    assert.ok(!neutral.includes('North Studio'), neutral)
+    const card = await call('GET', `${BASE}/${opp.id}/place-profile`)
+    assert.equal(card.body.siteName, neutral)
+    assert.equal(card.body.decisions.find((d) => d.factId === name.id).onSite, false)
+    // Shown again by the owner, the name is no longer held: the card names no neutral identity, even before a new brief.
+    assert.equal(
+      (await call('PUT', `${BASE}/${opp.id}/facts`, { factId: name.id, onSite: true })).status,
+      200
+    )
+    assert.equal('siteName' in (await call('GET', `${BASE}/${opp.id}/place-profile`)).body, false)
+  }
+)
+
+test(
   'the card refuses a fact override past the cap and a key message label past 60 characters',
   opts,
   async () => {

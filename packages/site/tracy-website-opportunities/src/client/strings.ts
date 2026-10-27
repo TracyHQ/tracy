@@ -647,6 +647,11 @@ export const en = {
   'name.save': 'Save',
   'name.change': 'Change',
   'name.failed': 'The name could not be saved. Try again.',
+  'name.label.held': 'Business name',
+  'name.chip.held': 'Not on the site',
+  'name.held.uses': 'Held until the owner confirms it. The site goes by {name} instead.',
+  'name.held.none': 'Held until the owner confirms it. The site shows no business name.',
+  'name.held.owner': 'You left it off the site.',
   'hours.note':
     '{source} says open 24 hours every day. A business like this one usually works by appointment.',
   'hours.edit': 'Edit hours',

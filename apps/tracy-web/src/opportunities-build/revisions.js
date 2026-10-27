@@ -489,15 +489,24 @@ async function researchOf(db, read, opp, view) {
   return research
 }
 
+/** A picture as the research holds it: without the vision labels a brief step added (`researchKey`). */
+function withoutVisionLabels(m) {
+  if (!m?.labels || typeof m.labels !== 'object' || !('vision' in m.labels)) return m
+  const { vision: _vision, ...labels } = m.labels
+  return { ...m, labels: Object.keys(labels).length ? labels : null }
+}
+
 /** The research a brief reads, as one hash: the same read twice is the same brief. */
 export function researchKey(domain, research) {
-  // How the labelling went is not research: a brief made with no vision model reads the same as one made by a step that
-  // was not asked (the labels themselves, when there are any, are in the media and do count).
+  // How the labelling went is not research, and neither are the vision labels the brief step put on the photographs
+  // (`withPictureLabels`): a place's are kept in the shared analysis cache, never on its media rows, so the live read the
+  // Details page hashes (`currentResearchKey`) has none, and a brief made a minute ago would read as stale. The other
+  // labels a picture carries are the store's own and do count.
   const { demoRequest, assetLabelling: _labelling, ...read } = research
   return researchHash({
     schemaVersion: domain.BRIEF_SCHEMA_VERSION,
     profileSnapshotVersion: PROFILE_SNAPSHOT_VERSION,
-    research: evidenceData(read),
+    research: evidenceData({ ...read, media: (read.media ?? []).map(withoutVisionLabels) }),
     ...(demoRequest ? { demoRequestHash: researchHash(demoRequest) } : {})
   })
 }

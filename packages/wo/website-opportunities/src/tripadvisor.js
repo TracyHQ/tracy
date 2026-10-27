@@ -57,11 +57,15 @@ export async function litescrapeCall(
 
 /**
  * One provider request: a 429 or transient 5xx is tried again within a few seconds (`provider-retry.mjs`,
- * `retry` overrides its defaults), a 402 or any other answer is final. Callers own endpoint allowlists,
+ * `retry` overrides its defaults, `onTry` hears each try), a 402 or any other answer is final. Callers own endpoint allowlists,
  * schemas and billing reservations.
  */
 export async function tripadvisorJson(url, headers, options = {}) {
-  return withProviderRetry(() => jsonAttempt(url, headers, options), options.retry)
+  // `onTry` hears each HTTP try (`provider-retry.mjs`): the caller lists every one with its code.
+  return withProviderRetry(() => jsonAttempt(url, headers, options), {
+    ...options.retry,
+    ...(options.onTry ? { onTry: options.onTry } : {})
+  })
 }
 
 /** One fixed HTTP attempt. */

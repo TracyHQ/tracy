@@ -26,6 +26,7 @@ import { createPlaceRunner } from './place-executor.js'
 import { claimPlaceJob } from './place-jobs.js'
 import { isPlaceholderName, nameClaimsOf, withNameDecision } from './business-name.js'
 import { candidateAsRead } from '../domain/candidate-as-read.mjs'
+import { videoSize } from '../domain/video-size.mjs'
 import { LISTING_SOURCE, refsOfCandidate, refsOfUrls, SOCIAL_SOURCES, SOURCES } from './sources.js'
 
 const { hoursDisagree } = await import(pathToFileURL(path.join(WO_DOMAIN_DIR, 'opening-hours.mjs')).href)
@@ -644,6 +645,9 @@ export function createExecutor({
       } catch {
         return reference('image_unreadable')
       }
+    } else {
+      // A video's size from its own header, so its brief asset has an orientation and a grade (null when unreadable).
+      info = { ...info, ...videoSize(bytes) }
     }
     const sha256 = domain.sha256Hex(bytes)
     // A place's picture goes to the shared bucket when this deployment has one (`opportunities/place-media-store.js`).

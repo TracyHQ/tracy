@@ -110,10 +110,30 @@ export function held(entry) {
   return { id: entry.id, labels: out }
 }
 
+/** Why a call labelled none of its pictures, in the brief's vocabulary (`ASSET_UNLABELLED_REASONS`). */
+class CallFailed extends Error {
+  constructor(reason) {
+    super(reason)
+    this.reason = reason
+  }
+}
+const reasonOf = (error) =>
+  error instanceof CallFailed
+    ? error.reason
+    : error?.name === 'TimeoutError'
+      ? 'timeout'
+      : error instanceof SyntaxError
+        ? 'answer_unparseable'
+        : 'vision_failed'
+
 /**
  * @param {{door: {url: string, key: string, model: string}, pictures: Array<{id: string, bytes: Uint8Array}>,
- *   trade?: string | null, batch?: number, concurrency?: number, fetchImpl?: typeof fetch, signal?: AbortSignal, challengeFor?: typeof createVisionChallenge}} input
- * @returns {Promise<{labels: Map<string, Record<string, any>>, usage: {calls: number, promptTokens: number, completionTokens: number}, failed: number}>}
+ *   trade?: string | null, batch?: number, concurrency?: number, retry?: number, fetchImpl?: typeof fetch, signal?: AbortSignal, challengeFor?: typeof createVisionChallenge}} input
+ *   `retry`: rounds that send the pictures of a failed call (or missing from an answer) again, each round at most as
+ *   many calls as the first; 0 (a build's default) sends each picture once.
+ * @returns {Promise<{labels: Map<string, Record<string, any>>, reasons: Map<string, string>,
+ *   usage: {calls: number, promptTokens: number, completionTokens: number}, failed: number}>}
+ *   `reasons`: why each picture asked came back without a label; `failed`: calls and decodes that failed.
  */
 export async function labelWithVision({
   door,
@@ -121,11 +141,14 @@ export async function labelWithVision({
   trade = null,
   batch = 8,
   concurrency = 4,
+  retry = 0,
   fetchImpl = fetch,
   signal,
   challengeFor = createVisionChallenge
 }) {
   const labels = new Map()
+  /** @type {Map<string, string>} */
+  const reasons = new Map()
   const usage = { calls: 0, promptTokens: 0, completionTokens: 0 }
   let failed = 0
   // 🔒 ONE DECODE AT A TIME, BEFORE ANY CALL GOES OUT. A thumbnail is a full decode of the original (a
@@ -138,10 +161,9 @@ export async function labelWithVision({
       thumbs.push({ id: p.id, thumb: await thumbnail(p.bytes) })
     } catch {
       failed += 1
+      reasons.set(p.id, 'decode_failed')
     }
   }
-  const batches = []
-  for (let i = 0; i < thumbs.length; i += batch) batches.push(thumbs.slice(i, i + batch))
   const systemPrompt = pictureLabelSystem(trade)
   const run = async (group) => {
     const challenge = await challengeFor()
@@ -169,7 +191,7 @@ export async function labelWithVision({
         }),
         signal: AbortSignal.any([AbortSignal.timeout(CALL_MS), ...(signal ? [signal] : [])])
       })
-      if (!res.ok) throw new Error(`the vision model answered ${res.status}`)
+      if (!res.ok) throw new CallFailed('http_error')
       const body = await res.json()
       usage.requests ??= []
       usage.requests.push({
@@ -181,16 +203,30 @@ export async function labelWithVision({
       usage.promptTokens += Number(body?.usage?.prompt_tokens) || 0
       usage.completionTokens += Number(body?.usage?.completion_tokens) || 0
       const parsed = JSON.parse(String(body?.choices?.[0]?.message?.content ?? ''))
-      if (!imageCodeMatches(parsed, challenge)) throw new Error('VISION_IMAGE_UNREADABLE')
+      if (!imageCodeMatches(parsed, challenge)) throw new CallFailed('image_code_mismatch')
       for (const entry of Array.isArray(parsed?.pictures) ? parsed.pictures : []) {
         const one = held(entry)
         if (one && asked.has(one.id) && !labels.has(one.id)) labels.set(one.id, one.labels)
       }
-    } catch {
+      for (const id of asked) if (!labels.has(id)) reasons.set(id, 'not_in_answer')
+    } catch (error) {
       failed += 1
+      const reason = reasonOf(error)
+      for (const id of asked) reasons.set(id, reason)
     }
   }
-  for (let i = 0; i < batches.length; i += concurrency)
-    await Promise.all(batches.slice(i, i + concurrency).map(run))
-  return { labels, usage, failed }
+  // 🔒 CAPPED RETRY. Each round sends only the pictures still unlabelled for a reason a second call can change, batched
+  // as before: never more calls than the first round, and `retry` rounds at most (a caller's budget names the bound).
+  let todo = thumbs
+  const firstCalls = Math.ceil(thumbs.length / batch)
+  for (let round = 0; round <= retry && todo.length && !signal?.aborted; round += 1) {
+    for (const p of todo) reasons.delete(p.id)
+    const batches = []
+    for (let i = 0; i < todo.length && batches.length < firstCalls; i += batch)
+      batches.push(todo.slice(i, i + batch))
+    for (let i = 0; i < batches.length; i += concurrency)
+      await Promise.all(batches.slice(i, i + concurrency).map(run))
+    todo = todo.filter((p) => !labels.has(p.id))
+  }
+  return { labels, reasons, usage, failed }
 }
