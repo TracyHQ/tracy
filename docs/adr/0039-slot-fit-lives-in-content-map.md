@@ -57,7 +57,10 @@
 - Only the Joomla audit exists, so WordPress and EmDash contracts get Slot fit when their audit does.
 - The Claude Cowork plugin can return `fit` with its slot list once it ships a contract that has one; its write check
   can then refuse a picture of the wrong shape or an opaque picture in a cut-out slot.
-- Decision 7 lands in a follow-up change: until then a release without Slot fit is not held.
+- Decision 7 is the Slot fit group of Content coverage (`apps/tracy-web/src/lib/content-coverage/fit.js`, verdict
+  `judgeFit`, codes `coverage-fit` and `coverage-live-fit`): judged on Joomla only (`fitPlatforms` in the coverage
+  policy) until another platform's audit measures Slot fit. A release already shown with a contract captured before
+  this ADR (JA Boxing 1.0.5) only warns; a release not shown yet is held until its next contract version carries Slot fit.
 
 ## Alternatives rejected
 

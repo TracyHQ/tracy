@@ -128,6 +128,16 @@ export const en = {
   'cms-readiness.coverage.rolesNone.detail':
     'Released before slot roles existed. Capture the contract again with roles.',
   'cms-readiness.coverage.list.noRole': 'Slots without a role',
+  'cms-readiness.coverage.noFit_one': '{count} slot without a fit',
+  'cms-readiness.coverage.noFit_other': '{count} slots without a fit',
+  'cms-readiness.coverage.noFit.detail':
+    'Every text and image slot needs a measured fit in content-map.json.',
+  'cms-readiness.coverage.fitInvalid': 'Slot fit invalid',
+  'cms-readiness.coverage.fitInvalid.detail': 'The Slot fit declaration cannot be used.',
+  'cms-readiness.coverage.fitNone': 'no Slot fit',
+  'cms-readiness.coverage.fitNone.detail':
+    'Captured before Slot fit existed. Measure it for the next version.',
+  'cms-readiness.coverage.list.noFit': 'Slots without a fit',
 
   'cms-readiness.ds.notAtProbe': '{step} · Not measured with preview probe v{probe}',
   'cms-readiness.ds.notAtProbe.none': '{version} has no measurement at preview probe v{probe}.',

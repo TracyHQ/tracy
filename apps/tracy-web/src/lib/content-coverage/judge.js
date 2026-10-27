@@ -124,3 +124,18 @@ export function judgeRoles(roles, { live }, policy = COVERAGE_POLICY) {
   const holds = !live && policy.rolesHoldNewRelease !== false
   return { holds, warns: !holds }
 }
+
+/**
+ * The verdict on the Slot fit group (ADR 0039 decision 7), the same rule as roles: a release not shown on Design
+ * inspiration whose content map lacks Slot fit is held from Publish (when the policy says so); one already shown only
+ * warns. A platform the fit audit does not measure yet (`policy.fitPlatforms`) is not judged at all.
+ * @param {import('./fit.js').Fit | { state: 'not-applicable' }} fit
+ * @param {{ live: boolean }} about
+ * @param {any} [policy]
+ * @returns {{ holds: boolean, warns: boolean }}
+ */
+export function judgeFit(fit, { live }, policy = COVERAGE_POLICY) {
+  if (fit.state === 'ready' || fit.state === 'not-applicable') return { holds: false, warns: false }
+  const holds = !live && policy.fitHoldNewRelease !== false
+  return { holds, warns: !holds }
+}

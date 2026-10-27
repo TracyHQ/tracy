@@ -2434,6 +2434,8 @@ export function buildApp(deps) {
         ...(deps.now ? { now: deps.now } : {}),
         // The slot roles of a release (Content coverage, ADR 0038); a test hands in its own answer.
         ...(deps.rolesOf ? { rolesOf: deps.rolesOf } : {}),
+        // The Slot fit of a release (Content coverage, ADR 0039); a test hands in its own answer.
+        ...(deps.fitOf ? { fitOf: deps.fitOf } : {}),
         workspaces: {
           app: workspacesRoutes({
             pool: deps.pool,
