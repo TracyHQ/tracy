@@ -16,7 +16,24 @@
  * not judged — they are composited, the palette has no say in them. A font is on when its first
  * family is a token's first family, or a generic (`sans-serif`, `system-ui`…) that some token stack
  * ends in. `allow` (from `design.json.allow`) silences a property/value pair a person accepted.
+ *
+ * THE SITE'S ACCENT IS ON THE PALETTE (ADR 0023, amended 26/10/2026). A Website Opportunities demo takes one accent
+ * colour from the business's logo on the accent role variables (`ACCENT_ROLES`, set on the page root); the checker
+ * does not know the brief, so the probe reads those variables off the root (`accent`) and `judge` counts their values
+ * as the site's accent, never as drift. Only the accent roles: any other `--ds-c-*` value and any other colour is
+ * still judged. Setting the roles by hand is held elsewhere (the demo's `look-kept` gate allows only the values the
+ * server gave; a customer site's roles come from the Design system door).
  */
+
+/** The accent role variables whose values on the page root are the site's accent (`@tracy/ds-slot` role-variables). */
+export const ACCENT_ROLES = Object.freeze([
+  '--ds-c-accent',
+  '--ds-c-accent-hover',
+  '--ds-c-accent-active',
+  '--ds-c-accent-on',
+  '--ds-c-accent-text',
+  '--ds-c-accent-text-hover'
+])
 
 /** A few named colours a theme's CSS still writes by name. @type {Record<string, string>} */
 const NAMED = {
@@ -168,6 +185,9 @@ export const STYLE_PROBE = `(() => {
   const inSkipped = (el) => typeof el.closest === 'function' && !!(el.closest('svg') || el.closest('#wpadminbar') || el.closest('.wp-block-social-link') || el.closest('[data-tracy-design-ignore]'))
   const name = (el) => { const t = String(el.tagName || '').toLowerCase(); if (el.id) return t + '#' + el.id; const c = typeof el.className === 'string' ? el.className.trim().split(/\\s+/)[0] : ''; return c ? t + '.' + c : t }
   const map = new Map(); let seen = 0
+  const ROLES = ${JSON.stringify(ACCENT_ROLES)}
+  const accent = {}
+  try { const root = document.documentElement; const rs = root ? getComputedStyle(root) : null; if (rs && typeof rs.getPropertyValue === 'function') for (const r of ROLES) { const v = String(rs.getPropertyValue(r) || '').trim(); if (v) accent[r] = v } } catch {}
   const add = (prop, value, el) => { if (!value) return; const k = prop + '|' + value; let e = map.get(k); if (!e) { e = { prop, value, count: 0, where: [] }; map.set(k, e) } e.count += 1; if (e.where.length < 3) { const n = name(el); if (!e.where.includes(n)) e.where.push(n) } }
   const all = document.body ? document.body.querySelectorAll('*') : []
   for (const el of all) {
@@ -183,8 +203,26 @@ export const STYLE_PROBE = `(() => {
     add('font-family', cs.fontFamily, el)
     if (map.size > 400) break
   }
-  return { href: String(document.location && document.location.href || ''), seen, samples: [...map.values()] }
+  return { href: String(document.location && document.location.href || ''), seen, samples: [...map.values()], accent }
 })()`
+
+/**
+ * The palette plus the site's accent as the page root sets it (`STYLE_PROBE` `accent`): each accent role whose value
+ * is an opaque colour joins the ruler under its own name. Anything else in `accent` is ignored.
+ * @param {ReturnType<typeof paletteOf>} palette
+ * @param {Record<string, string> | undefined} accent
+ * @returns {ReturnType<typeof paletteOf>}
+ */
+function withAccent(palette, accent) {
+  if (!accent || typeof accent !== 'object') return palette
+  const colors = [...palette.colors]
+  for (const role of ACCENT_ROLES) {
+    const c = typeof accent[role] === 'string' ? parseColor(accent[role]) : null
+    if (c && c.a === 1)
+      colors.push({ token: role, rgb: { r: Math.round(c.r), g: Math.round(c.g), b: Math.round(c.b) } })
+  }
+  return colors.length === palette.colors.length ? palette : { ...palette, colors }
+}
 
 /** Max channel difference between two rgb values. @param {{ r: number, g: number, b: number }} a @param {{ r: number, g: number, b: number }} b */
 const distance = (a, b) => Math.max(Math.abs(a.r - b.r), Math.abs(a.g - b.g), Math.abs(a.b - b.b))
@@ -197,13 +235,14 @@ const distance = (a, b) => Math.max(Math.abs(a.r - b.r), Math.abs(a.g - b.g), Ma
 
 /**
  * The report for one probe against one palette.
- * @param {{ href?: string, seen?: number, samples?: { prop: string, value: string, count: number, where?: string[] }[] }} probe
- * @param {ReturnType<typeof paletteOf>} palette
+ * @param {{ href?: string, seen?: number, samples?: { prop: string, value: string, count: number, where?: string[] }[], accent?: Record<string, string> }} probe
+ * @param {ReturnType<typeof paletteOf>} given the system's palette; the page's accent joins it
  * @param {{ allow?: { prop: string, value: string }[], design?: { id: string | null, source: string }, now?: () => Date }} [opts]
  * @returns {Report}
  */
-export function judge(probe, palette, opts = {}) {
+export function judge(probe, given, opts = {}) {
   const allow = new Set((opts.allow ?? []).map((a) => `${a.prop}|${a.value}`))
+  const palette = withAccent(given, probe.accent)
   /** @type {Report['colors']} */
   const colors = { on: 0, near: 0, off: 0, offenders: [] }
   /** @type {Report['fonts']} */

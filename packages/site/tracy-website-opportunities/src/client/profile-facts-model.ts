@@ -23,6 +23,16 @@ export interface FactRowView {
   decidedBy: 'rule' | 'owner'
   /** Reason codes of the rule's decision. */
   reasons: string[]
+  /**
+   * The other names the business's own marks give (its logo, its social pages), each with the source kinds that give
+   * it (`logo`, `instagram`): only on the name row held back because its own marks call it something else.
+   */
+  alsoCalled: OtherNameView[]
+}
+
+export interface OtherNameView {
+  name: string
+  sources: string[]
 }
 
 /** Field codes with a plain-words label in the strings (`field.<code>`); any other code is spelled out from its name. */
@@ -40,7 +50,8 @@ export const FIELD_KEYS = [
   'audience',
   'website',
   'socials',
-  'whatsapp'
+  'whatsapp',
+  'contactChannels'
 ] as const
 /** Value fields that read as the fact, first match wins. */
 const LABEL_FIELDS = [
@@ -108,6 +119,33 @@ function decisionsOf(v: unknown): Map<string, Rec> {
   return out
 }
 
+const list = (v: unknown): unknown[] => (Array.isArray(v) ? v : [])
+const OWN_MARKS_CODE = 'name-differs-from-own-marks'
+
+/**
+ * The names the business's own marks give other than `held` (`own-marks.mjs` on the server keeps them as a conflict of
+ * `business.name` whose reason starts with the code), each with the kinds of source its evidence cites, in order.
+ */
+export function otherNamesOf(profile: unknown, held: string): OtherNameView[] {
+  const doc = rec(profile)
+  const sourceOf = new Map(list(doc.sources).map((s) => [text(rec(s).id), text(rec(s).kind)]))
+  const evidenceSource = new Map(list(doc.evidence).map((e) => [text(rec(e).id), text(rec(e).sourceId)]))
+  const conflict = list(doc.conflicts)
+    .map(rec)
+    .find((c) => c.target === 'business.name' && String(c.reason ?? '').startsWith(`${OWN_MARKS_CODE}:`))
+  if (conflict === undefined) return []
+  return list(conflict.values).flatMap((v) => {
+    const name = text(rec(v).value)
+    if (name === null || name === held) return []
+    const sources: string[] = []
+    for (const ref of list(rec(v).evidenceRefs)) {
+      const kind = sourceOf.get(evidenceSource.get(text(ref)) ?? null)
+      if (kind && !sources.includes(kind)) sources.push(kind)
+    }
+    return [{ name, sources }]
+  })
+}
+
 /** `serviceAreas` to `Service areas` for a field code the strings do not know. */
 export function spelledField(field: string): string {
   const words = field
@@ -151,7 +189,8 @@ export function factRowsView(profile: unknown, decisions: unknown): FactRowView[
         decidedBy: d.decidedBy === 'owner' ? ('owner' as const) : ('rule' as const),
         reasons: (Array.isArray(d.reasons) ? d.reasons : []).flatMap((r) =>
           text(r) === null ? [] : [String(r)]
-        )
+        ),
+        alsoCalled: field === 'name' ? otherNamesOf(doc, label ?? '') : []
       }
     ]
   })
@@ -166,6 +205,7 @@ export const REASON_CODES = [
   'implausible-all-week-hours',
   'few-reviews',
   'review-only-person',
+  'name-differs-from-own-marks',
   'inferred-kind-not-allowed',
   'allowed-inferred-kind'
 ] as const

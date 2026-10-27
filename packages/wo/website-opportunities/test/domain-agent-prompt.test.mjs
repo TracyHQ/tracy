@@ -1074,7 +1074,7 @@ test('the follower and like counts collected for Facebook, Instagram and TikTok 
     socialFigures: figures
   })
   assert.match(p, /## Social figures collected/)
-  assert.match(p, /- Facebook: 12345 followers — https:\/\/www\.facebook\.com\/phohung \(as of 2026-10-20\)/)
+  assert.match(p, /- Facebook: 12345 followers, https:\/\/www\.facebook\.com\/phohung \(as of 2026-10-20\)/)
   assert.match(p, /never rounded/)
   assert.doesNotMatch(p, /someone-else|50 followers/)
   // No figure collected: no section, the prompt as before.

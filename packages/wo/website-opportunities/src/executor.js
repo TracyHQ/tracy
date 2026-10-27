@@ -140,6 +140,8 @@ const BRAND_ENGINE = Object.freeze({
  *   and story are read with; the default has none, and the rules read alone.
  *   `afterPublish` (`place-maintenance.js`): called once a place run published, never throws.
  *   `hub` (`hub/local-cache.js`): a shared hub read before Place Details is paid for; null reads none.
+ *   `providerRetry` (`domain/provider-retry.mjs`): how Place Details, Google Maps and TripAdvisor calls retry a 429 or
+ *   transient 5xx (`{retries, baseDelayMs, maxWaitMs, sleep}`); the default waits a few seconds at most per call.
  */
 export function createExecutor({
   pool,
@@ -168,13 +170,19 @@ export function createExecutor({
   researchLedger = null,
   afterPublish = null,
   hub = null,
+  providerRetry = undefined,
   menuVisionDoor = async () => ({ state: 'not_configured' }),
   businessReadingDoor = async () => ({ state: 'not_configured' })
 }) {
   requireHost(host, ['overLimitOrClosed'])
   const running = new Set()
   let claiming = Promise.resolve()
-  const domainDeps = { fetch: fetchImpl, ...(resolve ? { resolve } : {}), now }
+  const domainDeps = {
+    fetch: fetchImpl,
+    ...(resolve ? { resolve } : {}),
+    now,
+    ...(providerRetry ? { retry: providerRetry } : {})
+  }
 
   async function claim(allowPrefetch) {
     const client = await pool.connect()
@@ -714,6 +722,7 @@ export function createExecutor({
     loadDomain,
     apiFetch,
     domainDeps,
+    providerRetry,
     chargeable,
     researchLedger,
     collectOne,

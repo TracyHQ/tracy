@@ -865,13 +865,16 @@ const derivedFromSystem = (value) =>
   /var\(/.test(value) && !LITERAL_PAINT.test(value.replace(/var\([^)]*\)/g, ''))
 /** A design-system slot token: only ever set by the Design system door, never by hand (`@tracy/ds-slot`). */
 const SLOT_TOKEN = /^--ds-c-/
-/** The accent role tokens a build's brand accent may set (`opportunities-build/brand-on-site.js` `ACCENT_TOKENS`). */
-const ACCENT_TOKEN = /^--ds-c-accent(?:-hover|-active|-on)?$/
+/**
+ * The accent role tokens a build's brand accent may set (`opportunities-build/brand-on-site.js` `ACCENT_TOKENS`), and
+ * its link tokens where the accent reads on the template's page grounds (`ACCENT_LINK_TOKENS`).
+ */
+const ACCENT_TOKEN = /^--ds-c-accent(?:-hover|-active|-on|-text|-text-hover)?$/
 /** A WhatsApp chat link as the brief builds it: wa.me and the number's digits, nothing else. */
 const WHATSAPP_LINK = /^https:\/\/wa\.me\/\d{8,15}$/
 
 /**
- * The brand accent a body sends: accent role tokens with a plain hex value, at most four.
+ * The brand accent a body sends: accent role tokens with a plain hex value, at most six.
  * @param {unknown} value
  * @returns {Record<string, string>}
  */
@@ -879,7 +882,7 @@ export function accentTokensOf(value) {
   /** @type {Record<string, string>} */
   const out = {}
   if (!value || typeof value !== 'object' || Array.isArray(value)) return out
-  for (const [token, hex] of Object.entries(value).slice(0, 4))
+  for (const [token, hex] of Object.entries(value).slice(0, 6))
     if (ACCENT_TOKEN.test(token) && typeof hex === 'string' && /^#[0-9a-f]{6}$/i.test(hex)) out[token] = hex
   return out
 }
@@ -2456,6 +2459,7 @@ function ratingShown(text, values) {
 }
 
 const WITHHELD_FIX = {
+  name: "remove this business name from the page's text, its title and its meta description (header, hero, footer, a module or widget, structured data): the name waits for the owner to confirm it. The logo picture may stay as it is.",
   googleRating:
     'remove Google\'s star rating and review count from this page, in any wording ("5 Google rating", "5.0 ★", "rated 5 on Google"), wherever it shows (hero, badges, testimonials heading, header, footer, a module or widget, structured data): the site leaves Google\'s rating off, so show none, not even a sample one. Collected reviews may stay, each with its author.',
   hours:
@@ -2487,8 +2491,15 @@ export function checkWithheldNotShown(
   const seen = new Set()
   for (const r of reads) {
     if (typeof r.text !== 'string') continue
-    // A guest's review may name a time: it is their words, credited, not the site's claim.
-    const text = withoutAttributedTestimonials(r, testimonials)
+    // A guest's review may name a time: it is their words, credited, not the site's claim. 🔒 Only the page's TEXT is
+    // read, with its title and meta description: a withheld name inside the logo picture (or any image) is no finding.
+    const text = [
+      withoutAttributedTestimonials(r, testimonials),
+      typeof r.title === 'string' ? r.title : '',
+      typeof r.metaDescription === 'string' ? r.metaDescription : ''
+    ]
+      .filter(Boolean)
+      .join('\n')
     const flat = reviewText(text)
     for (const w of withheld) {
       const fix =
@@ -4178,6 +4189,7 @@ function notAPage(r, path, source) {
  *   styles?: {selector: string, text: string}[], inline?: {selector: string, style: string}[],
  *   images?: {src: string, sha256: string | null, width: number, height: number, broken: boolean, kind: 'img' | 'background', selector?: string, clone?: boolean, underWords?: boolean}[],
  *   blocks?: {text: string, selector?: string, form?: boolean}[], labels?: {text: string, href: string}[], text?: string,
+ *   title?: string, metaDescription?: string,
  *   ctas?: {href: string, text: string, booking: boolean, button?: boolean, nav?: boolean, navigation?: boolean, toggles?: boolean, opens?: boolean, submits?: boolean, selector?: string}[],
  *   mainContent?: {state: 'present'|'empty'|'unknown', selector: string | null},
  *   finalUrl?: string,

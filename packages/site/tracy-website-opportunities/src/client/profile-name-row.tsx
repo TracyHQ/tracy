@@ -21,12 +21,12 @@ const PRODUCT_NAME: Record<string, string> = {
   osm: 'OpenStreetMap'
 }
 
-function sourceLabel(t: Translate, s: NameSourceView): string {
+export function sourceLabel(t: Translate, s: NameSourceView): string {
   if (s.key === 'listing') return s.label ?? t('name.source.listing')
   return PRODUCT_NAME[s.key] ?? t(`name.source.${s.key}`)
 }
 
-function joined(list: string[]): string {
+export function joined(list: string[]): string {
   try {
     return new Intl.ListFormat(interfaceLocale(), { type: 'conjunction' }).format(list)
   } catch {

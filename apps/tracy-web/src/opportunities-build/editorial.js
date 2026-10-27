@@ -1,3 +1,4 @@
+import { siteBriefOf } from 'website-opportunities/domain/held-name.mjs'
 import { visionLabelOf } from './demo-photo-labels.js'
 /**
  * A read-only editorial pilot: choose sourced passages BEFORE they are pinned into a quickstart.
@@ -39,7 +40,8 @@ const promotional = /\b(discount|promotion|until|tonight|today|this weekend|happ
  */
 export function placeDossier({ revision, accountId, media = [], websitePages = [] }) {
   if (!accountId || revision.account_id !== accountId) throw new Error('EDITORIAL_ACCOUNT_MISMATCH')
-  const brief = revision.brief
+  // The business as the site may show it: a name held off the site gives way to the brief's neutral identity.
+  const brief = siteBriefOf(revision.brief)
   if (!brief?.business?.name) throw new Error('EDITORIAL_BRIEF_MISSING')
   const sources = []
   for (const page of brief.sitemap ?? [])

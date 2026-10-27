@@ -146,6 +146,8 @@ function executor(pool, domain, extra = {}) {
       throw new Error('no network in tests')
     },
     log: { warn() {}, error() {}, log() {} },
+    // Provider calls are tried once here, so each test counts its calls; the retry has its own tests below.
+    providerRetry: { maxWaitMs: 0 },
     ...extra
   })
   return { ex, put }
@@ -1432,6 +1434,9 @@ async function taExecutor(
     primaryScenario = null,
     fallbackId = '12345',
     serpFailure = null,
+    // {op: status}: that SerpApi call fails once with the status (Retry-After 1), then answers.
+    serpFailOnce = null,
+    providerRetry = undefined,
     serpEmpty = false,
     serpPhotosMissing = false,
     serpReviewCount = 1,
@@ -1476,7 +1481,9 @@ async function taExecutor(
     },
     settings: { ...taSettings(), googleMapsMenu: false, ...settings }
   })
+  const once = { ...serpFailOnce }
   const { ex } = executor(pool, domain, {
+    ...(providerRetry ? { providerRetry } : {}),
     runtime,
     chargeable: createChargeable(ledger),
     apiFetch: async (url) => {
@@ -1488,6 +1495,11 @@ async function taExecutor(
       calls.push(op)
       if (parsed.searchParams.has('q')) queries.push(parsed.searchParams.get('q'))
       if (hook) await hook(op)
+      if (parsed.hostname === 'serpapi.com' && once[op]) {
+        const status = once[op]
+        delete once[op]
+        return new Response('{}', { status, headers: { 'retry-after': '1' } })
+      }
       if (parsed.hostname === 'serpapi.com') {
         const status = typeof serpFailure === 'object' && serpFailure ? serpFailure[op] : serpFailure
         if (status) return new Response('{}', { status })
@@ -2209,6 +2221,47 @@ for (const status of [401, 429])
       assert.equal(rows.filter((r) => r.state === 'unreconciled').length, 2)
     }
   )
+
+for (const status of [429, 503])
+  test(
+    `SerpApi ${status} once is retried after its wait, and the reviews come from SerpApi`,
+    opts,
+    async () => {
+      const { pool } = db
+      const a = await account(pool, `serpapi-retry-${status}@tracy.test`)
+      const opp = await saveGoogle(pool, a)
+      const waits = []
+      const h = await taExecutor(pool, {
+        keys: { serpapi: 'first', rapidapi: 'second', litescrape: 'third' },
+        serpFailOnce: { 'serpapi-search': status },
+        providerRetry: { sleep: async (ms) => void waits.push(ms) }
+      })
+      await requestResearch(pool, { accountId: a, opportunity: opp, requestId: `serp-retry-${status}` })
+      await drain(h.ex)
+      assert.deepEqual(h.calls, ['serpapi-search', 'serpapi-search', 'serpapi-place', 'serpapi-reviews'])
+      assert.deepEqual(waits, [1000])
+      const source = (await placeViewOf(pool, opp)).profile.reviewSources.tripadvisor
+      assert.equal(source.provider, 'serpapi')
+      assert.equal(source.reviews.length, 1)
+    }
+  )
+
+test('SerpApi 402 (paid quota spent) is not retried: the next provider is asked at once', opts, async () => {
+  const { pool } = db
+  const a = await account(pool, 'serpapi-402@tracy.test')
+  const opp = await saveGoogle(pool, a)
+  const waits = []
+  const h = await taExecutor(pool, {
+    keys: { serpapi: 'first', rapidapi: 'second', litescrape: 'third' },
+    serpFailOnce: { 'serpapi-search': 402 },
+    providerRetry: { sleep: async (ms) => void waits.push(ms) }
+  })
+  await requestResearch(pool, { accountId: a, opportunity: opp, requestId: 'serp-402' })
+  await drain(h.ex)
+  assert.equal(h.calls.filter((c) => c === 'serpapi-search').length, 1)
+  assert.deepEqual(waits, [])
+  assert.equal(h.calls[1], 'autocomplete')
+})
 
 test(
   'SerpApi empty search ends enrichment without fallback while transient review failure reuses the verified ID',

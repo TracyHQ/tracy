@@ -140,7 +140,7 @@ export function qualitySourcesOf(frozen) {
       })
   }
   // 🔒 A guest's words reach a testimonial, word for word and signed (product owner, 26/10/2026); never hours or prices.
-  for (const review of quickstartReviews(frozen.profile_effective)) {
+  for (const review of quickstartReviews(frozen.profile_effective, frozen.brief)) {
     const provider = reviewAttribution(review)
     if (!provider) continue
     add({

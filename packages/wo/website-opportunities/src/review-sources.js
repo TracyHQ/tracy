@@ -1,7 +1,14 @@
+import { heldPeopleOf, heldReviewsSplit } from '../domain/held-reviews.mjs'
+
+/** A review source whose reviews naming someone the brief holds off the site move to `heldReviews` (`held-reviews.mjs`). */
+const withHeldReviews = (source, names) =>
+  source && names.length ? { ...source, ...heldReviewsSplit(source.reviews, names) } : source
+
 /** App-owned, additive brief extension: review quotations never supply business facts. */
 export function addReviewSources(brief, profile) {
-  const tripadvisor = profile?.reviewSources?.tripadvisor
-  const googleMaps = profile?.reviewSources?.googleMaps
+  const held = heldPeopleOf(brief?.missing)
+  const tripadvisor = withHeldReviews(profile?.reviewSources?.tripadvisor, held)
+  const googleMaps = withHeldReviews(profile?.reviewSources?.googleMaps, held)
   if (!tripadvisor && !googleMaps) return brief
   const photos = new Map(
     [tripadvisor, googleMaps]
@@ -102,7 +109,7 @@ export function renderBriefWithReviews(domain, brief) {
     )
   for (const r of source.reviews ?? []) {
     lines.push(
-      `- ${JSON.stringify(r.text)} — ${JSON.stringify(r.author)} · TripAdvisor · ${JSON.stringify(r.url)}${r.authorUrl ? ` · Author profile: ${JSON.stringify(r.authorUrl)}` : ''}${r.date ? ` · ${JSON.stringify(r.date)}` : ''}`
+      `- ${JSON.stringify(r.text)}, ${JSON.stringify(r.author)} · TripAdvisor · ${JSON.stringify(r.url)}${r.authorUrl ? ` · Author profile: ${JSON.stringify(r.authorUrl)}` : ''}${r.date ? ` · ${JSON.stringify(r.date)}` : ''}`
     )
     if (r.authorAvatarUrl)
       lines.push(
@@ -113,6 +120,7 @@ export function renderBriefWithReviews(domain, brief) {
         `  Attached review photo: ${JSON.stringify(photo.url)}; review: ${JSON.stringify(r.id)}; source: ${JSON.stringify(photo.sourceUrl)}${photo.mediaId ? `; stored mediaId: ${JSON.stringify(photo.mediaId)}` : ''}. Keep this photo associated with this quotation; no photographer is inferred from the review author.`
       )
   }
+  lines.push(...heldReviewLines(source))
   for (const photo of source.media ?? []) {
     if (photo.credit?.photoSource !== 'gallery') continue
     lines.push(
@@ -121,6 +129,13 @@ export function renderBriefWithReviews(domain, brief) {
   }
   return lines.join('\n')
 }
+
+/** The reviews kept off the site because they name someone the brief holds off it: named, never quoted. */
+const heldReviewLines = (source) =>
+  (source?.heldReviews ?? []).map(
+    (r) =>
+      `- Not for the site: the review by ${JSON.stringify(r.author)} names ${r.namesHeld.join(' and ')}, whom the brief holds off the site; quote nothing of it.`
+  )
 
 /** Menu images are source documents, not an extracted list of dishes or current prices. */
 function renderMapsSources(markdown, source) {
@@ -134,13 +149,14 @@ function renderMapsSources(markdown, source) {
   ]
   for (const review of source.reviews ?? []) {
     lines.push(
-      `- ${JSON.stringify(review.text)} — ${JSON.stringify(review.author)} on Google; ${JSON.stringify(review.url)}${review.authorUrl ? `; author profile: ${JSON.stringify(review.authorUrl)}` : ''}${review.authorAvatarUrl ? `; reviewer avatar (identity only): ${JSON.stringify(review.authorAvatarUrl)}` : ''}. Guest opinion, not business-fact evidence.`
+      `- ${JSON.stringify(review.text)}, ${JSON.stringify(review.author)} on Google; ${JSON.stringify(review.url)}${review.authorUrl ? `; author profile: ${JSON.stringify(review.authorUrl)}` : ''}${review.authorAvatarUrl ? `; reviewer avatar (identity only): ${JSON.stringify(review.authorAvatarUrl)}` : ''}. Guest opinion, not business-fact evidence.`
     )
     for (const photo of review.photos ?? [])
       lines.push(
         `  Attached review photo: ${JSON.stringify(photo.url)}; reviewId: ${JSON.stringify(review.id)}; source: ${JSON.stringify(photo.sourceUrl)}${photo.mediaId ? `; stored mediaId: ${JSON.stringify(photo.mediaId)}` : ''}. Do not infer photographer from reviewer.`
       )
   }
+  lines.push(...heldReviewLines(source))
   if (source.menuPhotos?.length) {
     lines.push(
       '',

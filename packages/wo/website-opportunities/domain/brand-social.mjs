@@ -88,7 +88,8 @@ function voiceOf(bio) {
   if (!text) return undefined
   const lang = VI_CHARS.test(text) ? 'Vietnamese' : /[a-z]/i.test(text) ? 'English' : 'unknown language'
   const cues = [EMOJI.test(text) && 'emoji', text.includes('!') && 'exclamations'].filter(Boolean)
-  const tone = cues.length ? `informal tone — ${cues.join(', ')}` : 'neutral tone'
+  // No dash in generated prose (#1791): the voice reaches the build as written.
+  const tone = cues.length ? `informal tone, ${cues.join(' and ')}` : 'neutral tone'
   return `${lang}; ${tone} (observed from bio)`
 }
 

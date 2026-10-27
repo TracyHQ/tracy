@@ -1,3 +1,4 @@
+import { siteBusinessOf } from './held-name.mjs'
 import { dishWordsIn } from './content-pool.mjs'
 
 // The words a demo site can carry with a source behind each one, keyed by the slot role they fill
@@ -152,7 +153,8 @@ const ownIn = (lang) => (item) => item.authorship === 'page' && (!lang || !item.
  */
 export function pinnedCopy(brief, { lang = 'en', cards = CARDS, dishes = DISHES } = {}) {
   const out = {}
-  const b = brief.business ?? {}
+  // The business as the site reads it: a held name is never the hero title (`held-name.mjs`).
+  const b = siteBusinessOf(brief)
   if (nonEmpty(b.name)) out['hero.title'] = { value: b.name.trim(), source: 'business.name' }
 
   const cuisine = Array.isArray(b.cuisine) ? b.cuisine.filter(nonEmpty).map((c) => c.trim()) : []

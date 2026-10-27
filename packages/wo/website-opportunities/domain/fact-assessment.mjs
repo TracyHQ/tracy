@@ -30,7 +30,9 @@ const WITHHELD_DERIVATION_CODES = new Set([
   'implausible-all-week-hours',
   'few-reviews',
   'review-only-person',
-  'owner-left-off'
+  'owner-left-off',
+  // The business's own logo or social page calls it by another name (`own-marks.mjs`): the owner confirms the name.
+  'name-differs-from-own-marks'
 ])
 // Any of these keeps a fact off the site by rule.
 const OFF_SITE_REASONS = new Set([
@@ -48,6 +50,11 @@ const CONTACT_LINKS = new Set([
   'tiktok',
   'youtube',
   'x',
+  // A channel the business invites messages on (`own-channels.mjs`).
+  'instagram-dm',
+  'facebook-dm',
+  'tiktok-dm',
+  'x-dm',
   'contact',
   'email',
   'phone',
@@ -207,6 +214,16 @@ export function assessProfile(
     'extensions'
   ])
     walk(profile[key], [key])
+  // 🔒 The brand's name follows the business name (#1791): while the business name is held off the site, the brand's
+  // record of the same business gives no name either, so no fill falls back to it. The owner's own choice still wins.
+  const nameRow = assessed.find((r) => r.factId === profile.business?.name?.id)
+  const brandRow = assessed.find((r) => r.factId === profile.brand?.name?.id)
+  if (nameRow?.onSite === false && brandRow && brandRow !== nameRow && brandRow.decidedBy === 'rule') {
+    const held = nameRow.reasons.filter((r) => r !== 'owner-override' && !brandRow.reasons.includes(r))
+    brandRow.onSite = false
+    brandRow.reasonCodes = [...brandRow.reasonCodes, ...held]
+    brandRow.reasons = [...brandRow.reasons, ...held]
+  }
   return assessed
 }
 

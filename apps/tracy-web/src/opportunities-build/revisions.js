@@ -58,7 +58,7 @@ export function templateRefusal(template) {
  */
 export async function revisionForAction(
   db,
-  { action, domain, templates, ops, now = Date.now, editorial, historical, logoResearch }
+  { action, domain, templates, ops, now = Date.now, editorial, historical, logoResearch, pictureLabels }
 ) {
   const built = (
     await db.query('select choice from wo_build where account_id = $1 and request_id = $2', [
@@ -123,6 +123,8 @@ export async function revisionForAction(
       researchSnapshotAt: read.snapshotAt ?? action.selection?.snapshotAt,
       domain,
       now,
+      // What the brief's photographs show, asked before the brief is made (`brief-picture-labels.js`, F08).
+      ...(pictureLabels ? { pictureLabels } : {}),
       ...(editorial ? { editorial, choiceFor: (frozen) => choiceFor(frozen) ?? fail(failure) } : {})
     }).catch((error) => (error?.code && error.code === failure ? { error: failure } : Promise.reject(error)))
     if (made.error) return made
@@ -186,12 +188,14 @@ function choiceOfSelection({ selection, pref, cards, domain, revision, ops, now,
  * @param {{
  *   accountId: string, opportunityId: string, domain: any, now?: () => number, revisionId?: string,
  *   actionId?: string, frozenResearchRead?: object, researchSnapshotAt?: string,
- *   editorial?: Function, choiceFor?: (frozen: object) => object
- * }} args - `actionId`: the demo action that adopts a reused brief; `choiceFor`: quality-v1's one build
+ *   editorial?: Function, choiceFor?: (frozen: object) => object, pictureLabels?: Function
+ * }} args - `actionId`: the demo action that adopts a reused brief; `choiceFor`: quality-v1's one build;
+ *   `pictureLabels`: the brief's photograph labelling (`brief-picture-labels.js`), none = unlabelled
  * @returns {Promise<{ revision: object, reused?: true } | { error: 'NOT_FOUND' }
  *   | { error: 'BRIEF_INVALID', errors: string[] }>}
  */
-export async function createRevision(pool, args) {
+export async function createRevision(pool, argsIn) {
+  const args = await withPictureLabelling(pool, argsIn)
   if (!args.editorial) return createBaseRevision(pool, args)
   const saved = await args.editorial.loadPrepared?.({
     accountId: args.accountId,
@@ -288,7 +292,11 @@ async function createBaseRevision(pool, args) {
       }
     }
     const view = args.frozenResearchRead ? null : opp.place_id ? await placeViewOf(client, opp) : null
-    const read = args.frozenResearchRead ?? (await liveRead(client, opp, view))
+    // The photographs carry the labels the brief step asked for before this transaction (`withPictureLabelling`).
+    const read = withPictureLabels(
+      args.frozenResearchRead ?? (await liveRead(client, opp, view)),
+      args.pictureLabelling
+    )
     // One object is hashed and briefed: the hash names exactly what the brief read.
     const research = await researchOf(client, read, opp, view)
     // A quality-v1 brief holds an editorial plan made for one template: never shared (`choiceFor`).
@@ -400,6 +408,63 @@ export async function currentResearchKey(db, opp, domain) {
 }
 
 /** What a brief made now reads; a frozen read (`freezeDemoResearchInput`) keeps what it held when frozen. */
+/**
+ * What the brief's photographs show, asked BEFORE any transaction (F08): `args.pictureLabels` (`brief-picture-labels.js`,
+ * injected) labels the photographs of the read the brief will be made from, at most its cap, from the shared cache first.
+ * Its answer rides on the args as `pictureLabelling`. Without the step nothing changes; a step that throws is a failed
+ * labelling, never a failed brief.
+ */
+async function withPictureLabelling(pool, args) {
+  if (typeof args.pictureLabels !== 'function' || args.pictureLabelling) return args
+  let read = args.frozenResearchRead ?? null
+  let opp = null
+  try {
+    if (!read) {
+      const client = await pool.connect()
+      try {
+        opp = (
+          await client.query('select * from wo_opportunity where id = $1 and account_id = $2', [
+            args.opportunityId,
+            args.accountId
+          ])
+        ).rows[0]
+        if (!opp) return args
+        read = await liveRead(client, opp, opp.place_id ? await placeViewOf(client, opp) : null)
+      } finally {
+        client.release()
+      }
+    }
+    const answer = await args.pictureLabels({
+      media: read.media ?? [],
+      brand: briefBrand(read.brand),
+      accountId: args.accountId,
+      trade: read.opportunity?.candidate?.trade ?? opp?.candidate?.trade ?? null
+    })
+    return { ...args, pictureLabelling: answer }
+  } catch {
+    return {
+      ...args,
+      pictureLabelling: {
+        labels: new Map(),
+        note: { status: 'failed', asked: 0, labelled: 0, cached: 0, reason: 'vision_failed' }
+      }
+    }
+  }
+}
+
+/** A read whose photographs carry the vision labels asked for, and the note of how that went. */
+function withPictureLabels(read, labelling) {
+  if (!labelling) return read
+  const labels = labelling.labels ?? new Map()
+  return {
+    ...read,
+    media: (read.media ?? []).map((m) =>
+      labels.has(m.id) ? { ...m, labels: { ...m.labels, vision: labels.get(m.id) } } : m
+    ),
+    ...(labelling.note ? { assetLabelling: labelling.note } : {})
+  }
+}
+
 async function liveRead(db, opp, view) {
   return withSocialStats(db, view ? fromPlace(view) : await fromOpportunity(db, opp))
 }
@@ -426,7 +491,9 @@ async function researchOf(db, read, opp, view) {
 
 /** The research a brief reads, as one hash: the same read twice is the same brief. */
 export function researchKey(domain, research) {
-  const { demoRequest, ...read } = research
+  // How the labelling went is not research: a brief made with no vision model reads the same as one made by a step that
+  // was not asked (the labels themselves, when there are any, are in the media and do count).
+  const { demoRequest, assetLabelling: _labelling, ...read } = research
   return researchHash({
     schemaVersion: domain.BRIEF_SCHEMA_VERSION,
     profileSnapshotVersion: PROFILE_SNAPSHOT_VERSION,

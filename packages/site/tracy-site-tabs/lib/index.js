@@ -1254,11 +1254,22 @@ var NAMED = /* @__PURE__ */ Object.freeze({
 var VOID = new Set("br img hr input wbr source meta link area col embed param track".split(" "));
 
 // ../tracy-site-build-core/src/host/design-check.mjs
+var ACCENT_ROLES = /* @__PURE__ */ Object.freeze([
+  "--ds-c-accent",
+  "--ds-c-accent-hover",
+  "--ds-c-accent-active",
+  "--ds-c-accent-on",
+  "--ds-c-accent-text",
+  "--ds-c-accent-text-hover"
+]);
 var STYLE_PROBE = `(() => {
   const SKIP = /^(SCRIPT|STYLE|NOSCRIPT|IFRAME|TEMPLATE|LINK|META|SVG|PATH|G|USE|DEFS|CIRCLE|RECT|LINE|POLYGON|POLYLINE)$/
   const inSkipped = (el) => typeof el.closest === 'function' && !!(el.closest('svg') || el.closest('#wpadminbar') || el.closest('.wp-block-social-link') || el.closest('[data-tracy-design-ignore]'))
   const name = (el) => { const t = String(el.tagName || '').toLowerCase(); if (el.id) return t + '#' + el.id; const c = typeof el.className === 'string' ? el.className.trim().split(/\\s+/)[0] : ''; return c ? t + '.' + c : t }
   const map = new Map(); let seen = 0
+  const ROLES = ${JSON.stringify(ACCENT_ROLES)}
+  const accent = {}
+  try { const root = document.documentElement; const rs = root ? getComputedStyle(root) : null; if (rs && typeof rs.getPropertyValue === 'function') for (const r of ROLES) { const v = String(rs.getPropertyValue(r) || '').trim(); if (v) accent[r] = v } } catch {}
   const add = (prop, value, el) => { if (!value) return; const k = prop + '|' + value; let e = map.get(k); if (!e) { e = { prop, value, count: 0, where: [] }; map.set(k, e) } e.count += 1; if (e.where.length < 3) { const n = name(el); if (!e.where.includes(n)) e.where.push(n) } }
   const all = document.body ? document.body.querySelectorAll('*') : []
   for (const el of all) {
@@ -1274,7 +1285,7 @@ var STYLE_PROBE = `(() => {
     add('font-family', cs.fontFamily, el)
     if (map.size > 400) break
   }
-  return { href: String(document.location && document.location.href || ''), seen, samples: [...map.values()] }
+  return { href: String(document.location && document.location.href || ''), seen, samples: [...map.values()], accent }
 })()`;
 
 // ../../tools/tracy-site-tools/src/host/look-style.mjs

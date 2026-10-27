@@ -6,15 +6,25 @@ import { decideGoogleRating, ratingPickOf } from './google-rating.mjs'
 import { pagePlan } from './page-plan.mjs'
 import { placeProfileFromResearch } from './place-profile-from-research.mjs'
 import { renderSocialFigures, socialFiguresOf } from './agent-prompt.mjs'
-import { aboutLineOf, evidenceCountOf, withReadingPicks } from './business-reading.mjs'
+import { aboutLineOf, evidenceCountOf, labelQuoted, withReadingPicks } from './business-reading.mjs'
+import { inSentence, withoutDashes } from './plain-prose.mjs'
+import { heldPeopleOf, heldReviewsSplit } from './held-reviews.mjs'
+import { socialNetworkOfUrl } from './own-channels.mjs'
 import { logoFactsOf } from './logo-facts.mjs'
 import { businessWords, tradeWords } from './trade-words.mjs'
 import { briefTradeOf } from './trades.mjs'
 import { decideSubTrade } from './sub-trades.mjs'
 import { cleanSocials } from './social-links.mjs'
 import { brandNamed } from './brand-social.mjs'
+import { brandWithoutName } from './held-name.mjs'
 import { candidateAsRead } from './candidate-as-read.mjs'
 import { heroCandidates, photographsOnly } from './pictures/brief-media.mjs'
+import {
+  ASSET_CONTENT,
+  ASSET_ORIENTATIONS,
+  ASSET_QUALITIES,
+  assetLabelsOf
+} from './pictures/asset-labels.mjs'
 import { researchWhatsappOf } from './business-phones.mjs'
 import {
   briefFactErrors,
@@ -25,17 +35,20 @@ import {
   decisionsOfAssessment,
   factOf,
   keyMessagesOf,
+  otherNamesOf,
   shown,
   withheldMissing
 } from './brief-facts.mjs'
 import { withKeyMessagePicks } from './business-reading.mjs'
+import { attemptsLine, briefSourceEntry, fetchedLine, suppliedBySource } from './brief-sources.mjs'
 
 // 2 (#1791): every stated fact in one envelope (`facts`, `brief-facts.mjs`), `missing` a view over the withheld ones,
 // key messages; `contact.whatsapp` and the team carry a `factId` instead of their own flags. Readers take 1 and 2.
 export const BRIEF_SCHEMA_VERSION = 2
 export const BRIEF_SCHEMA_VERSIONS = Object.freeze([1, 2])
 /** The contact copy of a business whose hours wait for a check, when it can be called or written to. */
-export const BY_APPOINTMENT = 'By appointment. Call or WhatsApp to book.'
+// The contact line of a business whose hours wait for a check; the channels to book on follow it, each once.
+export const BY_APPOINTMENT = 'By appointment.'
 /** A brief is the research frozen once: no CMS, no template. A build adds those (`briefForBuild`). */
 export const BRIEF_REQUIRED = Object.freeze([
   'schemaVersion',
@@ -81,6 +94,13 @@ const BUSINESS_PAGES = [
   { id: 'contact' }
 ]
 const NETWORK_LABEL = { facebook: 'Facebook', instagram: 'Instagram', tiktok: 'TikTok', youtube: 'YouTube' }
+/** The button and contact line of a channel the business invites messages on (`own-channels.mjs`). */
+const CHANNEL_LABEL = {
+  'instagram-dm': 'Message on Instagram',
+  'facebook-dm': 'Message on Facebook',
+  'tiktok-dm': 'Message on TikTok',
+  'x-dm': 'Message on X'
+}
 
 const nonEmpty = (s) => typeof s === 'string' && s.trim() !== ''
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/
@@ -224,7 +244,8 @@ export function buildBrief({
     ? profile.nameCheck.name
     : (profile.name ?? opportunity.name ?? cand.name)
   const branch = opportunity.branch ?? profile.branch ?? cand.branch ?? null
-  const displayName = branch ? `${name} — ${branch}` : name
+  // "Name (Branch)": never joined by a dash, which reads as machine written in the copy (#1791).
+  const displayName = branch ? `${name} (${branch})` : name
   // Every social link cleaned of share tracking, old records included (`social-links.mjs`, #1780 item 10).
   const socials = cleanSocials({ ...cand.socials, ...profile.socials })
   // Google's rating: shown from FEW_GOOGLE_REVIEWS reviews on, or when the person chose to show it (`google-rating.mjs`).
@@ -315,17 +336,23 @@ export function buildBrief({
       }
     : null
   const services = reading?.services ?? []
-  const about = aboutLineOf(name, reading)
+  // 🔒 A name held off the site (`name-differs-from-own-marks`, or the owner's off) is printed in no copy, SEO line or
+  // acceptance line: the copy says "this <kind of business>" until the owner confirms the name.
+  const nameOn = isOn('name')
+  const about = aboutLineOf(nameOn ? name : `This ${noun}`, reading)
   // Google's rating shows when its fact is on the site (few reviews or the owner's off keep it off, the owner's on shows it).
   const ratingFact = factOf(stated, 'googleRating', (v) => v?.label === 'rating')
   const ratingDecision = ratingFact
     ? { ...ratingDecided, state: ratingFact.onSite ? 'shown' : 'left' }
     : ratingDecided
   const place = googlePlaceSection(googlePlace, cand, ratingDecision)
+  // The names the business's own marks give besides the held one (`otherNamesOf`): named to the builder, never printed.
+  const otherNames = otherNamesOf(held)
   const keyMessages = keyMessagesOf(
     withKeyMessagePicks(readingPicked?.keyMessages, cand.keyMessagePicks),
     stated,
-    readingPicked
+    readingPicked,
+    { otherNames: otherNames.map((n) => n.name) }
   )
 
   // An email only with a source behind it: one the restaurant published, never a guess at a mailbox.
@@ -364,7 +391,9 @@ export function buildBrief({
     if (phoneOn && kept.length) business.otherPhones = kept
     else delete business.otherPhones
   }
-  if (nonEmpty(profile.website ?? cand.website)) business.website = profile.website ?? cand.website
+  // A website field that holds a social page is that social page, never a website (`socialNetworkOfUrl`).
+  const websiteRead = profile.website ?? cand.website
+  if (nonEmpty(websiteRead) && !socialNetworkOfUrl(websiteRead)) business.website = websiteRead
   if (cuisine.length) business.cuisine = cuisine
 
   // The WhatsApp number (#1780 item 16): one a source labels WhatsApp, else the main number inferred from a UAE mobile,
@@ -383,10 +412,17 @@ export function buildBrief({
         }
       : null
 
-  // Assets and which of them are usable as current content.
+  // Assets and which of them are usable as current content; each with its size, orientation, resolution grade and, when
+  // a vision model looked at it, what it shows and a caption (`asset-labels.mjs`, F08).
   const assets = media
     .filter((m) => nonEmpty(m?.id))
-    .map((m) => ({ id: m.id, kind: m.kind, category: m.category ?? 'other', sha256: m.sha256 }))
+    .map((m) => ({
+      id: m.id,
+      kind: m.kind,
+      category: m.category ?? 'other',
+      sha256: m.sha256,
+      ...assetLabelsOf(m)
+    }))
   const stale = []
   const staleIds = new Set()
   for (const m of media) {
@@ -417,23 +453,38 @@ export function buildBrief({
   const menuRead = withDishPhotos(read, images, posts, guestReviewsOf(profile))
 
   const firstSocial = SOURCE_ORDER.slice(1).find((n) => nonEmpty(socials[n]))
-  // The booking button speaks the trade's words: Book a table, Book a class, Book an appointment, or Book (#1780).
+  // The channels the business invites messages on in its own words ("DM us"), those on the site, each with its quotes.
+  const channels = stated
+    .filter(
+      (f) =>
+        f.field === 'contactChannels' && f.onSite && CHANNEL_LABEL[f.value?.kind] && nonEmpty(f.value?.url)
+    )
+    .map((f) => ({
+      label: CHANNEL_LABEL[f.value.kind],
+      url: f.value.url,
+      quotes: f.evidence.map((e) => e.quote).filter(nonEmpty)
+    }))
+  // The booking button speaks the trade's words: Book a table, Book a class, Book an appointment, or Book (#1780). With
+  // no booking link, the channel the business names itself comes before a phone it never asked to be called on.
   const primaryCta = booking
     ? { kind: 'booking', label: words.bookingCta, href: booking.url }
-    : phoneSourced && phoneOn
-      ? { kind: 'phone', label: 'Call', href: `tel:${phoneOn.replace(/[^\d+]/g, '')}` }
-      : firstSocial
-        ? { kind: 'social', label: `Follow on ${NETWORK_LABEL[firstSocial]}`, href: socials[firstSocial] }
-        : null
+    : channels.length
+      ? { kind: 'link', label: channels[0].label, href: channels[0].url }
+      : phoneSourced && phoneOn
+        ? { kind: 'phone', label: 'Call', href: `tel:${phoneOn.replace(/[^\d+]/g, '')}` }
+        : firstSocial
+          ? { kind: 'social', label: `Follow on ${NETWORK_LABEL[firstSocial]}`, href: socials[firstSocial] }
+          : null
   const contactCta = primaryCta && primaryCta.kind !== 'social' ? primaryCta : null
   const withCta = (section, cta) => (cta ? { ...section, cta } : section)
 
   // Sitemap.
   const home = { slug: 'home', title: 'Home', sections: [] }
-  // The hero says what the business says it is (`heroCopyOf`); the address has its own location line.
-  const heroCopy = heroCopyOf({
-    displayName,
+  // The hero is key message 1 and the services on the site (`heroOf`); the address has its own location line.
+  const hero = heroOf({
+    displayName: nameOn ? displayName : null,
     reading,
+    keyMessages,
     bio,
     editorial: googlePlace?.summaries?.editorial,
     cuisine,
@@ -443,13 +494,21 @@ export function buildBrief({
     withCta(
       {
         kind: 'hero',
-        copy: heroCopy,
+        copy: hero.copy,
         assetIds: heroes.map((h) => h.id),
-        ...(heroes.length ? { heroCandidates: heroes } : {})
+        ...(heroes.length ? { heroCandidates: heroes } : {}),
+        ...(hero.evidence.length ? { evidence: hero.evidence } : {})
       },
       primaryCta
     )
   )
+  // What a search result shows of the home page, made of facts on the site only (`seoOf`).
+  home.seo = seoOf({
+    name: nameOn ? name : null,
+    noun,
+    city: cityOf(addressOn),
+    services: heroServicesOf(reading, null)
+  })
   if (imagesOf('food').length) {
     home.sections.push({
       kind: 'highlights',
@@ -533,7 +592,9 @@ export function buildBrief({
     kind: 'story',
     copy:
       about ??
-      (cuisine.length ? `${displayName} serves ${cuisine.join(', ')} cuisine.` : `About ${displayName}.`),
+      (cuisine.length
+        ? `${nameOn ? displayName : `This ${noun}`} serves ${cuisine.join(', ')} cuisine.`
+        : `About ${nameOn ? displayName : `this ${noun}`}.`),
     assetIds: [...imagesOf('people'), ...imagesOf('space')].slice(0, 3)
   }
   const storyEvidence = [
@@ -614,17 +675,34 @@ export function buildBrief({
   }
 
   // Hours waiting for a check: no hours, and how such a business is reached instead when it can be called.
+  // 🔒 Each channel on the site is named once, in the call to action's order: a channel the business names itself ("DM
+  // us") first, then the phone, then WhatsApp.
+  const whatsappOn = Boolean(whatsapp) || Object.keys(cand.contacts ?? {}).some((k) => /whatsapp/i.test(k))
   const byAppointment =
-    hoursDecision.state === 'check' &&
-    (Boolean(phoneOn) || Object.keys(cand.contacts ?? {}).some((k) => /whatsapp/i.test(k)))
+    hoursDecision.state === 'check' && (channels.length > 0 || Boolean(phoneOn) || whatsappOn)
+  const phoneLine = phoneOn ? `${phoneOn}${profile.phoneWhatsapp === true ? ' (WhatsApp)' : ''}` : null
+  const bookingLine = byAppointment
+    ? `${BY_APPOINTMENT} To book, ${listOr([
+        ...channels.map((c) => `${c.label.replace(/^Message\b/, 'message')} (${c.url})`),
+        phoneLine ? `call ${phoneLine}` : null,
+        whatsappOn ? (phoneLine ? 'WhatsApp' : 'message on WhatsApp') : null
+      ])}.`
+    : null
   const contactLines = [
-    phoneOn ? `Phone: ${phoneOn}${profile.phoneWhatsapp === true ? ' (WhatsApp)' : ''}.` : null,
+    bookingLine,
+    ...(byAppointment ? [] : channels.map((c) => `${c.label}: ${c.url}.`)),
+    phoneLine && !byAppointment ? `Phone: ${phoneLine}.` : null,
     business.otherPhones
       ? `Other phones: ${business.otherPhones.map((p) => `${p.phone}${p.whatsapp ? ' (WhatsApp)' : ''}`).join(', ')}.`
       : null,
-    addressOn ? `Address: ${addressOn}.` : null,
-    byAppointment ? BY_APPOINTMENT : null
+    addressOn ? `Address: ${addressOn}.` : null
   ].filter(Boolean)
+  const channelEvidence = channels.flatMap((c) =>
+    c.quotes.map((quote) => ({ source: 'contactChannels', quote }))
+  )
+  // 🔒 "By appointment" is Tracy's conclusion from hours held as implausible, never a quote: it carries its reason, and no
+  // hours excerpt is shown beside it for a builder to read as hours.
+  const inferred = byAppointment ? [{ text: BY_APPOINTMENT, reason: 'implausible-all-week-hours' }] : []
   const contact = {
     slug: 'contact',
     title: booking ? 'Contact & booking' : 'Contact',
@@ -635,7 +713,9 @@ export function buildBrief({
           copy: contactLines.length
             ? contactLines.join(' ')
             : `Reach the ${noun} through its social profiles.`,
-          assetIds: []
+          assetIds: [],
+          ...(channelEvidence.length ? { evidence: channelEvidence } : {}),
+          ...(inferred.length ? { inferred } : {})
         },
         contactCta
       )
@@ -685,7 +765,7 @@ export function buildBrief({
   }
   const heldTeam = (reading?.team ?? []).filter((p) => !p.onSite)
   // What the brief withholds is a view over its facts kept off the site (#1791): one entry per field, with every value.
-  const withheld = withheldMissing(stated)
+  const withheld = withheldMissing(stated, { otherNames })
   if (hoursConflicting) {
     missing.push({
       field: 'hours',
@@ -694,6 +774,8 @@ export function buildBrief({
     })
   }
   for (const w of withheld) if (!(w.field === 'hours' && hoursConflicting)) missing.push(w)
+  // 🔒 A review that names someone the brief holds off the site is not offered for the site (`heldReviewsSplit`).
+  if (place) Object.assign(place, heldReviewsSplit(place.reviews, heldPeopleOf(missing)))
   if (!hours.length && !missing.some((m) => m.field === 'hours'))
     miss('hours', 'No opening hours were collected: show no hours.')
   if (!phone) miss('phone', 'No phone number found.')
@@ -724,7 +806,9 @@ export function buildBrief({
 
   const acceptance = [
     'Every page renders on a 375 px wide phone without horizontal scrolling.',
-    'Business name, address and phone on the site match this brief exactly.',
+    nameOn
+      ? 'Business name, address and phone on the site match this brief exactly.'
+      : 'The business name is held off the site until the owner confirms it: no copy, page title or meta description names the business (its logo may show); address and phone on the site match this brief exactly.',
     'Every image and video on the site comes from assets[] of this brief.',
     'No demo or template placeholder content remains.',
     `Every price, ${food ? 'menu item' : 'service'}, opening hour and event this brief holds is shown as held; nothing replaces or contradicts it; a collected review keeps its exact text and author, and a collected rating is never replaced.`,
@@ -742,6 +826,9 @@ export function buildBrief({
       `Every service of this brief shows by its name on the ${words.listBlock} page; no other service is added.`
     )
   if (heldTeam.length) acceptance.push('Nobody the brief holds off the site is named on it.')
+  acceptance.push(
+    `The home page's HTML title is exactly ${JSON.stringify(home.seo.title)} (at most ${SEO_TITLE_MAX} characters) and its meta description is exactly ${JSON.stringify(home.seo.description)} (at most ${SEO_DESCRIPTION_MAX} characters).`
+  )
   if (pool) {
     acceptance.push(
       `Text taken from content[] keeps the ${noun}'s words and adds no fact; an event or offer shows as current only when its item says active or upcoming.`
@@ -760,11 +847,16 @@ export function buildBrief({
     facts: stated,
     ...(keyMessages.length ? { keyMessages } : {}),
     madeAt,
-    sitemap,
+    // Generated prose carries no dash (`plain-prose.mjs`); quotes and evidence stay exact.
+    sitemap: sitemapWithoutDashes(sitemap),
     ...(pool ? { content: { items: contentItems, links: pool.links } } : {}),
-    ...(reading ? { reading: briefReading(reading, about) } : {}),
-    // The brand's name is the decided business name, never a raw handle (`brandNamed`).
-    brand: brandNamed(brand, name),
+    ...(reading ? { reading: briefReading(reading, about && withoutDashes(about)) } : {}),
+    // The brand's name is the decided business name, never a raw handle (`brandNamed`). 🔒 While that name is held off
+    // the site, the brand names nobody (`name: null`) and points to the held name's Missing entry, whose `otherNames`
+    // the builder reads: no builder prints the brand's name in place of the held one.
+    brand: nameOn
+      ? brandWithoutDashes(brandNamed(brand, name))
+      : brandNameHeld(brandWithoutDashes(brand), stated),
     ...(place ? { googlePlace: place } : {}),
     ...(site ? { currentSite: site } : {}),
     integrations,
@@ -772,12 +864,10 @@ export function buildBrief({
     stale,
     assets,
     acceptance,
-    sources: orderedSources.map((s) => ({
-      source: s.source,
-      status: s.status,
-      ...(s.reason ? { reason: s.reason } : {}),
-      coverage: s.coverage ?? { fetched: 0 }
-    }))
+    // Each with its error code and the providers it tried (`brief-sources.mjs`).
+    sources: orderedSources.map((s) =>
+      briefSourceEntry(s, suppliedBySource({ googlePlace: place, media, posts: posts ?? [] }))
+    )
   }
 }
 
@@ -796,34 +886,206 @@ function firstBioLine(bio) {
   return null
 }
 
+/** "a, b or c": the ways to book, as one phrase. */
+const listOr = (items) => {
+  const said = items.filter(Boolean)
+  return said.length <= 1 ? (said[0] ?? '') : `${said.slice(0, -1).join(', ')} or ${said.at(-1)}`
+}
+
+/** Every section's copy and the page's SEO lines without a dash (`withoutDashes`); quotes and evidence as they are. */
+const sitemapWithoutDashes = (sitemap) =>
+  sitemap.map((p) => ({
+    ...p,
+    sections: p.sections.map((s) => ({ ...s, copy: withoutDashes(s.copy) })),
+    ...(p.seo
+      ? { seo: { title: withoutDashes(p.seo.title), description: withoutDashes(p.seo.description) } }
+      : {})
+  }))
+
+/** A brand while the business name is held: no name, and where the held name is described (`held-name.mjs`). */
+function brandNameHeld(brand, stated) {
+  if (!brand || typeof brand !== 'object') return brand ?? null
+  const reasons = (stated ?? []).find((f) => f.field === 'name' && f.onSite === false)?.reasons ?? []
+  return { ...brandWithoutName(brand), name: null, nameHeld: { missing: 'name', reasons } }
+}
+
+/** The brand's voice without a dash: a brief of an older research may hold "informal tone — emoji". */
+const brandWithoutDashes = (brand) =>
+  brand && typeof brand.voice === 'string' ? { ...brand, voice: withoutDashes(brand.voice) } : brand
+
+const MAX_HERO_SERVICES = 3
+const capitalFirst = (t) => t.charAt(0).toUpperCase() + t.slice(1)
+
 /**
- * The hero sentence (pure): the name, then what the business says it is in its own quoted words (the reading's story,
- * else Google's editorial summary, else the bio's first line), then its most repeated service when the description
- * does not name it already. Without a self-description: the cuisine of a restaurant, else what kind of business it
- * is. Never an address (it has its own location line) and never a slogan of our own.
+ * The services of the site the hero and the SEO lines name (pure): the most mentioned first, at most three, none the
+ * lead already names. `reading.services` holds only the services on the site.
  */
-export function heroCopyOf({
+export function heroServicesOf(reading, lead) {
+  const named = (s) => nonEmpty(lead) && lead.toLowerCase().includes(String(s.label).toLowerCase())
+  return [...(reading?.services ?? [])]
+    .filter((s) => nonEmpty(s?.label) && !named(s))
+    .sort((a, b) => evidenceCountOf(b) - evidenceCountOf(a))
+    .slice(0, MAX_HERO_SERVICES)
+}
+
+/**
+ * Key message 1 as the hero says it (pure): its shortest quote from the business's own text that says its label (emoji
+ * off), else its label. A theme only customers praise never speaks as the business: the first message of its own leads.
+ */
+function heroLeadOf(keyMessages) {
+  const m = (Array.isArray(keyMessages) ? keyMessages : []).find(
+    (k) => k?.basis !== 'praise' && nonEmpty(k?.label)
+  )
+  if (!m) return null
+  const own = (m.quotes ?? [])
+    .map((x) => ({
+      x,
+      text: stripEnd(
+        String(x?.text ?? '')
+          .replace(PICTO, ' ')
+          .replace(/\s+/g, ' ')
+          .trim()
+      )
+    }))
+    .filter(
+      ({ x, text }) =>
+        text &&
+        !String(x.sourceRef ?? '').startsWith('review:') &&
+        text.split(' ').length <= MAX_SELF_WORDS &&
+        labelQuoted(m.label, text)
+    )
+    .sort((a, b) => a.text.length - b.text.length)[0]
+  return {
+    text: own?.text ?? stripEnd(m.label),
+    evidence: (m.quotes ?? []).map((x) => ({
+      source: `keyMessages:${x.sourceRef ?? 'unknown'}`,
+      quote: x.text
+    }))
+  }
+}
+
+// One excerpt per quote: "Tennis & Padel" backs both of its services.
+const serviceEvidence = (services) =>
+  services
+    .filter((s, i) => nonEmpty(s.quote) && services.findIndex((o) => o.quote === s.quote) === i)
+    .map((s) => ({ source: `reading.services:${s.source?.kind ?? 'source'}`, quote: s.quote }))
+
+/**
+ * The hero (pure): key message 1 and the names of the services on the site, up to three ("European Coaching in Dubai:
+ * tennis, padel, swimming lessons."), with every quote it rests on as `evidence`. Without a key message: the name, what
+ * the business says it is in its own quoted words (the reading's story, else Google's editorial summary, else the bio's
+ * first line), then its services the description does not name. Without a self-description: the cuisine of a
+ * restaurant, else what kind of business it is. Never an address (it has its own location line), never our own slogan.
+ * `displayName` is null while the name is held off the site: the hero then names no business.
+ * @returns {{copy: string, evidence: {source: string, quote: string}[]}}
+ */
+export function heroOf({
   displayName,
   reading = null,
+  keyMessages = [],
   bio = null,
   editorial = null,
   cuisine = [],
   noun
 }) {
+  const lead = heroLeadOf(keyMessages)
+  if (lead) {
+    const services = heroServicesOf(reading, lead.text)
+    const names = services.map((s) => inSentence(stripEnd(String(s.label).replace(PICTO, ' ')), s.quote))
+    return {
+      copy: names.length ? `${lead.text}: ${names.join(', ')}.` : `${lead.text}.`,
+      evidence: [...lead.evidence, ...serviceEvidence(services)]
+    }
+  }
+  const story = reading?.story?.[0]
   const self =
-    [reading?.story?.[0]?.label, nonEmpty(editorial) ? editorial : null, firstBioLine(bio)]
+    [story?.label, nonEmpty(editorial) ? editorial : null, firstBioLine(bio)]
       .map((t) => (nonEmpty(t) ? stripEnd(t) : null))
       .find(Boolean) ?? null
   if (!self) {
-    if (cuisine.length) return `${displayName}. ${cuisine.join(', ')} cuisine.`
-    return `${displayName}, ${/^[aeiou]/i.test(noun) ? 'an' : 'a'} ${noun}.`
+    const article = /^[aeiou]/i.test(noun) ? 'an' : 'a'
+    if (!nonEmpty(displayName))
+      return {
+        copy: cuisine.length ? `${cuisine.join(', ')} cuisine.` : capitalFirst(`${article} ${noun}.`),
+        evidence: []
+      }
+    if (cuisine.length) return { copy: `${displayName}. ${cuisine.join(', ')} cuisine.`, evidence: [] }
+    return { copy: `${displayName}, ${article} ${noun}.`, evidence: [] }
   }
-  const services = [...(reading?.services ?? [])]
-  const top = services.sort((a, b) => evidenceCountOf(b) - evidenceCountOf(a))[0]
-  const named = top && self.toLowerCase().includes(String(top.label).toLowerCase())
-  return [`${displayName}.`, `${self}.`, top && !named ? `${stripEnd(top.label)}.` : null]
+  const services = heroServicesOf(reading, self)
+  const names = services.map((s) => inSentence(stripEnd(String(s.label).replace(PICTO, ' ')), s.quote))
+  return {
+    copy: [
+      nonEmpty(displayName) ? `${displayName}.` : null,
+      `${self}.`,
+      names.length ? `${capitalFirst(names.join(', '))}.` : null
+    ]
+      .filter(Boolean)
+      .join(' '),
+    evidence: [
+      ...(story && nonEmpty(story.quote) && stripEnd(story.label) === self
+        ? [{ source: `reading.story:${story.source?.kind ?? 'source'}`, quote: story.quote }]
+        : []),
+      ...serviceEvidence(services)
+    ]
+  }
+}
+
+/** The hero sentence alone (`heroOf`). */
+export const heroCopyOf = (input) => heroOf(input).copy
+
+export const SEO_TITLE_MAX = 60
+export const SEO_DESCRIPTION_MAX = 155
+
+/**
+ * The city of an address as Google writes it (pure): the last part before the country that holds no number
+ * ("Harbour Lane - Al Barsha - Dubai - United Arab Emirates" gives "Dubai"); null for an address of fewer parts.
+ */
+export function cityOf(address) {
+  // Whitespace collapses first so the split pattern stays linear on long runs of spaces or tabs.
+  const parts = String(address ?? '')
+    .replace(/\s+/g, ' ')
+    .split(/ - |,/)
+    .map((p) => p.trim())
     .filter(Boolean)
-    .join(' ')
+  if (parts.length < 3) return null
+  for (let i = parts.length - 2; i >= 1; i -= 1)
+    if (!/\d/.test(parts[i]) && parts[i].split(' ').length <= 3) return parts[i]
+  return null
+}
+
+/** The text cut at a word to at most `max` characters. */
+const fitTo = (text, max) => {
+  if (text.length <= max) return text
+  const cut = text.slice(0, max + 1).replace(/\s+\S*$/u, '')
+  return stripEnd(cut.length ? cut : text.slice(0, max))
+}
+const listed = (items) =>
+  items.length <= 1 ? (items[0] ?? '') : `${items.slice(0, -1).join(', ')} and ${items.at(-1)}`
+
+/**
+ * The home page's title and meta description (pure), only of facts on the site: its name (null when kept off), the
+ * kind of business, the city of its address on the site, and its top services. The title stays within 60 characters,
+ * the description within 155: a part that does not fit is left out, never cut mid-word.
+ * @returns {{title: string, description: string}}
+ */
+export function seoOf({ name = null, noun, city = null, services = [] }) {
+  const kind = capitalFirst(noun)
+  const where = city ? ` in ${city}` : ''
+  const titles = nonEmpty(name)
+    ? [`${name} | ${kind}${where}`, `${name} | ${kind}`, name]
+    : [`${kind}${where}`, kind]
+  const title = titles.find((t) => t.length <= SEO_TITLE_MAX) ?? fitTo(titles.at(-1), SEO_TITLE_MAX)
+  const article = /^[aeiou]/i.test(noun) ? 'an' : 'a'
+  const head = nonEmpty(name)
+    ? `${name}, ${article} ${noun}${where}.`
+    : `${capitalFirst(`${article} ${noun}`)}${where}.`
+  const names = services.map((s) => inSentence(stripEnd(String(s.label).replace(PICTO, ' ')), s.quote))
+  for (let n = names.length; n >= 0; n -= 1) {
+    const text = n ? `${head} ${capitalFirst(listed(names.slice(0, n)))}.` : head
+    if (text.length <= SEO_DESCRIPTION_MAX) return { title, description: text }
+  }
+  return { title, description: fitTo(head, SEO_DESCRIPTION_MAX) }
 }
 
 /** The reading as a brief carries it: each item's words, quote and source, the team's place on the site, the About line. */
@@ -1037,6 +1299,19 @@ export function validateBrief(brief) {
           err(`assets[${i}].category`, `must be one of ${CATEGORIES.join(', ')}`)
         if (!/^[0-9a-f]{64}$/.test(a.sha256 ?? ''))
           err(`assets[${i}].sha256`, 'must be 64 lowercase hex characters')
+        // The labels (F08) are optional: a brief made before them has none.
+        for (const [field, allowed] of [
+          ['orientation', ASSET_ORIENTATIONS],
+          ['quality', ASSET_QUALITIES],
+          ['content', ASSET_CONTENT]
+        ])
+          if (field in a && !allowed.includes(a[field]))
+            err(`assets[${i}].${field}`, `must be one of ${allowed.join(', ')}`)
+        for (const side of ['width', 'height'])
+          if (side in a && a[side] !== null && !(Number.isInteger(a[side]) && a[side] > 0))
+            err(`assets[${i}].${side}`, 'must be a positive integer, or null when unknown')
+        if ('caption' in a && !(nonEmpty(a.caption) && a.caption.length < 125))
+          err(`assets[${i}].caption`, 'must be a non-empty string under 125 characters')
       })
   }
 
@@ -1111,6 +1386,21 @@ export function validateBrief(brief) {
         if (slugs.has(p.slug)) err(`${at}.slug`, `duplicate slug ${p.slug}`)
         slugs.add(p.slug)
         if (!nonEmpty(p.title)) err(`${at}.title`, 'must be a non-empty string')
+        // The page's title and meta description (optional: a brief made before them has none).
+        if (
+          'seo' in p &&
+          !(
+            isObj(p.seo) &&
+            nonEmpty(p.seo.title) &&
+            p.seo.title.length <= SEO_TITLE_MAX &&
+            nonEmpty(p.seo.description) &&
+            p.seo.description.length <= SEO_DESCRIPTION_MAX
+          )
+        )
+          err(
+            `${at}.seo`,
+            `must be {title (at most ${SEO_TITLE_MAX} characters), description (at most ${SEO_DESCRIPTION_MAX})}`
+          )
         if (!Array.isArray(p.sections)) return err(`${at}.sections`, 'must be a list')
         p.sections.forEach((s, j) => {
           const sat = `${at}.sections[${j}]`
@@ -1377,6 +1667,24 @@ function logoLines(br, words = tradeWords('food')) {
   return lines
 }
 
+/** An asset's line in the markdown: what it shows, its shape and grade, its caption (F08); the category of a brief before. */
+/** How the pictures were labelled when the brief was made (`assetLabelling`, F08), in one line. */
+function assetLabellingLine(n) {
+  const counts = `${n.labelled ?? 0} of ${n.asked ?? 0} asked, ${n.cached ?? 0} cached${n.max ? `, at most ${n.max}` : ''}`
+  if (n.status === 'labelled') return `labelled by a vision model (${counts})`
+  if (n.status === 'cached') return `labels a vision model gave before (${counts})`
+  if (n.status === 'off') return 'no vision model is assigned; pictures are unlabelled'
+  if (n.status === 'failed')
+    return `the vision model failed (${n.reason ?? 'unknown'}); pictures are unlabelled${n.cached ? `, except ${n.cached} labelled before` : ''}`
+  return 'no photograph to label'
+}
+
+function assetLine(a) {
+  if (!('content' in a)) return `${a.kind}, ${a.category}`
+  const shape = a.width && a.height ? `${a.orientation} ${a.width}x${a.height}` : 'size unknown'
+  return `${a.kind}, ${a.content}, ${shape}, quality ${a.quality}${a.caption ? `, ${q(a.caption)}` : ''}`
+}
+
 function dishPhotoValid(p, assetIds) {
   return (
     isObj(p) &&
@@ -1395,7 +1703,7 @@ function dishPhotoValid(p, assetIds) {
   )
 }
 
-/** `"Margherita" (Small): "8.50" — "PIZZA" · "https://…/menu.pdf" p. 1` */
+/** `"Margherita" (Small): "8.50", "PIZZA" · "https://…/menu.pdf" p. 1` */
 function menuItemLine(i) {
   const where = [
     i.section ? q(i.section) : null,
@@ -1410,7 +1718,7 @@ function menuItemLine(i) {
       : ''
   // Only an accepted photo is offered as the dish's own; a candidate is not shown at all.
   const photo = i.photo?.status === 'accepted' ? ` · photo of this dish: ${i.photo.assetId}` : ''
-  return `${q(i.name)}${i.size ? ` (${q(i.size).slice(1, -1)})` : ''}: ${i.price ? `${q(i.price)}${thousands(i)}` : 'no price'} — ${where}${note}${photo}`
+  return `${q(i.name)}${i.size ? ` (${q(i.size).slice(1, -1)})` : ''}: ${i.price ? `${q(i.price)}${thousands(i)}` : 'no price'}, ${where}${note}${photo}`
 }
 
 /** `, printed in thousands (110,000)` for a price the menu prints shortened (`priceScale`); '' otherwise. */
@@ -1445,7 +1753,7 @@ function renderGooglePlace(g, line, includeGoogleReviews, hoursDisputed = false,
     )
   if (g.priceRange)
     line(
-      `- Price range on Google: ${[g.priceRange.start, g.priceRange.end].filter(Number.isFinite).join('–')} ${g.priceRange.currency} per person`
+      `- Price range on Google: ${[g.priceRange.start, g.priceRange.end].filter(Number.isFinite).join(' to ')} ${g.priceRange.currency} per person`
     )
   if (Number.isFinite(g.rating))
     line(
@@ -1468,7 +1776,7 @@ function renderGooglePlace(g, line, includeGoogleReviews, hoursDisputed = false,
     )
     for (const r of g.reviews) {
       line()
-      line(`> ${q(r.text)} — ${r.author} on Google${Number.isFinite(r.rating) ? ` (${r.rating}/5)` : ''}`)
+      line(`> ${q(r.text)}, ${r.author} on Google${Number.isFinite(r.rating) ? ` (${r.rating}/5)` : ''}`)
       if (r.authorUri) line(`- Author profile: ${q(r.authorUri)}`)
       if (r.authorAvatarUrl)
         line(`- Author avatar (reviewer identity only, not venue photography): ${q(r.authorAvatarUrl)}`)
@@ -1477,6 +1785,10 @@ function renderGooglePlace(g, line, includeGoogleReviews, hoursDisputed = false,
     }
     line()
   }
+  for (const r of g.heldReviews ?? [])
+    line(
+      `- Not for the site: the review by ${r.author} names ${r.namesHeld.join(' and ')}, whom the brief holds off the site; quote nothing of it.`
+    )
   line()
 }
 
@@ -1499,7 +1811,7 @@ function renderReading(r, line, words, brief = {}) {
   const list = (title, items, show) => {
     if (!items?.length) return
     line(`- ${title}:`)
-    for (const i of items) line(`  - ${show(i)} — ${readingSourceLabel(i.source)}: ${q(i.quote)}`)
+    for (const i of items) line(`  - ${show(i)}, ${readingSourceLabel(i.source)}: ${q(i.quote)}`)
   }
   list(words.listBlock === 'Menu' ? 'Services' : words.listBlock, r.services, (i) => q(i.label))
   list('Who it is for', r.audience, (i) => q(i.label))
@@ -1527,7 +1839,7 @@ function renderContent(items, line, noun = 'restaurant') {
       : ''
     const post = it.posts[0]
     line()
-    line(`### ${it.id} — ${q(it.title)}`)
+    line(`### ${it.id}: ${q(it.title)}`)
     line(
       `- ${it.kinds.join(', ')}${when} · posted ${String(post.publishedAt ?? 'unknown').slice(0, 10)} on ${post.source}${post.url ? ` ${q(post.url)}` : ''}${it.authorship === 'credited' ? ' · credits someone else' : ''}`
     )
@@ -1602,13 +1914,22 @@ export function renderBriefMarkdown(
     const ds = t.platform ? t.designSystem : null
     line(
       ds
-        ? `- Design system: ${ds.name ?? ds.id} (\`${ds.id}\`, ${ds.source}) — bound to the template. Tracy keeps it: do not change colours or fonts.${accentException(brief)}`
-        : `- Design system: none bound — keep the template’s own look; do not change colours or fonts.${accentException(brief)}`
+        ? `- Design system: ${ds.name ?? ds.id} (\`${ds.id}\`, ${ds.source}), bound to the template. Tracy keeps it: do not change colours or fonts.${accentException(brief)}`
+        : `- Design system: none bound; keep the template’s own look; do not change colours or fonts.${accentException(brief)}`
     )
   }
   line()
   line('## Business')
-  line(`- Name: ${q(b.name)}`)
+  const nameHeld = (brief.facts ?? []).some((f) => f.field === 'name' && f.onSite === false)
+  line(
+    `- Name: ${q(b.name)}${nameHeld ? ' (held off the site until the owner confirms it: write no business name in the copy, page title or meta description)' : ''}`
+  )
+  // The names its own marks give (`otherNamesOf`): the builder and the owner see them; no copy prints them either.
+  const otherNames = (brief.missing ?? []).find((m) => m.field === 'name')?.otherNames ?? []
+  for (const n of otherNames)
+    line(
+      `- Also calls itself: ${q(n.name)} (${n.evidence.map((e) => `${e.source}${e.quote ? ` ${q(e.quote)}` : ''}`).join('; ')}); not on the site either until the owner confirms it`
+    )
   for (const k of ['branch', 'address', 'phone'])
     line(`- ${k[0].toUpperCase()}${k.slice(1)}: ${b[k] === null || b[k] === undefined ? 'unknown' : q(b[k])}`)
   if (b.otherPhones?.length)
@@ -1626,7 +1947,7 @@ export function renderBriefMarkdown(
     )
   if (b.serviceAreas?.length)
     line(
-      `- Service areas (the business's own words; never an address): ${b.serviceAreas.map((a) => `${q(a.text)} — ${readingSourceLabel(a.source)}: ${q(a.quote)}`).join('; ')}`
+      `- Service areas (the business's own words; never an address): ${b.serviceAreas.map((a) => `${q(a.text)}, ${readingSourceLabel(a.source)}: ${q(a.quote)}`).join('; ')}`
     )
   line(`- Hours: ${Array.isArray(b.hours) ? b.hours.map(q).join('; ') : 'unknown'}`)
   if (b.cuisine) line(`- Cuisine: ${b.cuisine.map(q).join(', ')}`)
@@ -1659,13 +1980,17 @@ export function renderBriefMarkdown(
   for (const p of brief.sitemap ?? []) {
     line()
     line(`### /${p.slug}: ${p.title}`)
+    if (p.seo)
+      line(
+        `- SEO title: ${q(p.seo.title)} · meta description: ${q(p.seo.description)} (use both exactly, as the page's HTML title and meta description)`
+      )
     for (const s of p.sections ?? []) {
       line(`- ${s.kind}: ${q(s.copy)}`)
       if (s.cta) line(`  - Call to action: ${s.cta.kind} ${q(s.cta.label)} -> ${q(s.cta.href)}`)
       if (s.assetIds?.length) line(`  - Assets: ${s.assetIds.join(', ')}`)
       if (s.heroCandidates?.length)
         line(
-          `  - Hero candidates (largest first, pick one): ${s.heroCandidates.map((h) => `${h.id} (${h.width}x${h.height}, ${h.source ?? 'unknown'})`).join(', ')}`
+          `  - Hero candidates (best first, pick one): ${s.heroCandidates.map((h) => `${h.id} (${h.width}x${h.height}, ${h.source ?? 'unknown'})`).join(', ')}`
         )
       if (s.itemIds?.length) line(`  - Content items: ${s.itemIds.join(', ')}`)
       if (s.menuItems?.length) {
@@ -1677,7 +2002,7 @@ export function renderBriefMarkdown(
           "  - Services (read from the business's own words, each with its quote; add no service of your own):"
         )
         for (const i of s.services) {
-          line(`    - ${q(i.name)} — ${readingSourceLabel(i.source)}: ${q(i.quote)}`)
+          line(`    - ${q(i.name)}, ${readingSourceLabel(i.source)}: ${q(i.quote)}`)
           for (const d of i.described ?? [])
             line(`      - Described in ${readingSourceLabel(d.source)}: ${q(d.quote)}`)
         }
@@ -1686,7 +2011,7 @@ export function renderBriefMarkdown(
         line('  - Facts the business states (show each only in its own words; add none):')
         for (const f of s.facts)
           line(
-            `    - ${q(f.text)} — ${f.source?.kind === 'logo' ? 'its logo' : readingSourceLabel(f.source)}: ${q(f.quote)}`
+            `    - ${q(f.text)}, ${f.source?.kind === 'logo' ? 'its logo' : readingSourceLabel(f.source)}: ${q(f.quote)}`
           )
       }
       if (s.menuSuggestions?.length) {
@@ -1695,6 +2020,10 @@ export function renderBriefMarkdown(
         )
         for (const i of s.menuSuggestions) line(`    - ${menuItemLine(i)}`)
       }
+      for (const x of s.inferred ?? [])
+        line(
+          `  - Inferred by Tracy, not a quote: ${q(x.text)} (${x.reason}${x.reason === 'implausible-all-week-hours' ? ': the hours are held until the owner confirms them, so show no hours' : ''})`
+        )
       for (const e of s.evidence ?? []) {
         line()
         line(`Source excerpt (${e.source}${e.url ? `, ${q(e.url)}` : ''}):`)
@@ -1710,12 +2039,14 @@ export function renderBriefMarkdown(
   if (!br) line('- No brand observation.')
   else {
     line(`- Origin: ${br.origin}${br.official === false ? ' (observation, not an official brand)' : ''}`)
+    if (br.nameHeld)
+      line('- Name: none while the business name is held (see Missing: name, and the other names it lists)')
     if (includeBrandPalette && br.colors?.length)
       line(`- Colours: ${br.colors.map((c) => `${c.hex} (${c.role})`).join(', ')}`)
     if (includeBrandPalette && br.fonts?.length) line(`- Fonts: ${br.fonts.map(q).join(', ')}`)
     if (!includeBrandPalette && (br.colors?.length || br.fonts?.length))
       line(
-        `- Colours and fonts: observed in ${br.colorsFrom === 'logo' ? 'the logo' : 'photographs'}, left out — the site keeps its design system`
+        `- Colours and fonts: observed in ${br.colorsFrom === 'logo' ? 'the logo' : 'photographs'}, left out: the site keeps its design system`
       )
     if (br.accent)
       line(
@@ -1744,8 +2075,9 @@ export function renderBriefMarkdown(
   for (const s of brief.stale ?? []) line(`- ${s.field}: from ${q(s.source)}, seen ${s.seenAt}`)
   line()
   line('## Assets')
+  if (brief.assetLabelling) line(`- Labels: ${assetLabellingLine(brief.assetLabelling)}`)
   if (!brief.assets?.length) line('- None.')
-  for (const a of brief.assets ?? []) line(`- ${a.id}: ${a.kind}, ${a.category}, sha256 ${a.sha256}`)
+  for (const a of brief.assets ?? []) line(`- ${a.id}: ${assetLine(a)}, sha256 ${a.sha256}`)
   line()
   line('## Acceptance')
   for (const a of brief.acceptance ?? []) line(`- [ ] ${a}`)
@@ -1753,9 +2085,8 @@ export function renderBriefMarkdown(
   line('## Sources')
   for (const s of brief.sources ?? []) {
     const cov = s.coverage ?? {}
-    const count = cov.total !== undefined ? `${cov.fetched}/${cov.total}` : `${cov.fetched ?? 0}`
     line(
-      `- ${s.source}: ${s.status}${s.reason ? ` (${s.reason})` : ''}, fetched ${count}${cov.until ? ` back to ${cov.until}` : ''}`
+      `- ${s.source}: ${s.status}${s.reason ? ` (${s.reason})` : ''}, fetched ${fetchedLine(cov)}${cov.until ? ` back to ${cov.until}` : ''}${attemptsLine(s)}`
     )
   }
   return `${out.join('\n').replace(/\n{3,}/g, '\n\n')}\n`
