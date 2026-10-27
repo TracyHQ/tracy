@@ -562,7 +562,9 @@ jobs:
     # runner is 4 vCPU / 16 GB: dsh's host typecheck peaks at 4.5 GB RSS, and the database the
     # workers tests need is the throwaway container `check-tests.ts` starts with the VM's docker.
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    # 60, not 45: on the hosted runner the `turbo-config` gate of `checks` measured 51 tasks in 37 min
+    # for a pull request touching `scripts/check-tests.ts` (PR #9); the row took 41 min in all.
+    timeout-minutes: 60
     # dsh is built by `dsh-lib` above and restored here, never built eight times (see there).
     #
     # 🔒 THE `if` SPELLS OUT WHAT `needs` USED TO IMPLY — changed 2026-10-05. Exactly one of the two
