@@ -1,3 +1,4 @@
+import { qaDeadlineError } from './demo-qa-deadline.js'
 /**
  * The demo QA gate's judge — what `POST /_host/demo-qa` decides about a demo an agent was handed
  * (tasks/plan-wo-qa-gate-and-fb-photos.md §3 as amended by the council in §6).
@@ -13,7 +14,7 @@
  * 🔒 CSS IS JUDGED PER STYLESHEET, NOT BY A TOTAL (council §6b). A template's own stylesheet may not
  * lose a rule nor its last rule (the sentinel) against the baseline taken before the agent's turn;
  * every same-origin stylesheet must keep its braces balanced and carry no SCSS/LESS source or merge
- * markers. tamarelhoian (18/10/2026): the agent recompiled `template.css` into raw SCSS with a stray
+ * markers. lumorahoian (18/10/2026): the agent recompiled `template.css` into raw SCSS with a stray
  * `}`, and the browser read 2,223 of its 3,701 rules.
  *
  * 🔒 NO LIST PER TEMPLATE OR PER CMS (18/10/2026). What counts as "demo" is measured, not
@@ -27,6 +28,7 @@ import { createHash } from 'node:crypto'
 import { captureTarget } from './capture.js'
 import { ownPublicOrigin } from './public-origin.js'
 import { SAFE_LABEL } from './provision.js'
+import { probeSiteProxy } from './site-proxy-probe.js'
 
 /** A page's `load` must fire within this long (council §6, "load ceiling 12 s"). */
 export const DEMO_QA_LOAD_CAP_MS = 12_000
@@ -85,6 +87,8 @@ const CHECK_IDS = Object.freeze([
   'no-cms-error-leak',
   'no-raw-placeholders',
   'no-empty-picture-slots',
+  'no-empty-boxes',
+  'photos-fit',
   'placed-pictures-visible',
   'no-google-review-quoted',
   'structure-kept',
@@ -131,6 +135,14 @@ export function demoQaBody(body) {
   if (!body || typeof body !== 'object') return fail('not an object')
   if (typeof body.label !== 'string' || !SAFE_LABEL.test(body.label)) return fail('refused label')
   if (typeof body.platform !== 'string' || body.platform === '') return fail('refused platform')
+  if (
+    body.workflow === 'agent-demo/1' &&
+    typeof body.briefText === 'string' &&
+    body.briefText.length > 400_000
+  )
+    return fail('fact evidence exceeds 400000 characters; complete evidence is required')
+  if (typeof body.collected?.sourced === 'string' && body.collected.sourced.length > 400_000)
+    return fail('collected evidence exceeds 400000 characters; complete evidence is required')
   const pages = body.pages === undefined ? ['/'] : body.pages
   if (!Array.isArray(pages) || pages.length === 0) return fail('need at least one page')
   if (!pages.every(isSitePath)) return fail('refused page path')
@@ -152,6 +164,8 @@ export function demoQaBody(body) {
     host: typeof body.host === 'string' && HOSTNAME.test(body.host) ? body.host : null,
     pages: [...new Set(pages)].slice(0, DEMO_QA_MAX_PAGES),
     discover: body.discover === true,
+    // A check after the first: pages whose document did not change keep their last read (`readDemoPage` `previous`).
+    incremental: body.incremental === true,
     measureFrames: body.measureFrames === true,
     plan: planned,
     routes: [
@@ -177,6 +191,14 @@ export function demoQaBody(body) {
     placedSources: Object.fromEntries(
       Object.entries(body.placedSources && typeof body.placedSources === 'object' ? body.placedSources : {})
         .filter(([path, source]) => path.length <= 400 && typeof source === 'string' && source.length <= 200)
+        .slice(0, 500)
+    ),
+    // What each source photo shows (`demo-photo-labels.js`): where it may go (`photos-fit`).
+    sourceSubjects: Object.fromEntries(
+      Object.entries(
+        body.sourceSubjects && typeof body.sourceSubjects === 'object' ? body.sourceSubjects : {}
+      )
+        .filter(([id, subject]) => id.length <= 200 && typeof subject === 'string' && subject.length <= 40)
         .slice(0, 500)
     ),
     briefText: typeof body.briefText === 'string' ? body.briefText.slice(0, 400_000) : '',
@@ -307,17 +329,19 @@ export function selfOriginIn(html, siteHosts) {
 
 /**
  * The home page's text at `base`, for `selfOriginIn`; empty when it does not answer in time.
- * @param {string} base @param {{fetchImpl?: typeof fetch, timeoutMs?: number}} [options]
+ * @param {string} base @param {{fetchImpl?: typeof fetch, timeoutMs?: number, signal?: AbortSignal}} [options]
  */
-export async function homeHtml(base, { fetchImpl = fetch, timeoutMs = 8000 } = {}) {
+export async function homeHtml(base, { fetchImpl = fetch, timeoutMs = 8000, signal } = {}) {
+  signal?.throwIfAborted()
   try {
     const res = await fetchImpl(base, {
       method: 'GET',
       redirect: 'manual',
-      signal: AbortSignal.timeout(timeoutMs)
+      signal: AbortSignal.any([AbortSignal.timeout(timeoutMs), ...(signal ? [signal] : [])])
     })
     return res.ok ? (await res.text()).slice(0, 200_000) : ''
   } catch {
+    signal?.throwIfAborted()
     return ''
   }
 }
@@ -499,7 +523,7 @@ export function cssTextProblems(text) {
       i = end + 1
     } else if ((ch === '"' || ch === "'") && text[i - 1] !== '\\') {
       // A quote after a backslash is part of a selector, not a string: Tailwind escapes class names
-      // like `.\[\&_svg\:not\(\[class\*\=\'size-\'\]\)\]` (em-tamarel1, 18/10/2026), and reading
+      // like `.\[\&_svg\:not\(\[class\*\=\'size-\'\]\)\]` (em-lumora1, 18/10/2026), and reading
       // that `\'` as a string start swallowed the next `{` and reported "1 { never closed".
       let j = i + 1
       while (j < text.length && text[j] !== ch && text[j] !== '\n') j += text[j] === '\\' ? 2 : 1
@@ -543,7 +567,7 @@ const BUNDLE_POOL_FLOOR = 0.5
  * A stylesheet named by its contents' hash — Astro `_astro/Base.BNyaLx3F.css`, Vite
  * `assets/index-C3k9aQ2x.css` — is renamed by every rebuild, and EmDash's hand-off rule 8 rebuilds
  * the site. Held to the baseline by its STEM (`_astro/Base.css`), so a rebuild that keeps the rules is
- * not "no longer loaded" (em-tamarel1, 18/10/2026: 205 → 206 rules, reported as a lost sheet).
+ * not "no longer loaded" (em-lumora1, 18/10/2026: 205 → 206 rules, reported as a lost sheet).
  * @param {string} path
  * @returns {string | null} the stem, or null when the name carries no content hash
  */
@@ -560,7 +584,7 @@ const BLOCK_SHEET = /(?:^|\/)blocks\/([\w-]+)\/[\w.-]+\.css$/i
 
 /**
  * What a stylesheet no longer loaded asks for: it was not edited, so restoring a file fixes nothing. A block's
- * sheet means the page lost that block (Tin Lantern, 24/10/2026: `site-title/style.min.css` — the header's name was
+ * sheet means the page lost that block (Copper Wire, 24/10/2026: `site-title/style.min.css` — the header's name was
  * deleted); any other means what linked it is gone from the page or the template's head.
  * @param {string} path
  */
@@ -637,6 +661,10 @@ export function checkCssIntact(reads, baseline) {
   )
 }
 
+/** Blocks of words a baseline keeps of one page, and the pages it keeps them of (`baselineOf` `pageBlocks`). */
+const PAGE_BLOCKS_MAX = 150
+const PAGE_BLOCKS_PAGES = 30
+
 /**
  * What the next run compares against, read off the site as Tracy handed it over: each same-origin
  * stylesheet's rule count and last rule (and the page it was first read on), every visible picture by
@@ -644,6 +672,48 @@ export function checkCssIntact(reads, baseline) {
  * @param {PageRead[]} reads
  * @param {string[]} [placed]
  */
+/** A frame as a page names it, without the ids a template numbers (a WordPress attachment class, a module's `#acm-…-112`). */
+export const frameKey = (selector) =>
+  String(selector ?? '')
+    .replace(/\.wp-image-\d+/g, '')
+    .replace(/#[\w-]*\d[\w-]*/g, '')
+
+/** A picture file a template names as its mark (`logo.png`, `brand-badge.svg`). */
+const MARK_FILE = /(?:^|[/_.-])(?:logo|brand)/i
+
+/**
+ * 🔒 WHAT THE TEMPLATE ITSELF REPEATS IS ITS DESIGN (local round 35, 26/10/2026). The happy-hours cards of JA Restaurant
+ * (WordPress) and JA Fresco (Joomla) each carry one badge picture; the build put the business's logo or one photo in
+ * all three, and photos-fit and collected-used failed what the template does. Per page: each picture the template
+ * shows in two frames or more (`repeats`, by `frameKey`), and the frames showing a mark file beyond the header and
+ * footer (`marks`). Pages with neither are left out.
+ * @param {PageRead[]} reads
+ */
+function designRepeats(reads) {
+  /** @type {Record<string, string[][]>} */
+  const repeats = {}
+  /** @type {Record<string, number>} */
+  const marks = {}
+  for (const r of reads) {
+    if (r.error) continue
+    /** @type {Map<string, string[]>} */
+    const byFile = new Map()
+    let markFrames = 0
+    for (const img of r.images ?? []) {
+      if (img.broken || img.clone) continue
+      const file = fileOf(img.src)
+      if (!file) continue
+      if (MARK_FILE.test(file)) markFrames++
+      if ((img.width ?? 0) >= REPEAT_MIN.width && (img.height ?? 0) >= REPEAT_MIN.height)
+        byFile.set(file, [...(byFile.get(file) ?? []), frameKey(img.selector)])
+    }
+    const groups = [...byFile.values()].filter((at) => at.length > 1).slice(0, 10)
+    if (groups.length) repeats[r.path] = groups.map((at) => at.slice(0, 12))
+    if (markFrames > LOGO_FRAMES) marks[r.path] = markFrames
+  }
+  return { repeats, marks }
+}
+
 export function baselineOf(reads, placed = [], { frames = false, routes = [] } = {}) {
   // The routes' words and pictures are the template's too (`no-demo-pictures`, `no-demo-words`); their sheets, look and sections are
   // judged on the pages only, so a route that did not open never makes the baseline untrusted.
@@ -659,6 +729,43 @@ export function baselineOf(reads, placed = [], { frames = false, routes = [] } =
   const labels = new Set()
   for (const r of content) for (const l of r.labels ?? []) labels.add(textKey(l.text))
   const read = []
+  // 🔒 EACH PAGE'S WORDS, AS A VISITOR READS THEM (plan "10/10" §7 S5, 26/10/2026): the build's words are written page
+  // by page in small structured tasks (`demo-copy.js`, tracy-web) and put back with content.replace, which finds words
+  // as the page shows them. Texts and buttons in page order, nav buttons left out (the menu is its own), at most
+  // `PAGE_BLOCKS_MAX` a page and `PAGE_BLOCKS_PAGES` pages, each read once.
+  /** @type {Record<string, {text: string, kind: 'text' | 'heading' | 'button', to?: string}[]>} */
+  const pageBlocks = {}
+  for (const r of reads) {
+    if (unreadWhy(r, r === reads[0]) || Object.keys(pageBlocks).length >= PAGE_BLOCKS_PAGES) continue
+    const seenHere = new Set()
+    const list = []
+    const keep = (text, kind, to = null) => {
+      const t = String(text ?? '')
+        .replace(/\s+/g, ' ')
+        .trim()
+      if (!t || seenHere.has(t) || list.length >= PAGE_BLOCKS_MAX) return
+      seenHere.add(t)
+      list.push({ text: t, kind, ...(to ? { to } : {}) })
+    }
+    // Where a button goes, so its words can say so: a path of this site, or the kind of link (local round 36,
+    // 26/10/2026: an EmDash home's buttons to the template's /investors page were written "Order a cake").
+    const toOf = (/** @type {string} */ href) => {
+      if (/^tel:/i.test(href)) return 'phone'
+      if (/^mailto:/i.test(href)) return 'email'
+      try {
+        const url = new URL(href, r.url)
+        return url.origin === new URL(r.url).origin ? url.pathname : 'another site'
+      } catch {
+        return null
+      }
+    }
+    for (const b of r.blocks ?? []) {
+      if (b.form) continue
+      keep(b.text, /(?:^|[\s>])h[1-6](?:[.#\s]|$)/i.test(b.selector ?? '') ? 'heading' : 'text')
+    }
+    for (const c of r.ctas ?? []) if (!c.nav) keep(c.text, 'button', toOf(String(c.href ?? '')))
+    if (list.length) pageBlocks[r.path] = list
+  }
   const unread = []
   reads.forEach((r, i) => {
     const why = unreadWhy(r, i === 0)
@@ -667,6 +774,21 @@ export function baselineOf(reads, placed = [], { frames = false, routes = [] } =
   })
   return {
     cssRules,
+    pageBlocks,
+    pictureFrames: reads.flatMap((r) =>
+      (r.images ?? [])
+        .filter((i) => !i.clone && !i.broken && !decoration(i, fileOf(i.src)))
+        .map((i) => ({
+          frameId: JSON.stringify([r.path, i.selector, i.src]),
+          page: r.path,
+          width: i.width,
+          height: i.height,
+          kind: MARK_FILE.test(fileOf(i.src)) ? 'logo' : i.kind,
+          underWords: i.underWords === true,
+          path: fileOf(i.src),
+          selector: i.selector
+        }))
+    ),
     ...(frames
       ? {
           imageFrames: reads.flatMap((r) =>
@@ -681,6 +803,7 @@ export function baselineOf(reads, placed = [], { frames = false, routes = [] } =
         }
       : {}),
     pictures: baselinePictures(content, placed),
+    ...designRepeats(content),
     texts: [...texts].sort(),
     ledger: residueLedgerOf(content),
     labels: [...labels].sort(),
@@ -999,7 +1122,7 @@ function designWhy(file) {
 
 /**
  * A picture of WordPress's own Media Library, filed by the month it was added (`wp-content/uploads/2026/10/news-1.jpg`).
- * 🔒 A LIBRARY UPLOAD THE HAND-OFF NEVER SHOWED IS STILL THE TEMPLATE'S (The Willow Nook local, build 13, 25/10/2026):
+ * 🔒 A LIBRARY UPLOAD THE HAND-OFF NEVER SHOWED IS STILL THE TEMPLATE'S (The Living Room local, build 13, 25/10/2026):
  * the blog grid showed eight posts' card pictures (`news-1.jpg`…, kept in the theme's `jd_intro_image` meta) that the
  * template's home had not shown before the agent reordered its posts, so no baseline named them and the check passed
  * them. Tracy's own doors never file there (`tracy-content/`, `tracy-brand/`), so such a file came with the template.
@@ -1139,7 +1262,7 @@ const NEUTRAL_WORDS = phrasesRe(DEMO_NEUTRAL_WORDS)
 
 /**
  * 🔒 FILLER IS NEVER A FACT NOR A STAND-IN, WHOEVER WROTE IT (product owner, 25/10/2026): a line that only tells the
- * visitor to ask ("Ask at the counter", six times on The Willow Nook's home), says it is a sample, or is one or more of
+ * visitor to ask ("Ask at the counter", six times on The Living Room's home), says it is a sample, or is one or more of
  * the fillers (`DEMO_FILLERS`: "Chef's selection Market price") stands where a fact is missing. The sweep empties it, a
  * dish's name taking its neutral item name (plan §7, product owner 27/10/2026). Judged on a short line as a whole, so a template's section
  * heading ("Menu changes frequently, here is a sample…") is not filler; a line of twelve words at most.
@@ -1181,7 +1304,7 @@ export function fromBrief(text, briefWords, briefText, { share = true, neutral =
   const t = squash(text)
   if (briefText.includes(t)) return true
   // A copyright line is the holder's name in boilerplate: it is the brief's when that name is, word for word
-  // (the-larch-house, 22/10/2026: "Copyright © 2026 The Larch House. All Rights Reserved." read as template
+  // (the-ridge-house, 22/10/2026: "Copyright © 2026 The Ridge House. All Rights Reserved." read as template
   // text, its boilerplate words outnumbering the name). The template's own holder is not in the brief.
   const holder = COPYRIGHT.exec(t)?.[1]?.trim()
   if (
@@ -1275,19 +1398,34 @@ function byPassage(findings) {
  * An empty field, or one holding an approved neutral word (`neutralWords`), is never a finding.
  * @param {PageRead[]} reads
  */
+/**
+ * How a template's category or tag is renamed on each CMS, said once with the first label left (local round 35,
+ * 26/10/2026: an EmDash build read "no taxonomy door", hid the template's sector chips in its /app code and rebuilt
+ * seven times; a WordPress build guessed its term ids for four checks).
+ */
+const LABEL_DOOR = {
+  emdash:
+    'rename it, never hide it: tracy_emdash taxonomy_list_terms {taxonomy}, then taxonomy_update_term {taxonomy, termSlug, label}',
+  wordpress:
+    'rename the term, never hide it: content.update {kind:"term", key:"category" or "post_tag", id, fields:{name, slug}} (its id is in the link’s term or a post list’s taxQuery)',
+  joomla:
+    'rename the category or tag, never hide it: content.update {kind:"category" or "tag", id, fields:{title}}'
+}
+
 export function checkNoDemoWords(
   reads,
   {
     baseline = null,
     briefText = '',
     briefProse = null,
+    platform = null,
     fillers = DEMO_FILLERS,
     neutralWords = DEMO_NEUTRAL_WORDS,
     residue = null
   } = {}
 ) {
   // The research's pages hold most everyday words ("website", "with", "updates"): judged against them, 25 of 30
-  // agency blocks read as the brief's (QuillHaus, 24/10/2026). A caller sending no prose is judged as before.
+  // agency blocks read as the brief's (NookHaus, 24/10/2026). A caller sending no prose is judged as before.
   const brief = squash(briefProse ?? briefText)
   const items = residue?.items ?? []
   const frame = new Set(residue?.frame ?? [])
@@ -1303,21 +1441,36 @@ export function checkNoDemoWords(
   const priorLabels = new Set(baseline?.labels ?? [])
   const findings = []
   // A passage is counted on every route that shows it: the template repeats one lorem body on each of its posts,
-  // and build 13 (The Willow Nook, 25/10/2026) named it on the first post read only. Labels are named once.
+  // and build 13 (The Living Room, 25/10/2026) named it on the first post read only. Labels are named once.
   const seen = new Set()
   const seenOn = new Set()
   for (const r of reads) {
+    // 🔒 NUMBERED TITLES ARE PLACEHOLDERS (local round 36, 26/10/2026): JA Fresco's offer page kept "Happy Hour 1",
+    // "Happy Hour 2" and "Happy Hour 3" over the bar's own cards — its research spoke of happy hour, so each read as the
+    // brief's. A template title shown with its siblings, differing only by a trailing number, is the template's.
+    const stems = new Map()
+    for (const block of r.blocks ?? []) {
+      const m = /^(.*\p{L}.*?)\s*#?\d{1,2}$/u.exec(String(block.text ?? '').trim())
+      if (m && before.has(textKey(block.text)))
+        stems.set(m[1].toLowerCase(), (stems.get(m[1].toLowerCase()) ?? 0) + 1)
+    }
+    const numbered = (/** @type {string} */ text) => {
+      const m = /^(.*\p{L}.*?)\s*#?\d{1,2}$/u.exec(String(text ?? '').trim())
+      return m !== null && (stems.get(m[1].toLowerCase()) ?? 0) >= 2
+    }
     for (const block of r.blocks ?? []) {
       const key = textKey(block.text)
       const at = `${r.path}\u0000${key}`
       if (block.form || !before.has(key) || seenOn.has(at)) continue
       // A short block is judged by each of its words, never by how many it shares with the brief.
-      if (fromBrief(block.text, briefWords, brief, { share: !block.short, neutral })) continue
-      if (block.short && !foreignWord(block.text, briefShort, neutral)) continue
+      if (!numbered(block.text) && fromBrief(block.text, briefWords, brief, { share: !block.short, neutral }))
+        continue
+      if (block.short && !numbered(block.text) && !foreignWord(block.text, briefShort, neutral)) continue
       seenOn.add(at)
       const said = squash(block.text).slice(0, 160)
-      // A section's heading the template frames the page with stays, by the residue's own rule (`residueOf`).
-      if (frame.has(`${r.path}\u0000${said}`)) continue
+      // A section's heading the template frames the page with stays, by the residue's own rule (`residueOf`);
+      // a numbered title is a placeholder whatever frames it.
+      if (!numbered(block.text) && frame.has(`${r.path}\u0000${said}`)) continue
       findings.push({
         page: r.path,
         words: said,
@@ -1349,6 +1502,7 @@ export function checkNoDemoWords(
       if (!priorLabels.has(key) || seen.has(key)) continue
       if (new RegExp(`(?<![\\p{L}\\p{N}])${escapeRe(name)}(?![\\p{L}\\p{N}])`, 'u').test(brief)) continue
       seen.add(key)
+      const door = LABEL_DOOR[/** @type {keyof typeof LABEL_DOOR} */ (platform)]
       // `name`: the label as the page writes it, case kept, for the sweep's replace to find (`planSweep`).
       const shown = String(label.text ?? '')
         .replace(/\s+/g, ' ')
@@ -1357,7 +1511,8 @@ export function checkNoDemoWords(
         page: r.path,
         words: name.slice(0, 160),
         name: shown.slice(0, 160),
-        category: label.href
+        category: label.href,
+        ...(door && !findings.some((f) => f.category) ? { fix: door } : {})
       })
     }
     // 🔒 No filler stands in for a fact, wherever it is written (plan §7, 26/10/2026).
@@ -1845,7 +2000,7 @@ function minutesOf(h, m, ampm) {
 
 const TIME_12 = /\b(\d{1,2})(?:[:.](\d{2}))?\s*(am|pm)\b/gi
 const TIME_24 = /\b([01]?\d|2[0-4])[:h](\d{2})\b/gi
-// 🔒 A UNIT IS A WHOLE WORD IN ANY SCRIPT (The Willow Nook local, build 13, 25/10/2026): JavaScript's `\b` knows
+// 🔒 A UNIT IS A WHOLE WORD IN ANY SCRIPT (The Living Room local, build 13, 25/10/2026): JavaScript's `\b` knows
 // ASCII letters only, so "1454 København", a postcode before its town, read as a price of 1454k; a letter after the
 // unit, any letter, makes it part of a word.
 const PRICE =
@@ -1896,7 +2051,7 @@ const PRICE_LINE = /^\s*(?:-\s*)?"[^"\n]*"(?: \([^)\n]*\))?: "([^"\n]*\d[^"\n]*)
  * template's `$147` passed on a brief whose only "147" was the street address.
  * `ranges: false` leaves out a price range's bounds (a `priceRange` field, Google's start and end prices, "10–20 kr"):
  * they say what the place's prices span, never what one dish costs, so a template dish's "$33" stays residue on a
- * brief whose range is "33–350 kr" (The Willow Nook build 8c, 25/10/2026).
+ * brief whose range is "33–350 kr" (The Living Room build 8c, 25/10/2026).
  * @param {string} text
  * @param {{ranges?: boolean}} [options]
  * @returns {Set<string>} each amount's digits
@@ -1954,7 +2109,7 @@ export function factsIn(text) {
     if (AFTER_REGION.test(String(text).slice(Math.max(0, m.index - 6), m.index)))
       run = run.replace(/^\d{5}(?:-\d{4})?[^\S\r\n]+/, '')
     const d = digits(run)
-    // A street number right after a phone joins its run ("(720) 555-0160 818 E. Elm", pilot 24/10/2026): the run
+    // A street number right after a phone joins its run ("(720) 330-2660 818 E. 3rd", pilot 24/10/2026): the run
     // without its last short group is read too, and either reading may be the brief's.
     const short = run.trim().match(/^(.*\d)\s+\d{1,5}$/)
     const trimmed = short ? digits(short[1]) : ''
@@ -2262,6 +2417,12 @@ export function checkWithheldNotShown(
 
 /** A page whose last path segment says contact (`/contact`, `/contact-us/`): the slug the build's own pages use. */
 const CONTACT_SLUG = /^contact/i
+/**
+ * A page of the site made for reservations is where a booking button goes too, whatever the plan names (local round 35,
+ * 26/10/2026: JA Restaurant's theme prints its blog sidebar's "Book a table" to `/contact/phone-reservation/`, which no
+ * door can change, and the page shows the business's own number to call).
+ */
+const RESERVATION_SLUG = /^(?:[\w-]*-)?(?:reservations?|booking|book-a-table)(?:-[\w-]*)?$/i
 
 /** One key for a path, whatever its trailing slash or `/index.php` prefix. */
 const pathKey = (/** @type {string} */ p) =>
@@ -2312,11 +2473,16 @@ export function checkCtaReal(
     )
   const contacts = new Set(contactPaths.map(pathKey))
   // The plan's contact pages when it names them; a slug saying contact only when it does not.
-  const isContact = (/** @type {URL} */ url) =>
-    contacts.size > 0
-      ? contacts.has(pathKey(url.pathname))
-      : CONTACT_SLUG.test(pathKey(url.pathname).split('/').filter(Boolean).at(-1) ?? '')
+  const isContact = (/** @type {URL} */ url) => {
+    const slug = pathKey(url.pathname).split('/').filter(Boolean).at(-1) ?? ''
+    if (RESERVATION_SLUG.test(slug)) return true
+    return contacts.size > 0 ? contacts.has(pathKey(url.pathname)) : CONTACT_SLUG.test(slug)
+  }
   const findings = []
+  let checkedTargets = 0
+  let unknownTargets = 0
+  // Keep queries in the identity: a search and its empty parent are different destinations.
+  const targetKey = (url) => url.pathname + url.search
   for (const r of reads)
     for (const cta of r.ctas ?? []) {
       const href = String(cta.href ?? '').trim()
@@ -2346,6 +2512,48 @@ export function checkCtaReal(
       if (hostIn(url.hostname, demoHosts)) {
         findings.push({ ...where, problem: 'points at a demo service' })
         continue
+      }
+      if ((cta.nav || cta.navigation) && !cta.toggles) {
+        const source = new URL(r.url)
+        const own =
+          url.origin === source.origin ||
+          (publicOrigin !== null && url.origin === publicOrigin) ||
+          (host !== null && url.hostname.toLowerCase() === host.toLowerCase())
+        if (own && (!url.hash || targetKey(url) !== targetKey(new URL(r.path, r.url)))) {
+          const destination = reads.find((read) => {
+            if (read.error || read.status !== 200) return false
+            try {
+              const requested = new URL(read.path, read.url)
+              const landed = read.finalUrl ? new URL(read.finalUrl) : null
+              if (
+                landed &&
+                landed.origin !== source.origin &&
+                landed.origin !== url.origin &&
+                landed.origin !== publicOrigin &&
+                !(host !== null && landed.hostname.toLowerCase() === host.toLowerCase())
+              )
+                return false
+              return [requested, landed].some(
+                (at) =>
+                  at &&
+                  targetKey(at) === targetKey(url) &&
+                  (at.origin === source.origin || at.origin === url.origin)
+              )
+            } catch {
+              return false
+            }
+          })
+          if (destination?.mainContent?.state === 'empty') {
+            checkedTargets++
+            findings.push({
+              ...where,
+              problem: 'navigation leads to a page with no main content',
+              target: destination.path,
+              fix: 'point this menu item at an existing populated page verified in the current reads; preserve the menu hierarchy'
+            })
+          } else if (destination?.mainContent?.state === 'present') checkedTargets++
+          else unknownTargets++
+        }
       }
       if (cta.nav) continue
       // The demo site's own address: the page's, the public name it is published under, or the name it answers to.
@@ -2385,15 +2593,18 @@ export function checkCtaReal(
         problem: `a button names ${i.to} and leads elsewhere: point it back at ${i.to}`,
         sweep: true
       })
-  return sweepable(
-    verdict(
-      'cta-real',
-      findings,
-      `${findings.length} dead, demo or off-site calls to action`,
-      'every call to action stays on the demo: booking on its Contact page, every other button on the page it names'
+  return {
+    ...sweepable(
+      verdict(
+        'cta-real',
+        findings,
+        `${findings.length} dead, empty-target, demo or off-site calls to action`,
+        'every call to action stays on the demo: booking on its Contact page, every other button on the page it names; inspected navigation targets contain main content'
+      ),
+      findings
     ),
-    findings
-  )
+    navigationTargets: { checked: checkedTargets, unknown: unknownTargets }
+  }
 }
 
 // ── no-horizontal-scroll ───────────────────────────────────────────────────────────────────────
@@ -2419,7 +2630,7 @@ const REACH_SLACK_PX = 150
 /**
  * Every section is reachable by scrolling: the document scrolls at least as far as its content
  * reaches. An agent that answers a phone overflow with `html, body { overflow-x: hidden }` on a
- * skrollr template leaves a desktop page that shows the hero and nothing under it (The Larch House,
+ * skrollr template leaves a desktop page that shows the hero and nothing under it (The Ridge House,
  * 18/10/2026) — a page every other check reads as fine, because what it cannot reach it skips.
  * @param {PageRead[]} reads
  */
@@ -2486,11 +2697,78 @@ export function contrastRatio(fg, bg) {
 /** One judged text's identity across reads: where it is and the two colours, whatever its words. */
 const contrastKey = (s) => `${s.selector ?? ''}|${JSON.stringify(s.fg)}|${JSON.stringify(s.bg)}`
 
+/**
+ * Words over a picture, against the worst of what lies under them (`measureOverImage`): WCAG's 3:1 for large text
+ * (24 px, or 18.66 px bold) and 4.5:1 for the rest — the bar a visitor reads at, which a plain background's
+ * `MIN_CONTRAST` (2, set below the template's own colours) is not.
+ */
+const MIN_CONTRAST_OVER_IMAGE = { large: 3, text: 4.5 }
+/** The widths a text over a picture is measured at, as the page read keys them. */
+const OVER_IMAGE_WIDTHS = /** @type {const} */ ([
+  ['under', 'desktop'],
+  ['underPhone', 'phone']
+])
+
+/**
+ * The contrast of words over a picture at one width, or null when that width was not measured: the bright end of
+ * what lies under light words (85th percentile), the dark end under dark ones (15th), never the mean — a white
+ * heading over a photo with one bright cookie is unreadable on the cookie.
+ * @param {{fg?: number[], under?: {p15: number, p50: number, p85: number}, underPhone?: {p15: number, p50: number, p85: number}}} s
+ * @param {'under' | 'underPhone'} key
+ */
+export function overImageRatio(s, key) {
+  const under = s[key]
+  if (!under || !Array.isArray(s.fg)) return null
+  const text = luminance(s.fg.slice(0, 3))
+  const ground = text > under.p50 ? under.p85 : under.p15
+  const [hi, lo] = [text, ground].sort((x, y) => y - x)
+  return (hi + 0.05) / (lo + 0.05)
+}
+const overImageKey = (s, key) => `${s.selector ?? ''}|${JSON.stringify(s.fg)}|${key}`
+const overImageMin = (s) => (s.large ? MIN_CONTRAST_OVER_IMAGE.large : MIN_CONTRAST_OVER_IMAGE.text)
+
+/** All uniform ground luminances that meet every measured text in one painted frame, including passing texts. */
+function uniformGround(probes) {
+  let ranges = [[0, 1]]
+  for (const s of probes) {
+    const words = luminance(s.fg.slice(0, 3))
+    const need = overImageMin(s)
+    const dark = (words + 0.05) / need - 0.05
+    const light = need * (words + 0.05) - 0.05
+    const allowed = [
+      ...(dark >= 0 ? [[0, Math.min(1, dark)]] : []),
+      ...(light <= 1 ? [[Math.max(0, light), 1]] : [])
+    ]
+    ranges = ranges.flatMap(([lo, hi]) =>
+      allowed.map(([a, b]) => [Math.max(lo, a), Math.min(hi, b)]).filter(([a, b]) => a <= b)
+    )
+  }
+  return ranges
+}
+
+/** A repair constraint, never a promise that toning a particular photograph can satisfy it. */
+function groundRepair(read, s, key) {
+  const frame = s[`${key}Frame`]
+  const probes = frame
+    ? (read.contrast ?? []).filter(
+        (other) => other.overImage && other[`${key}Frame`] === frame && overImageRatio(other, key) !== null
+      )
+    : [s]
+  const ranges = uniformGround(probes)
+  const scope = frame
+    ? `This frame's ${probes.length} measured texts`
+    : 'The background frame was not identified; this text alone'
+  const fix = ranges.length
+    ? `${scope} require a uniform ground luminance in ${ranges.map(([a, b]) => `[${a.toFixed(3)}, ${b.toFixed(3)}]`).join(' or ')}. Choose a photo/crop with that ground at the text positions. image.tone is only a candidate, not a guarantee; measure every text again at desktop and phone width, including those currently passing.`
+    : `No uniform background luminance meets all ${probes.length} measured texts in this frame. A photo with different light/dark regions at their positions may work; do not alternate whole-image tones or change the template's text colours. Measure every text again at desktop and phone width.`
+  return { backgroundFrame: frame ?? null, uniformGround: ranges, fix }
+}
+
 /** The texts the template already showed unreadable, as `checkContrastReadable` judges them. */
 function unreadableOf(reads) {
   const keys = new Set()
   for (const r of reads)
-    for (const s of r.contrast ?? [])
+    for (const s of r.contrast ?? []) {
       if (
         !s.overImage &&
         Array.isArray(s.fg) &&
@@ -2498,23 +2776,73 @@ function unreadableOf(reads) {
         contrastRatio(s.fg, s.bg) < MIN_CONTRAST
       )
         keys.add(contrastKey(s))
+      // The template's own words over its own picture, already unreadable as installed, are not the build's.
+      if (s.overImage)
+        for (const [key] of OVER_IMAGE_WIDTHS) {
+          const ratio = overImageRatio(s, key)
+          if (ratio !== null && ratio < overImageMin(s)) keys.add(overImageKey(s, key))
+        }
+    }
   return [...keys].sort()
 }
 
 /**
- * Nav links and headings can be read against what is painted behind them. Text over a picture is not
- * judged (`overImage`): its background is pixels, not a colour.
+ * Nav links and headings can be read against what is painted behind them. Text over a picture is judged against
+ * the picture as shot under it, at desktop and phone width (`overImageRatio`); one the reader could not shoot stays
+ * to the eye (`looks-finished`).
  * @param {PageRead[]} reads
  */
-export function checkContrastReadable(reads, { baseline = null } = {}) {
+export function checkContrastReadable(reads, { baseline = null, placed = [] } = {}) {
   // The template's own unreadable text, its colours unchanged since hand-off, is not the build's (dev 24/10/2026:
   // a JA header's "Book a table" button at 1.59 on every page).
   const before = new Set(baseline?.unreadable ?? [])
+  // 🔒 WORDS ON A PHOTO THE BUILD PLACED ARE THE BUILD'S (local round 36, 26/10/2026): JA Restaurant's dark happy-hours
+  // line was unreadable over the template's own photo too, so its new 1.3:1 over the bakery's dark cookie went
+  // unjudged, while the vision model, reading its white shadow as light words, asked for a darker photo.
+  const placedUnder = (/** @type {{ underSrc?: string }} */ s) => {
+    const file = fileOf(s.underSrc ?? '')
+    return (
+      file !== '' && (/(^|\/)tracy-content\//.test(file) || (placed.length > 0 && matchesFile(file, placed)))
+    )
+  }
   const findings = []
   let judged = 0
+  /** Only successful measurements at their actual widths may take over a vision contrast finding. */
+  const measuredOver = []
   for (const r of reads)
     for (const s of r.contrast ?? []) {
-      if (s.overImage || !Array.isArray(s.fg) || !Array.isArray(s.bg)) continue
+      if (s.overImage) {
+        const viewports = OVER_IMAGE_WIDTHS.filter(([key]) => overImageRatio(s, key) !== null).map(
+          ([, viewport]) => viewport
+        )
+        if (viewports.length && measuredOver.length < 120 && typeof s.text === 'string' && s.text.trim())
+          measuredOver.push({
+            page: r.path,
+            text: s.text.trim().slice(0, 120),
+            viewports,
+            selector: s.selector ?? null
+          })
+        for (const [key, viewport] of OVER_IMAGE_WIDTHS) {
+          const ratio = overImageRatio(s, key)
+          if (ratio === null) continue
+          judged++
+          if (ratio < overImageMin(s) && (!before.has(overImageKey(s, key)) || placedUnder(s))) {
+            findings.push({
+              page: r.path,
+              where: s.where,
+              selector: s.selector ?? null,
+              text: s.text ?? null,
+              ratio: Number(ratio.toFixed(2)),
+              overImage: true,
+              viewport,
+              needs: overImageMin(s),
+              ...groundRepair(r, s, key)
+            })
+          }
+        }
+        continue
+      }
+      if (!Array.isArray(s.fg) || !Array.isArray(s.bg)) continue
       judged++
       const ratio = contrastRatio(s.fg, s.bg)
       if (ratio < MIN_CONTRAST && !before.has(contrastKey(s)))
@@ -2526,18 +2854,21 @@ export function checkContrastReadable(reads, { baseline = null } = {}) {
           ratio: Number(ratio.toFixed(2))
         })
     }
-  return verdict(
-    'contrast-readable',
-    findings,
-    `${findings.length} of ${judged} unreadable`,
-    `nav and headings contrast ≥ ${MIN_CONTRAST}:1`
-  )
+  return {
+    ...verdict(
+      'contrast-readable',
+      findings,
+      `${findings.length} of ${judged} unreadable`,
+      `nav and headings contrast ≥ ${MIN_CONTRAST}:1; words over a picture ≥ ${MIN_CONTRAST_OVER_IMAGE.large}:1 large, ${MIN_CONTRAST_OVER_IMAGE.text}:1 other, at desktop and phone width`
+    ),
+    measuredOver
+  }
 }
 
 // ── no-text-overlap ────────────────────────────────────────────────────────────────────────────
 
 /**
- * No text is covered by another element — a picture or a block painted over the words (pic-tamarel5:
+ * No text is covered by another element — a picture or a block painted over the words (pic-lumora5:
  * the address under a photo). The browser half probes points inside each text's own box and reports
  * what is on top there; fixed and sticky bars are left out, they cover everything while scrolling.
  * @param {PageRead[]} reads
@@ -2619,7 +2950,7 @@ const PLACEHOLDERS = [
   /\{\{[^{}\n]{0,80}\}\}/,
   /\[\/?[a-z][a-z0-9_-]*(?:\s+[a-z_-]+="[^"\]]*")*\]/,
   /\b(?:undefined|NaN)\b/,
-  // A JSON escape written as text: `TamarelHoiAn\nHoi An` in a slide title (18/10/2026).
+  // A JSON escape written as text: `LumoraHoiAn\nHoi An` in a slide title (18/10/2026).
   // Case-insensitive: the browser's innerText carries text-transform, so a slide title reads `CAFÉ\NAND`.
   /\\(?:[ntr]|u[0-9a-f]{4})/i,
   /\b(?:TPL|COM|MOD|PLG|JLIB|JGLOBAL|JERROR|JFIELD|JLOGIN)_[A-Z0-9_]{3,}\b/
@@ -2666,6 +2997,125 @@ export function checkNoEmptyPictureSlots(reads) {
     findings,
     `${findings.length} empty picture frames`,
     'every picture frame a visitor sees shows a picture'
+  )
+}
+
+// ── no-empty-boxes ────────────────────────────────────────────────────────────────────────────
+
+/**
+ * No box made for a service (a booking or contact form, a feed, a map, a newsletter) shows with nothing in it
+ * (plan "10/10" §5, David 26/10/2026: a dead form becomes a real way to reach the business). Local round 31 shipped an
+ * empty orange band under the hero: the template's OpenTable form, empty at install. The template's own empty box is
+ * the build's too — a visitor sees the band either way. The browser half finds them (`emptyBoxes`).
+ * @param {PageRead[]} reads
+ */
+export function checkNoEmptyBoxes(reads) {
+  const findings = []
+  for (const r of reads)
+    for (const box of r.emptyBoxes ?? [])
+      findings.push({ page: r.path, selector: box.selector ?? null, size: box.size ?? null })
+  return verdict(
+    'no-empty-boxes',
+    findings,
+    `${findings.length} empty service boxes`,
+    'every box made for a form, a feed, a map or a booking shows something a visitor can use'
+  )
+}
+
+// ── photos-fit ─────────────────────────────────────────────────────────────────────────────────
+
+/** Subjects that never go behind words or fill a section's background (`demo-photo-labels.js` `BACKGROUND_UNFIT`). */
+const BACKGROUND_UNFIT = new Set(['people', 'event', 'poster', 'menu-board', 'logo'])
+/** A frame this small is a thumbnail or an icon: the same photo there is no repeat a visitor sees. */
+const REPEAT_MIN = { width: 120, height: 90 }
+/**
+ * Two frames this close down the page are seen together (a desktop screen's height): one photo in both is a repeat.
+ * Farther apart they are not (local round 36, 26/10/2026: a Joomla bar's photos behind its feature cards and again in
+ * its photo strip far below failed five checks, and the build cut its galleries to pass, failing native-structure).
+ */
+const REPEAT_NEAR_PX = 900
+
+/**
+ * Each placed photo sits where its subject fits (plan "10/10" P1, 26/10/2026). Local rounds 31–33 (WordPress) put a
+ * selfie behind a section's cards and one photo of flowers on two posts side by side. Read from the photos the build
+ * placed (`placedSources`) and what each shows (`sourceSubjects`, labelled once per photo):
+ * - a photo of people, an event, a poster, a menu board or a logo in a section's background fails;
+ * - one photo filling two frames of a page fails while the research holds photos that page does not show yet
+ *   (with fewer photos than frames, using them again is the brief's own rule).
+ * A photo with no label is judged on repeats only.
+ * @param {PageRead[]} reads
+ * @param {{placedSources?: Record<string, string>, sourceSubjects?: Record<string, string>, collected?: {pictures?: number} | null}} [asked]
+ */
+export function checkPhotosFit(
+  reads,
+  { placedSources = {}, sourceSubjects = {}, collected = null, baseline = null } = {}
+) {
+  const sources = Object.entries(placedSources)
+  // The frames the template itself filled with one picture on this page: a photo filling those is its design.
+  const designed = (path, where) =>
+    (baseline?.repeats?.[path] ?? []).some((group) => {
+      const left = [...group]
+      return where.every((selector) => {
+        const i = left.indexOf(frameKey(selector))
+        if (i === -1) return false
+        left.splice(i, 1)
+        return true
+      })
+    })
+  const photoOf = (file) => sources.find(([path]) => matchesFile(file, [path]))?.[1] ?? null
+  const available = Number(collected?.pictures) || 0
+  const findings = []
+  let judged = 0
+  for (const r of reads) {
+    if (r.error) continue
+    /** @type {Map<string, string[]>} */
+    const frames = new Map()
+    /** @type {Map<string, (number | null)[]>} */
+    const tops = new Map()
+    for (const img of r.images ?? []) {
+      if (img.broken || img.clone) continue
+      const photo = photoOf(fileOf(img.src))
+      if (!photo || photo === '$logo') continue
+      judged++
+      const subject = sourceSubjects[photo] ?? null
+      // A photo some words lie on is the section's ground whatever holds it (local round 35: a selfie cropped to one
+      // face behind the About masthead, set as a WordPress cover block's `<img>`).
+      if ((img.kind === 'background' || img.underWords) && subject && BACKGROUND_UNFIT.has(subject))
+        findings.push({
+          page: r.path,
+          selector: img.selector ?? null,
+          photo,
+          subject,
+          problem: 'a photo of this subject behind a section'
+        })
+      if ((img.width ?? 0) >= REPEAT_MIN.width && (img.height ?? 0) >= REPEAT_MIN.height) {
+        frames.set(photo, [...(frames.get(photo) ?? []), img.selector ?? ''])
+        tops.set(photo, [...(tops.get(photo) ?? []), Number.isFinite(img.top) ? img.top : null])
+      }
+    }
+    // Seen together: two of its frames within a screen of each other, or a read from before positions were kept.
+    const together = (/** @type {string} */ photo) => {
+      const at = tops.get(photo) ?? []
+      if (at.some((t) => t === null)) return true
+      const sorted = /** @type {number[]} */ (at).sort((a, b) => a - b)
+      return sorted.some((t, i) => i > 0 && t - sorted[i - 1] < REPEAT_NEAR_PX)
+    }
+    if (available > frames.size)
+      for (const [photo, where] of frames)
+        if (where.length > 1 && together(photo) && !designed(r.path, where))
+          findings.push({
+            page: r.path,
+            photo,
+            frames: where.length,
+            selectors: where.slice(0, 4),
+            problem: 'repeat'
+          })
+  }
+  return verdict(
+    'photos-fit',
+    findings,
+    `${findings.length} misplaced or repeated of ${judged} placed photos`,
+    'no photo of people, an event, a poster, a menu or a logo behind a section; no photo twice on a page while others are unused'
   )
 }
 
@@ -2846,6 +3296,10 @@ const COLLECTED_REVIEWS_MAX = 20
  */
 export function collectedOf(value) {
   if (!value || typeof value !== 'object') return null
+  if (typeof value.sourced === 'string' && value.sourced.length > 400_000)
+    throw Object.assign(new Error('Complete collected evidence exceeds its budget'), {
+      code: 'DEMO_QA_EVIDENCE_TOO_LARGE'
+    })
   const text = (v, max) => (typeof v === 'string' && v.trim() ? v.trim().slice(0, max) : null)
   const count = (v) => (Number.isInteger(v) && v > 0 ? Math.min(v, 10_000) : 0)
   return {
@@ -2865,7 +3319,7 @@ export function collectedOf(value) {
     reviewsWaived: text(value.reviewsWaived, 500),
     pictures: count(value.pictures),
     // The research's own words (`researchText`): a contact detail found there is collected, wherever it was read.
-    sourced: text(value.sourced, 100_000)
+    sourced: text(value.sourced, 400_000)
   }
 }
 
@@ -2907,7 +3361,10 @@ const phraseIn = (haystack, needle) => {
 /** How many frames of one page the business's own logo may fill: its header's and its footer's. */
 const LOGO_FRAMES = 2
 
-export function checkCollectedUsed(reads, { collected = null, placed = [], placedSources = {} } = {}) {
+export function checkCollectedUsed(
+  reads,
+  { collected = null, placed = [], placedSources = {}, baseline = null } = {}
+) {
   if (!collected) return verdict('collected-used', [], 'nothing collected was named', 'collected facts shown')
   const shown = reads.filter((r) => typeof r.text === 'string')
   const words = shown.map((r) => wordsOf(r.text).join(' ')).join(' \u0000 ')
@@ -3042,7 +3499,7 @@ export function checkCollectedUsed(reads, { collected = null, placed = [], place
   shown.forEach((r, i) => {
     let logos = 0
     for (const img of r.images ?? [])
-      if (!img.broken && ours(img.src)) {
+      if (!img.broken && !img.clone && ours(img.src)) {
         const photo = photoOf(fileOf(img.src))
         // The business's logo is no photo of the place (`agentDemoCollected` marks it `$logo`).
         if (photo === '$logo') {
@@ -3054,7 +3511,8 @@ export function checkCollectedUsed(reads, { collected = null, placed = [], place
       }
     // 🔒 ITS LOGO SHOWS WHERE A LOGO GOES (local stand 24/10/2026): an EmDash bakery's own marks filled a strip of
     // other organisations' logos. A header and a footer are two; a third on one page fills a frame meant for another.
-    if (logos > LOGO_FRAMES)
+    // Where the template showed its own mark in more frames (a badge on each card), the business's goes there too.
+    if (logos > Math.max(LOGO_FRAMES, Number(baseline?.marks?.[r.path]) || 0))
       findings.push({
         code: 'COLLECTED_MISPLACED',
         what: 'logo',
@@ -3097,7 +3555,15 @@ export function checkCollectedUsed(reads, { collected = null, placed = [], place
  * what was collected; a read without `brand` (an older browser half) says nothing.
  * @param {PageRead[]} reads
  */
-export function checkHeaderBrand(reads, { collected = null, placedSources = {} } = {}) {
+/**
+ * Where a Joomla template keeps its logo, said once with the first finding: T4 uses the native
+ * `template.siteSettings` door; T3 keeps the logo in the template style (local round 35, 26/10/2026: a Death & Co build
+ * tried the template style eight ways and then wrote over the template's own `logo.png`).
+ */
+const JOOMLA_LOGO_PLACE =
+  ' — on Joomla T4 use tracy_site template.siteSettings {operation:"read", template:"<template>"}, then {operation:"set", template:"<template>", profiles:{"<profile>":{site_logo:"<imported picture path>"}}} for the returned profiles; this native door records Undo and preserves the other settings. Do not edit template files. On T3 use the template style’s logo setting (content.update {kind:"templateStyle"})'
+
+export function checkHeaderBrand(reads, { collected = null, placedSources = {}, platform = null } = {}) {
   const expected =
     'the header shows the collected logo, or the business name when no logo was collected; it keeps its brand block'
   const judged = reads.filter((r) => r.brand && typeof r.brand === 'object')
@@ -3140,7 +3606,11 @@ export function checkHeaderBrand(reads, { collected = null, placedSources = {} }
           logo: collected.logo,
           file: logoFiles[0],
           shown: images.map((img) => fileOf(img.src)).slice(0, 3),
-          fix: `set the header’s logo to ${logoFiles[0]} (the business’s logo, already on the site)`
+          fix: `set the header’s logo to ${logoFiles[0]} (the business’s logo, already on the site)${
+            platform === 'joomla' && !findings.some((f) => f.code === 'LOGO_NOT_IN_HEADER')
+              ? JOOMLA_LOGO_PLACE
+              : ''
+          }`
         })
       continue
     }
@@ -3190,8 +3660,8 @@ export function copiedShare(text, source) {
 
 /**
  * `no-copied-reviews`: a post is written by the business from its research, quoting a review in one short line at
- * most; a post whose body is mostly one review's words fails (product owner, 25/10/2026). The Willow Nook (lrsweep
- * rig, build 7): twenty template posts became "X's review of The Willow Nook", each a TripAdvisor or Google review
+ * most; a post whose body is mostly one review's words fails (product owner, 25/10/2026). The Living Room (lrsweep
+ * rig, build 7): twenty template posts became "X's review of The Living Room", each a TripAdvisor or Google review
  * copied whole. The testimonial area that shows a review verbatim is not a post and is not judged here.
  * @param {PageRead[]} reads
  * @param {{collected?: ReturnType<typeof collectedOf>}} asked
@@ -3351,6 +3821,8 @@ function judgeWith(reads, asked, routeReads = []) {
     checkNoCmsErrorLeak(reads),
     checkNoRawPlaceholders(reads),
     checkNoEmptyPictureSlots(reads),
+    checkNoEmptyBoxes(reads),
+    checkPhotosFit(reads, asked),
     checkPlacedPicturesVisible(reads, asked),
     checkNoGoogleReviewQuoted(reads, asked),
     checkStructureKept(reads, asked.baseline ?? null),
@@ -3365,6 +3837,9 @@ function judgeWith(reads, asked, routeReads = []) {
  * Read every page (home first; with `discover`, then the pages home's nav links to) and judge them.
  * @param {{asked: any, base: string, read: (url: string, path: string, options: object) => Promise<PageRead>}} input
  */
+/** Pages a check reads at once after home, each in its own tab (`runDemoQa`). */
+export const READ_AT_ONCE = 1
+
 export async function runDemoQa({ asked, base, read, now = Date.now }) {
   const started = now()
   const origin = new URL(base).origin
@@ -3411,13 +3886,8 @@ export async function runDemoQa({ asked, base, read, now = Date.now }) {
   const maxPages = (asked.maxPages ?? DEMO_QA_MAX_PAGES) + held
   const reads = []
   const visited = []
-  for (let i = 0; i < pages.length && reads.length < maxPages; i++) {
-    if (i > 0 && now() - started > (asked.budgetMs ?? Infinity)) break
-    const path = pages[i]
-    const url = new URL(path, base)
-    // 🔒 The joined address must still be the demo's own origin, whatever the path said.
-    if (url.origin !== origin) continue
-    const r = await read(url.href, path, { ...options, discover: asked.discover && i === 0 })
+  /** One page read, judged as read (skipped or kept) and, for home, the pages its nav and footer link. */
+  const handle = (i, path, r) => {
     const source = from.get(path) ?? 'asked'
     const skipped = notAPage(r, path, source)
     visited.push({
@@ -3427,7 +3897,7 @@ export async function runDemoQa({ asked, base, read, now = Date.now }) {
       from: source,
       ...(skipped ? { skipped } : {})
     })
-    if (skipped) continue
+    if (skipped) return
     reads.push(r)
     if (asked.discover && i === 0) {
       // Nav first (what a visitor clicks), then footer and sitemap, tried in that order until the cap.
@@ -3447,6 +3917,31 @@ export async function runDemoQa({ asked, base, read, now = Date.now }) {
       }
     }
   }
+  // 🔒 HOME ALONE, THEN THE REST A FEW AT ONCE (plan "10/10" §7 S3, 26/10/2026): one check read up to ~15 pages one
+  // after another at 2.6–6 s each. Home is read first by itself (it finds the nav's pages); the others are read
+  // `READ_AT_ONCE` at a time, each in its own tab (`makeDemoQa`), never more than the pages left under the cap, and
+  // handled in page order — so the reads, and every verdict judged from them, are the same as one at a time.
+  let i = 0
+  while (i < pages.length && reads.length < maxPages) {
+    if (now() - started > (asked.budgetMs ?? Infinity)) throw qaDeadlineError()
+    const wave = i === 0 ? 1 : Math.min(READ_AT_ONCE, maxPages - reads.length)
+    const batch = []
+    while (batch.length < wave && i < pages.length) {
+      const index = i++
+      const path = pages[index]
+      const url = new URL(path, base)
+      // 🔒 The joined address must still be the demo's own origin, whatever the path said.
+      if (url.origin !== origin) continue
+      batch.push({ index, path, url })
+    }
+    const results = await Promise.all(
+      batch.map(({ index, path, url }) =>
+        read(url.href, path, { ...options, discover: asked.discover && index === 0 })
+      )
+    )
+    batch.forEach((b, k) => handle(b.index, b.path, results[k]))
+  }
+  if (now() - started > (asked.budgetMs ?? Infinity)) throw qaDeadlineError()
   // 🔒 ONE POST, OPENED AS A VISITOR OPENS IT (lrsweep rig, 24/10/2026): a single post's own page shows the
   // template's article, which no list shows whole. The post the baseline read, else the first a card links.
   // A post whose route moved since the baseline is opened where it answers now (`postRoutes`).
@@ -3508,6 +4003,8 @@ export async function runDemoQa({ asked, base, read, now = Date.now }) {
     ...(fittedLogo ? { fittedLogo } : {}),
     baseline: baselineOf(reads, asked.placed ?? [], { frames: asked.measureFrames, routes: routeReads }),
     pages: reads.map((r) => r.path),
+    // Pages whose document had not changed since the last check: their read was kept (`readDemoPage` `previous`).
+    reused: reads.filter((r) => r.reused === true).map((r) => r.path),
     ...(asked.routes?.length ? { routes: routeReads.map((r) => r.path), routesUnread } : {}),
     visited,
     durationMs: now() - started
@@ -3565,9 +4062,11 @@ function notAPage(r, path, source) {
  *   pending?: string[], blocked?: string[], failed?: {url: string, status: number | string, type: string}[],
  *   sheets?: {path: string, rules: number, sentinel: string | null, sentinelFound: boolean | null, text: string | null}[],
  *   styles?: {selector: string, text: string}[], inline?: {selector: string, style: string}[],
- *   images?: {src: string, sha256: string | null, width: number, height: number, broken: boolean, kind: 'img' | 'background', selector?: string}[],
+ *   images?: {src: string, sha256: string | null, width: number, height: number, broken: boolean, kind: 'img' | 'background', selector?: string, clone?: boolean, underWords?: boolean}[],
  *   blocks?: {text: string, selector?: string, form?: boolean}[], labels?: {text: string, href: string}[], text?: string,
- *   ctas?: {href: string, text: string, booking: boolean, button?: boolean, nav?: boolean, opens?: boolean, submits?: boolean, selector?: string}[],
+ *   ctas?: {href: string, text: string, booking: boolean, button?: boolean, nav?: boolean, navigation?: boolean, toggles?: boolean, opens?: boolean, submits?: boolean, selector?: string}[],
+ *   mainContent?: {state: 'present'|'empty'|'unknown', selector: string | null},
+ *   finalUrl?: string,
  *   maps?: {query: string, text: string, selector?: string}[],
  *   sections?: {name: string, items: number, text: number}[],
  *   contrast?: {where: string, fg: number[], bg: number[] | null, overImage: boolean, selector?: string, text?: string}[],
@@ -3599,22 +4098,31 @@ export function baseCandidates(label, platform, port = null, host = null) {
  * The first candidate that answers HTTP at all (any status below 500), probed in order with a
  * short timeout; none answering returns the first so the run fails with that address in its detail.
  * @param {string[]} candidates
- * @param {{fetchImpl?: typeof fetch, timeoutMs?: number}} [options]
+ * @param {{fetchImpl?: typeof fetch, timeoutMs?: number, signal?: AbortSignal, fallback?: string | null, acceptHttpErrors?: boolean}} [options]
  */
-export async function reachableBase(candidates, { fetchImpl = fetch, timeoutMs = 4000 } = {}) {
+export async function reachableBase(
+  candidates,
+  { fetchImpl = fetch, timeoutMs = 4000, signal, fallback = candidates[0], acceptHttpErrors = false } = {}
+) {
   for (const base of candidates) {
+    signal?.throwIfAborted()
     try {
       const res = await fetchImpl(base, {
         method: 'GET',
         redirect: 'manual',
-        signal: AbortSignal.timeout(timeoutMs)
+        signal: AbortSignal.any([AbortSignal.timeout(timeoutMs), ...(signal ? [signal] : [])])
       })
-      if (res && res.status < 500) return base
+      try {
+        if (res && (res.status < 500 || acceptHttpErrors)) return base
+      } finally {
+        await res?.body?.cancel().catch(() => {})
+      }
     } catch {
-      // refused, unresolved or timed out: try the next address
+      signal?.throwIfAborted()
+      // Refused, unresolved or timed out: try the next address.
     }
   }
-  return candidates[0]
+  return fallback
 }
 
 /**
@@ -3622,15 +4130,54 @@ export async function reachableBase(candidates, { fetchImpl = fetch, timeoutMs =
  * names itself on its own host (`publicOrigin`, or with `discover` the markers its home page writes) and that is
  * not the address that answered (the stand) — pages opened at that name and served from the answering one.
  * @param {{label: string, platform: string, port?: number | null, host?: string | null, publicOrigin?: string | null}} asked
- * @param {{reach?: typeof reachableBase, home?: typeof homeHtml, discover?: boolean}} [deps]
- * @returns {Promise<{base: string, serveFrom: string | null}>}
+ * @param {{reach?: typeof reachableBase, home?: typeof homeHtml, discover?: boolean, signal?: AbortSignal, proxyOrigin?: string | null, proxyFetch?: typeof probeSiteProxy}} [deps]
+ * @returns {Promise<{base: string, serveFrom: string | null, serveFromIsProxy?: boolean, proxySiteLabel?: string}>}
  */
-export async function demoAddress(asked, { reach = reachableBase, home = homeHtml, discover = false } = {}) {
-  const reachable = await reach(
-    baseCandidates(asked.label, asked.platform, asked.port ?? null, asked.host ?? null)
-  )
+export async function demoAddress(
+  asked,
+  {
+    reach = reachableBase,
+    home = homeHtml,
+    discover = false,
+    signal,
+    proxyOrigin = null,
+    proxyFetch = probeSiteProxy
+  } = {}
+) {
+  const candidates = baseCandidates(asked.label, asked.platform, asked.port ?? null, asked.host ?? null)
+  const direct = await reach(candidates, { signal, fallback: null, acceptHttpErrors: true })
+  if (!direct && proxyOrigin && asked.publicOrigin && asked.host) {
+    const publicUrl = new URL(asked.publicOrigin)
+    let response
+    try {
+      response = await proxyFetch(`${proxyOrigin}/`, {
+        headers: {
+          host: publicUrl.host,
+          'x-forwarded-host': publicUrl.host,
+          'x-forwarded-proto': publicUrl.protocol.slice(0, -1),
+          'x-forwarded-port': publicUrl.port || (publicUrl.protocol === 'https:' ? '443' : '80')
+        },
+        signal: AbortSignal.any([AbortSignal.timeout(4000), ...(signal ? [signal] : [])])
+      })
+      if (
+        response.status >= 200 &&
+        response.status < 400 &&
+        response.headers.get('x-tracy-site-response') === asked.label
+      )
+        return {
+          base: `${publicUrl.origin}/`,
+          serveFrom: `${proxyOrigin}/`,
+          serveFromIsProxy: true,
+          proxySiteLabel: asked.label
+        }
+    } catch {
+      signal?.throwIfAborted()
+    }
+  }
+  const reachable = direct ?? candidates[0]
   const self =
-    asked.publicOrigin ?? (discover && asked.host ? selfOriginIn(await home(reachable), [asked.host]) : null)
+    asked.publicOrigin ??
+    (discover && asked.host ? selfOriginIn(await home(reachable, { signal }), [asked.host]) : null)
   const alias = self && self !== new URL(reachable).origin ? `${self}/` : null
   return { base: alias ?? reachable, serveFrom: alias ? reachable : null }
 }

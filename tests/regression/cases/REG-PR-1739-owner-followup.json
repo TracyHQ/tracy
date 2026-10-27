@@ -1,0 +1,38 @@
+{
+  "id": "REG-PR-1739-owner-followup",
+  "kind": "fix",
+  "title": "Completed demo assignments do not leak into ordinary owner follow-up turns",
+  "pr": 1739,
+  "area": "website-opportunities/agent-demo",
+  "cms": ["wp", "jo", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "Boot the shipped site-tools plugin, finish an assigned build turn, then stop an ordinary owner follow-up.",
+    "Exercise closed responses, Retry, same-turn steers and late old responses; compare rewritten inline punctuation against native frames."
+  ],
+  "expect": [
+    "Only the active turn with a successful server answer gets build behavior; a closed demo never demands its unavailable check.",
+    "A Retry can regain assignment; old replies cannot grant or revoke the new turn. Native frame changes still fail while text punctuation remains copy."
+  ],
+  "selectors": {
+    "files": "packages/tools/tracy-site-tools/src/host/build-turns.mjs packages/tools/tracy-site-tools/src/host/index.ts apps/tracy-web/src/sites/agent-demo-inventory.js"
+  },
+  "evidence": "Local owner turn8 received No check has run after completed+passed action, then AGENT_DEMO_ACTION_CLOSED. Shipped-bundle fixture before fix emitted 2 reminders instead of 1.",
+  "fence": "Turn identity is captured before each await, successful server assignment is scoped to that identity, and closed refusals revoke it.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/tools/tracy-site-tools/test/build-turns.test.mjs",
+      "packages/tools/tracy-site-tools/test/visual-check-wiring.test.mjs",
+      "apps/tracy-web/test/agent-demo-native-inventory.test.mjs"
+    ],
+    "tests": [
+      "a completed build does not steer an ordinary owner follow-up into its closed demo checks",
+      "a closed demo response revokes only its current-turn build behavior, and a Retry can earn it again",
+      "punctuation beside rewritten inline words is copy; its containing native frame still counts"
+    ]
+  }
+}

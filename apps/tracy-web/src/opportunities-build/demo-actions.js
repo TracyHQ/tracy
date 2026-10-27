@@ -337,6 +337,10 @@ export async function acceptDemoActions(
           'Retry an action that has stopped, or wait for the current action.'
         )
       }
+      if (retryBuild?.state === 'deleted' || retryBuild?.demo_deleted_at) {
+        await client.query('rollback')
+        return refusal(409, 'DEMO_DELETED', 'This demo was deleted: press Rebuild to make it again.')
+      }
       const active = (
         await client.query(
           "select * from wo_demo_action where opportunity_id = $1 and account_id=$2 and status in ('queued','quality-queued-v1') order by accepted_at,id",

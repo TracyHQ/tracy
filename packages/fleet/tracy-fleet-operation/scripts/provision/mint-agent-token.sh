@@ -453,6 +453,9 @@ token_mount_custody() {
     function valued(s, pre, re) { return starts(s, pre) && substr(s, length(pre) + 1) ~ re }
     function web_networks() {
       if (bad || p > n) { bad = 1; return }
+      if (length(label "-web-1") <= 63 && L[p] == "    networks: [default]") { isolated = 1; p++; return }
+      if (length(label "-web-1") > 63 && ALIAS != "" && p + 2 <= n && L[p] == "    networks:" &&
+          L[p + 1] == "      default:" && L[p + 2] == "        aliases: [\"" ALIAS "\"]") { isolated = 1; p += 3; return }
       if (L[p] == "    networks: [default, tracy]") { p++; return }
       if (length(label "-web-1") > 63 && ALIAS != "" && p + 3 <= n && L[p] == "    networks:" &&
           L[p + 1] == "      default: {}" && L[p + 2] == "      tracy:" &&
@@ -507,7 +510,7 @@ token_mount_custody() {
       MAILURL = "^\"https?://[A-Za-z0-9.-]+(:[0-9]+)?(/[A-Za-z0-9._~%/-]*)?\"$"
       MEM = "^[1-9][0-9]*[mg]$"; PIDS = "^[1-9][0-9]*$"
       CPUS = "^([1-9][0-9]*(\\.[0-9]+)?|0\\.[0-9]*[1-9][0-9]*)$"
-      p = 1; tokens = 0; gen = 0; bad = 0
+      p = 1; tokens = 0; gen = 0; bad = 0; isolated = 0; access = 0
       lit("services:")
       lit("  web:")
       ok(valued(L[p], "    image: ", IMG))
@@ -530,8 +533,10 @@ token_mount_custody() {
       lit("      - " site "/data:/site/" label "/.webroot/data")
       lit("      - " site "/uploads:/site/" label "/.webroot/uploads")
       opt_token("last")
+      parent = site; sub("/[^/]+$", "", parent)
+      if (L[p] == "      - " parent "/.site-access/" label ":/run/tracy-access:ro") { access = 1; p++ }
       web_networks()
-      opt_dns()
+      if (!isolated) opt_dns()
       lit("    ports:")
       lit("      - \"127.0.0.1:${HOST_PORT:?this site\047s .env has no HOST_PORT — refusing to publish it on a default port another site may hold}:4321\"")
       lit("volumes:")
@@ -540,9 +545,11 @@ token_mount_custody() {
       lit("  default:")
       lit("    external: true")
       lit("    name: " label "_default")
-      lit("  tracy:")
-      lit("    external: true")
-      ok(valued(L[p], "    name: ", NET))
+      if (!isolated) {
+        lit("  tracy:")
+        lit("    external: true")
+        ok(valued(L[p], "    name: ", NET))
+      }
       if (bad || p != n + 1) print "unknown"
       # The mail run dates the file (#289): only a generator that writes the bind in its own place
       # wrote it, so mail with no bind, or with the bind where only the migration puts it, is no
@@ -551,6 +558,8 @@ token_mount_custody() {
       # So does the cap run (28/09/2026), later still: its generator writes the mail run and the bind
       # in its own place too, and caps beside no bind would otherwise read `none`.
       else if (lim && !(mail && tokens == 1 && gen == 1)) print "unknown"
+      # Isolation/access are current generator forms, never proof of a pre-protected legacy site.
+      else if ((isolated || access) && !(lim && mail && tokens == 1 && gen == 1)) print "unknown"
       else if (tokens == 0) print "none"
       else if (tokens == 1) print "protected"
       else print "unknown"

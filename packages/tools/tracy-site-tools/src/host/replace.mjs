@@ -155,6 +155,10 @@ export const REPLACE_NEXT = Object.freeze({
     'A picture is not words: change its image slot, or on WordPress its block by position — content.get {kind:"post", id, outline:true}, then content.update {kind:"post", id, blocks:{"<n>":<block>}}.',
   notFoundNext:
     'page.text {path:"{page}", match:"{word}"}, then this replace quoting those words exactly; only a NOT_FOUND needs a read.',
+  // Local round 31, 25/10/2026: a build's call with no path read the home page, this answer then sent it to read the
+  // home page again, and the agent gave up and edited the theme's PHP; words a theme prints are found only where shown.
+  notFoundNoPathNext:
+    'No path was given, so only the home page was read: the same call with path:"<the page that shows them>" (a check names it). Words a theme prints are found only on their page.',
   notHereError: 'those words are on {page}, not on this page; nothing was written',
   notHereNext: 'the same call with path:"{page}"',
   otherLanguageError: 'those words are on {page}, in another language; nothing was written',
@@ -278,9 +282,10 @@ function refuse(code, error, next, extra = {}) {
  *   One undo item as the call carries it: see {@link REPLACE_RESTORE_KEYS}.
  */
 /**
- * @typedef {{ ok: true, mode: 'replace', changes: ReplaceChange[], path: string,
+ * @typedef {{ ok: true, mode: 'replace', changes: ReplaceChange[], path: string, pathGiven: boolean,
  *   where: Region | null, at: string[] | null, all: false | true | 'page', dryRun: boolean,
  *   expect: number | null, normalized: string[] }} ReplacePlan
+ *   `pathGiven`: the call named its page; without one `path` is the home page.
  * @typedef {{ ok: true, mode: 'restore', restore: RestoreItem[], path: string, dryRun: boolean,
  *   normalized: string[] }} RestorePlan
  */
@@ -708,7 +713,8 @@ export function planReplace(params) {
     expect = /** @type {number} */ (p.expect)
   }
 
-  return { ok: true, mode: 'replace', changes, path, where, at, all, dryRun, expect, normalized }
+  const pathGiven = p.path !== undefined && p.path !== null
+  return { ok: true, mode: 'replace', changes, path, pathGiven, where, at, all, dryRun, expect, normalized }
 }
 
 // ── Matching (F3 §3.3) ───────────────────────────────────────────────────────────────────────────
@@ -1183,9 +1189,10 @@ const matchWord = (find) =>
  * change, as David's language rule says.
  *
  * @param {{ page: { units: RenderedUnit[], lang: string | null } | null, stored: readonly StoredUnit[],
- *   change: ReplaceChange, path?: string, where?: Region | null, at?: string[] | null,
+ *   change: ReplaceChange, path?: string, pathGiven?: boolean, where?: Region | null, at?: string[] | null,
  *   all?: false | true | 'page', expect?: number | null, confirmed?: boolean, dryRun?: boolean,
  *   mustKeepTwo?: boolean, countRules?: boolean, hooks?: LocateHooks }} input
+ *   `pathGiven: false`: the call named no page, so `path` is the home page it was read as.
  * @returns {Located | Refusal}
  */
 export function locate(input) {
@@ -1488,10 +1495,12 @@ export function locate(input) {
       // a path is part of a call here: whole, or a placeholder — never cut into a call that fails
       PICTURE_PATH.test(find.trim())
         ? replaceText('pictureNotFoundNext')
-        : replaceText('notFoundNext', {
-            page: path.length <= 60 ? path : '<the page>',
-            word: matchWord(find).slice(0, 30)
-          }),
+        : input.pathGiven === false
+          ? replaceText('notFoundNoPathNext')
+          : replaceText('notFoundNext', {
+              page: path.length <= 60 ? path : '<the page>',
+              word: matchWord(find).slice(0, 30)
+            }),
       { find, near: nearWords(pool, find) }
     )
   }
@@ -1740,6 +1749,7 @@ export function locateAll({ plan, page, stored, confirmed = false, mustKeepTwo =
       stored: typeof stored === 'function' ? stored(plan.changes[i], i) : stored,
       change: plan.changes[i],
       path: plan.path,
+      pathGiven: plan.pathGiven,
       where: plan.where,
       at: plan.at,
       all: plan.all,

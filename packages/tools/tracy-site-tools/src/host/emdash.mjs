@@ -2668,7 +2668,9 @@ export const EMDASH_DESCRIPTION = [
   // "a page as read: tracy_site page.text" left (09/10/2026): the site context's "Seeing a page" row says it.
   // Not "and words the template code prints": a mode with a shell edits that code under /app and
   // rebuilds (ADR 0022); which mode can is the site context's EmDash row to say (28/09/2026).
-  'Labels: not writable.',
+  // "Labels: not writable." left (26/10/2026): a category's or tag's label has `taxonomy_update_term` (the persona
+  // names it) and a form's words `form_words` (below); the line contradicted both and cost a build its terms (round 26).
+  // No room here for the label door itself (1,500 characters); a check names it where a label fails (`no-demo-words`).
   EMDASH_WORDS_ROAD,
   // 29/09/2026 (v6 L3-01): 20 s went on learning Portable Text for a page body; EmDash converts Markdown.
   'Menus: menu_get → menu_set_items.',

@@ -521,3 +521,56 @@ test('blocksTouched: the existing blocks a whole body changes or drops; blocks p
   assert.deepEqual(blocksTouched(body, body.replaceAll('\n\n', '\n')), { touched: [], of: 4 })
   assert.equal(blocksTouched(body, '<!-- wp:paragraph -->'), null)
 })
+
+// Local round 36 (26/10/2026): a WordPress build sent 19 sections back whole (124,000 characters) to change their
+// photos' src. A picture in a block is swapped: its address, no srcset or sizes, its attachment in class and comment.
+test('{pictures} swaps a picture in a block — img, srcset, url() and its attachment — without retyping it', () => {
+  const body =
+    '<!-- wp:group --><div class="wp-block-group"><!-- wp:image {"id":35,"sizeSlug":"full"} --><figure class="wp-block-image size-full"><img src="http://lev.test/wp-content/uploads/2026/10/intro-3-1.jpg" srcset="http://lev.test/wp-content/uploads/2026/10/intro-3-1-300x300.jpg 300w, http://lev.test/wp-content/uploads/2026/10/intro-3-1.jpg 800w" sizes="(max-width:800px) 100vw" alt="Our dining room" class="wp-image-35"/></figure><!-- /wp:image -->' +
+    '<div class="bg" style="background-image:url(/wp-content/uploads/2026/10/bg-2.jpg)"></div><p>Words stay</p></div><!-- /wp:group -->\n\n' +
+    '<!-- wp:paragraph --><p>Next</p><!-- /wp:paragraph -->'
+  const out = /** @type {any} */ (
+    applyBlockEdits(body, {
+      0: {
+        pictures: {
+          'wp-content/uploads/2026/10/intro-3-1-768x768.jpg': {
+            path: 'wp-content/uploads/tracy-content/abc.jpg',
+            attachmentId: 301
+          },
+          'bg-2.jpg': '/wp-content/uploads/tracy-content/def.jpg'
+        }
+      }
+    })
+  )
+  assert.equal(out.ok, true)
+  assert.match(out.body, /<!-- wp:image \{"id":301,"sizeSlug":"full"\} -->/)
+  assert.match(
+    out.body,
+    /<img src="http:\/\/lev\.test\/wp-content\/uploads\/tracy-content\/abc\.jpg" alt="Our dining room" class="wp-image-301"\/>/
+  )
+  assert.match(out.body, /url\(\/wp-content\/uploads\/tracy-content\/def\.jpg\)/)
+  assert.doesNotMatch(out.body, /srcset|sizes=|intro-3-1|bg-2/)
+  assert.match(out.body, /<p>Words stay<\/p>[\s\S]*<p>Next<\/p>/)
+  // no attachment given: the old one goes, so WordPress cannot rebuild the template's srcset from it
+  const bare = /** @type {any} */ (
+    applyBlockEdits(body, {
+      0: { pictures: { 'intro-3-1.jpg': 'wp-content/uploads/tracy-content/abc.jpg' } }
+    })
+  )
+  assert.match(bare.body, /<!-- wp:image \{"sizeSlug":"full"\} -->/)
+  assert.doesNotMatch(bare.body, /wp-image-/)
+  // a picture the block does not show, a path that is no picture, and a second key beside pictures
+  assert.equal(
+    /** @type {any} */ (applyBlockEdits(body, { 0: { pictures: { 'nowhere.jpg': 'x/a.jpg' } } })).code,
+    'NOT_FOUND'
+  )
+  assert.equal(
+    /** @type {any} */ (applyBlockEdits(body, { 0: { pictures: { 'bg-2.jpg': 'Our new photo' } } })).code,
+    'BAD_PARAMS'
+  )
+  assert.equal(
+    /** @type {any} */ (applyBlockEdits(body, { 0: { pictures: { 'bg-2.jpg': 'a/b.jpg' }, find: 'x' } }))
+      .code,
+    'BAD_PARAMS'
+  )
+})

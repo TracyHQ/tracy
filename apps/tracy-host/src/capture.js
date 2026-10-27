@@ -210,7 +210,9 @@ export async function runCapture({
   shoot,
   timeoutMs,
   base: reached = null,
-  serveFrom = null
+  serveFrom = null,
+  serveFromIsProxy = false,
+  proxySiteLabel = null
 }) {
   // `reached`: the address the route found answering (`demo-qa.js` `reachableBase`); else the first rule.
   const base = reached ?? captureTarget(label, platform, port, host)
@@ -245,7 +247,13 @@ export async function runCapture({
             signal: controller.signal,
             progress,
             // Opened at the demo's own name, served from the address that answered (`self-named.js`).
-            ...(serveFrom ? { serveFrom, siteHosts: host ? [host] : [] } : {})
+            ...(serveFrom
+              ? {
+                  serveFrom,
+                  ...(serveFromIsProxy ? { serveFromIsProxy, proxySiteLabel } : {}),
+                  siteHosts: host ? [host] : []
+                }
+              : {})
           }),
           timeoutMs,
           () => `shot timed out after ${timeoutMs}ms while ${progress.phase}`,

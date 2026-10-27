@@ -19,7 +19,7 @@ const DETAIL_MAX = 20
 
 const digits = (s) => String(s).replace(/\D/g, '')
 /** "1.200", "1,200" and "1200" are one amount; "12.50" and "12,50" another. */
-function amount(text) {
+export function amount(text) {
   const s = String(text).replace(/\s/g, '')
   const n = /^\d{1,3}(?:[.,]\d{3})+$/.test(s) ? s.replace(/[.,]/g, '') : s.replace(',', '.')
   const value = Number.parseFloat(n)

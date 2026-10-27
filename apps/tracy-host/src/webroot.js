@@ -1040,6 +1040,13 @@ function webNetworkForms(label) {
   return [shorthand, ['    networks:', '      default: {}', '      tracy:', `        aliases: ["${alias}"]`]]
 }
 
+/** The isolated generator has one network, no shared footer and no shared resolver. */
+function isolatedWebNetworkForm(label) {
+  if (`${label}-web-1`.length <= 63) return ['    networks: [default]']
+  const alias = `tracy-web-${createHash('sha256').update(label).digest('hex').slice(0, 32)}`
+  return ['    networks:', '      default:', `        aliases: ["${alias}"]`]
+}
+
 /** The length of the `webNetworkForms` run starting at `lines[at]`, or 0 when none matches. */
 function matchWebNetworks(lines, at, label) {
   for (const form of webNetworkForms(label)) {
@@ -1123,7 +1130,7 @@ function matchLimits(lines, at) {
  * (`webNetworkForms`, one line or four); `{ opt: 'dns' }` is the local-dev-only `dns:` line
  * (`TRACY_SITE_DNS`); a function judges a line whose value the generator fills in. `s` is the
  * absolute site directory, `l` its label.
- * @type {Array<string | {opt: 'token', slot: 'first'|'generator'|'last'} | {opt: 'mail'|'limits'|'networks'|'dns'} | ((line: string, s: string, l: string) => boolean)>}
+ * @type {Array<string | {opt: 'token', slot: 'first'|'generator'|'last'} | {opt: 'mail'|'limits'|'networks'|'dns'|'access'|'shared-footer'} | ((line: string, s: string, l: string) => boolean)>}
  */
 const EMDASH_COMPOSE_FORM = [
   'services:',
@@ -1152,6 +1159,7 @@ const EMDASH_COMPOSE_FORM = [
   (line, s, l) => line === `      - ${s}/data:/site/${l}/.webroot/data`,
   (line, s, l) => line === `      - ${s}/uploads:/site/${l}/.webroot/uploads`,
   { opt: 'token', slot: 'last' },
+  { opt: 'access' },
   { opt: 'networks' },
   { opt: 'dns' },
   '    ports:',
@@ -1162,9 +1170,7 @@ const EMDASH_COMPOSE_FORM = [
   '  default:',
   '    external: true',
   (line, _s, l) => line === `    name: ${l}_default`,
-  '  tracy:',
-  '    external: true',
-  (line) => line.startsWith('    name: ') && NETWORK_VALUE.test(line.slice('    name: '.length))
+  { opt: 'shared-footer' }
 ]
 
 /** The optional `dns:` line exactly as `tracy_web_networks` prints it. */
@@ -1188,13 +1194,31 @@ export function classifyTokenMount(text, siteDir) {
   const slots = []
   let mail = false
   let limits = false
+  let isolated = false
+  let access = false
   for (const want of EMDASH_COMPOSE_FORM) {
     const line = lines[at]
     if (typeof want === 'object') {
       if (want.opt === 'networks') {
-        const taken = matchWebNetworks(lines, at, label)
+        const own = isolatedWebNetworkForm(label)
+        isolated = own.every((want, i) => lines[at + i] === want)
+        const taken = isolated ? own.length : matchWebNetworks(lines, at, label)
         if (taken === 0) return 'unknown'
         at += taken
+      } else if (want.opt === 'access') {
+        const key = path.posix.join(path.posix.dirname(siteDir), '.site-access', label)
+        if (line === `      - ${key}:/run/tracy-access:ro`) {
+          access = true
+          at++
+        }
+      } else if (want.opt === 'shared-footer') {
+        if (!isolated) {
+          if (lines[at] !== '  tracy:' || lines[at + 1] !== '    external: true') return 'unknown'
+          const name = lines[at + 2]
+          if (!name?.startsWith('    name: ') || !NETWORK_VALUE.test(name.slice('    name: '.length)))
+            return 'unknown'
+          at += 3
+        }
       } else if (want.opt === 'mail') {
         const taken = matchMailEnv(lines, at, label)
         mail = taken > 0
@@ -1206,7 +1230,7 @@ export function classifyTokenMount(text, siteDir) {
       } else if (want.opt === 'token' && line === TOKEN_BIND_LINE) {
         slots.push(want.slot)
         at++
-      } else if (want.opt === 'dns' && line !== undefined && isDnsLine(line)) at++
+      } else if (want.opt === 'dns' && !isolated && line !== undefined && isDnsLine(line)) at++
       continue
     }
     if (line === undefined) return 'unknown'
@@ -1222,6 +1246,9 @@ export function classifyTokenMount(text, siteDir) {
   // 🔒 SO DOES THE CAP RUN (28/09/2026), and later still: the generator that writes it writes the
   // mail run and the bind in its own place too. Caps beside no bind would otherwise read `none`.
   if (limits && !(mail && slots.length === 1 && slots[0] === 'generator')) return 'unknown'
+  // Isolation and access keys postdate caps/mail/protected custody; neither may authorize a legacy mint.
+  if ((isolated || access) && !(limits && mail && slots.length === 1 && slots[0] === 'generator'))
+    return 'unknown'
   if (slots.length === 0) return 'none'
   return slots.length === 1 ? 'protected' : 'unknown'
 }

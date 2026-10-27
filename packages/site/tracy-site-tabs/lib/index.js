@@ -2574,7 +2574,9 @@ var EMDASH_DESCRIPTION = [
   // "a page as read: tracy_site page.text" left (09/10/2026): the site context's "Seeing a page" row says it.
   // Not "and words the template code prints": a mode with a shell edits that code under /app and
   // rebuilds (ADR 0022); which mode can is the site context's EmDash row to say (28/09/2026).
-  "Labels: not writable.",
+  // "Labels: not writable." left (26/10/2026): a category's or tag's label has `taxonomy_update_term` (the persona
+  // names it) and a form's words `form_words` (below); the line contradicted both and cost a build its terms (round 26).
+  // No room here for the label door itself (1,500 characters); a check names it where a label fails (`no-demo-words`).
   EMDASH_WORDS_ROAD,
   // 29/09/2026 (v6 L3-01): 20 s went on learning Portable Text for a page body; EmDash converts Markdown.
   "Menus: menu_get \u2192 menu_set_items.",
@@ -2846,6 +2848,15 @@ var WP_SEO_PLUGINS = /* @__PURE__ */ Object.freeze(
   ].map((row) => /* @__PURE__ */ Object.freeze({ ...row, folders: /* @__PURE__ */ Object.freeze(row.folders) }))
 );
 
+// ../../tools/tracy-site-tools/src/host/comment-fence.mjs
+var FILE_WRITES = /* @__PURE__ */ Object.freeze({ write: "file_path", edit: "file_path", str_replace_editor: "path" });
+var SHELLS = /* @__PURE__ */ Object.freeze({
+  bash: { text: "command", dir: "workdir" },
+  pwsh: { text: "command", dir: "workdir" },
+  terminal_send: { text: "text", dir: null }
+});
+var COMMENT_FENCED_TOOLS = /* @__PURE__ */ new Set([...Object.keys(FILE_WRITES), ...Object.keys(SHELLS)]);
+
 // ../../tools/tracy-site-tools/src/host/set-only-doors.mjs
 var SET_ONLY_WRITE_ACTIONS = /* @__PURE__ */ Object.freeze(
   /* @__PURE__ */ new Set(["site.identity", "template.siteSettings", "template.languageOverrides"])
@@ -3009,7 +3020,7 @@ var LOOKING_ACTIONS = new Set(
   Object.entries(ACTION_CLASSES).filter(([, kind]) => kind === "read").map(([action]) => action)
 );
 var WRITING_FILE_TOOLS = { write: "file_path", edit: "file_path", str_replace_editor: "path" };
-var SHELLS = /* @__PURE__ */ new Set(["bash", "pwsh"]);
+var SHELLS2 = /* @__PURE__ */ new Set(["bash", "pwsh"]);
 var DOOR_TOOLS = /* @__PURE__ */ new Set(["tracy_site", "tracy_emdash"]);
 function argsOf(call) {
   let args = call?.arguments;
@@ -3045,7 +3056,7 @@ function siteCallWrote(args) {
 }
 function callChangedSite(call) {
   const name2 = typeof call?.name === "string" ? call.name : "";
-  if (SHELLS.has(name2)) return true;
+  if (SHELLS2.has(name2)) return true;
   const pathArg = WRITING_FILE_TOOLS[name2];
   if (pathArg !== void 0) return insideWebroot(argsOf(call)?.[pathArg]);
   if (name2 === "tracy_emdash") return emdashWrote(call?.arguments);

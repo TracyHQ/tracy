@@ -13,7 +13,7 @@ import { mkdtempSync, mkdirSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
 
-import { contentFind } from '../src/host/find.mjs'
+import { contentFind, gettextOf } from '../src/host/find.mjs'
 
 /** A Joomla webroot with the four files the measured sessions actually grepped. */
 function joomlaSite(files = {}) {
@@ -176,4 +176,50 @@ test('a walk cut by its file budget says so, never "search a longer phrase"; one
   )
   const full = await contentFind(joomlaSite(noisy), 'demo', { text: 'Opening hours' }, asJoomla)
   assert.match(full.stopped, /search a longer phrase/)
+})
+
+// Local round 35 (26/10/2026): JA Restaurant prints its blog sidebar through gettext in PHP patterns; a build, fenced out
+// of the theme, needs the domain and msgid the plugin's string override takes, never the file.
+test('a WordPress theme line printing the words through gettext names the string override, with its domain and msgid', async () => {
+  const root = mkdtempSync(path.join(tmpdir(), 'content-find-wp-'))
+  const web = path.join(root, 'lev', '.webroot')
+  const files = {
+    'wp-content/themes/wp-ja-restaurant/patterns/blog-banner.php':
+      "<p class=\"price\"><?php esc_html_e( 'Only $5.99', 'wp-ja-restaurant' ); ?></p>\n<a><?php echo esc_html( _x( 'Most Read', 'sidebar heading', 'wp-ja-restaurant' ) ); ?></a>\n<p>Soup or salad</p>",
+    'wp-content/themes/wp-ja-restaurant/style.css': 'x'
+  }
+  for (const [rel, body] of Object.entries(files)) {
+    mkdirSync(path.join(web, path.dirname(rel)), { recursive: true })
+    writeFileSync(path.join(web, rel), body)
+  }
+  const wp = async () => 'wordpress'
+  const price = await contentFind(root, 'lev', { text: 'only $5.99' }, wp)
+  assert.deepEqual(price.matches[0].gettext, { domain: 'wp-ja-restaurant', msgid: 'Only $5.99' })
+  assert.match(
+    price.matches[0].door,
+    /content\.contract \{operation:"string", domain:"wp-ja-restaurant", msgid:"Only \$5\.99"/
+  )
+  assert.match(price.matches[0].door, /never edit this file/)
+  const heading = await contentFind(root, 'lev', { text: 'Most read' }, wp)
+  assert.deepEqual(heading.matches[0].gettext, {
+    domain: 'wp-ja-restaurant',
+    msgid: 'Most Read',
+    context: 'sidebar heading'
+  })
+  const plain = await contentFind(root, 'lev', { text: 'Soup or salad' }, wp)
+  assert.equal(plain.matches[0].gettext, undefined)
+  // Round 37: a line reading an option names it and the door that sets it.
+  mkdirSync(path.join(web, 'wp-content/themes/wp-ja-restaurant/inc/groups'), { recursive: true })
+  writeFileSync(
+    path.join(web, 'wp-content/themes/wp-ja-restaurant/inc/groups/blog.php'),
+    "<?php\n\t$id = (int) get_option( 'wp_ja_restaurant_blog_banner_image', 0 );\n"
+  )
+  const option = await contentFind(root, 'lev', { text: 'banner' }, wp)
+  const read = option.matches.find((m) => m.option)
+  assert.equal(read.option, 'wp_ja_restaurant_blog_banner_image')
+  assert.match(read.door, /content\.update \{kind:"option", key:"wp_ja_restaurant_blog_banner_image"/)
+  assert.deepEqual(gettextOf("<?php _e( 'It\\'s fresh', 'acme' ); ?>", "it's"), {
+    domain: 'acme',
+    msgid: "It's fresh"
+  })
 })

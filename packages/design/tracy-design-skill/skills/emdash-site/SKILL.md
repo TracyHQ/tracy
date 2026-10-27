@@ -79,8 +79,10 @@ limitation to report back. Their answers are in `docs/agents/build/job.json` und
   it again for a fresh `_rev`, do not retry the old one.
 - **Languages are entries.** Another language is another entry of the same slug, linked as a
   translation. Change the language the customer asked about; do not translate on your own.
-- **Not writable here:** taxonomy term labels (the term tools take no locale and write the first
-  language's term) and form labels (the Forms plugin has no MCP tool). Say so, once.
+- **Labels change through their own tools.** A category's or tag's label: `taxonomy_update_term
+  {taxonomy, termSlug, label}`, its items kept — terms are per language, and without `locale` it
+  writes the first language's. A form's visible words (labels, placeholders, options, button):
+  `form_words` after `form_list`, never its fields or recipients.
 - **Do not invent facts.** No counts, years, certifications, prices, clients or people the
   customer did not give. Empty beats invented.
 - **Code is the build tool's business.** Views, styles and config live under `/app` and are

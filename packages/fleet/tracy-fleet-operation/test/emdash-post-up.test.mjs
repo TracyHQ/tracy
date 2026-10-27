@@ -17,7 +17,7 @@
  */
 import assert from 'node:assert/strict'
 import { spawnSync } from 'node:child_process'
-import { existsSync, mkdtempSync, readFileSync, rmSync, symlinkSync, mkdirSync } from 'node:fs'
+import { existsSync, mkdtempSync, readFileSync, rmSync, symlinkSync, mkdirSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { test } from 'node:test'
@@ -44,12 +44,13 @@ const STUBS = readFileSync(fileURLToPath(new URL('./emdash-post-up-stub.sh', imp
  * Drive platform_post_up once; return {rc, stdout, stderr, token, docker} where token is the private
  * file and docker is every docker call the run made, one per line (STUB_DOCKER_LOG).
  */
-function runPostUp({ env = {}, dest, here = PROVISION } = {}) {
+function runPostUp({ env = {}, dest, here = PROVISION, isolated = false } = {}) {
   const root = mkdtempSync(path.join(tmpdir(), 'emdash-postup-'))
   const site = path.join(root, 'site')
   const sitesRoot = path.join(root, 'sites')
   mkdirSync(path.join(site, 'data'), { recursive: true })
   mkdirSync(sitesRoot, { recursive: true })
+  if (isolated) writeFileSync(path.join(site, 'network-isolated'), '')
   const tokenFile = path.join(site, 'tracy-agent.token')
 
   // The destination shape under test: a fresh regular file (prepared), a directory, or a symlink.
@@ -465,6 +466,80 @@ test('provision.sh takes --mail-sender (tracy-host sends it for a demo or a stoc
 // that stack — its bootstrap runs inside the container.
 const MACOS = { ...BIZ_OK, STUB_LOOPBACK_DOWN: '1' }
 const SITE_INSPECT = /^inspect --format .*NetworkSettings\.Networks "([^"]+)".*IPAddress.* demo-web-1$/m
+
+test('isolated bridge: setup, mail and forms borrow only this host connection and release it', () => {
+  const r = runPostUp({ isolated: true, env: { ...MACOS, HOSTNAME: '123456abcdef' } })
+  assert.equal(r.rc, 0, r.stderr)
+  assert.equal(r.docker.match(SITE_INSPECT)?.[1], 'demo_default', r.docker)
+  assert.match(r.docker, /^network connect demo_default 123456abcdef/m)
+  assert.match(r.docker, /^network disconnect demo_default 123456abcdef/m)
+  assert.ok(r.docker.indexOf('network connect') < r.docker.indexOf('configure-mail.mjs'))
+  assert.ok(r.docker.indexOf('quiet-forms.mjs') < r.docker.indexOf('network disconnect'))
+  assert.doesNotMatch(r.docker, /network connect tracy_tracy/)
+})
+
+test('isolated bridge: a failed helper still releases its connection', () => {
+  const r = runPostUp({ isolated: true, env: { ...MACOS, HOSTNAME: '123456abcdef', STUB_MAIL_RC: '1' } })
+  assert.notEqual(r.rc, 0)
+  assert.match(r.docker, /^network disconnect demo_default 123456abcdef/m)
+})
+
+test('isolated bridge: a later loopback listener cannot replace the selected private origin', () => {
+  const r = runPostUp({
+    isolated: true,
+    env: { ...MACOS, HOSTNAME: '123456abcdef', STUB_LOOPBACK_RECOVERS: '1' }
+  })
+  assert.equal(r.rc, 0, r.stderr)
+  assert.match(r.docker.match(MAIL_HELPER)?.[0] ?? '', /--origin http:\/\/172\.30\.0\.7:4321 /)
+})
+
+test('isolated bridge: interrupting connect releases the lease without running a helper', () => {
+  for (const [signal, rc] of [
+    ['INT', 130],
+    ['TERM', 143]
+  ]) {
+    const r = runPostUp({
+      isolated: true,
+      env: { ...MACOS, HOSTNAME: '123456abcdef', STUB_CONNECT_SIGNAL: signal }
+    })
+    assert.equal(r.rc, rc, r.stderr)
+    assert.match(r.docker, /^network disconnect demo_default 123456abcdef/m)
+    assert.doesNotMatch(r.docker, /configure-mail\.mjs|quiet-forms\.mjs/)
+  }
+})
+
+test('isolated fleet: reachable loopback needs no bridged host identity or membership', () => {
+  const r = runPostUp({ isolated: true, env: { ...BIZ_OK, HOSTNAME: 'fleet-native' } })
+  assert.equal(r.rc, 0, r.stderr)
+  assert.doesNotMatch(r.docker, /^inspect |^network (connect|disconnect) /m)
+})
+
+test('isolated bridge: a preexisting host connection is preserved', () => {
+  const r = runPostUp({ isolated: true, env: { ...MACOS, HOSTNAME: '123456abcdef', STUB_HOST_JOINED: '1' } })
+  assert.equal(r.rc, 0, r.stderr)
+  assert.doesNotMatch(r.docker, /^network (connect|disconnect) /m)
+})
+
+test('isolated bridge: an unverified host never joins or runs a credentialed helper', () => {
+  for (const invalid of [
+    { HOSTNAME: 'other-host' },
+    { STUB_HOST_IDENTITY: 'other|tracy-host|true|tracy_tracy' },
+    { STUB_HOST_IDENTITY: '123456abcdef00|tracy-web|true|tracy_tracy' },
+    { STUB_HOST_IDENTITY: '123456abcdef00|tracy-host|false|tracy_tracy' },
+    { STUB_HOST_IDENTITY: '123456abcdef00|tracy-host|true|other_tracy' }
+  ]) {
+    const r = runPostUp({ isolated: true, env: { ...MACOS, HOSTNAME: '123456abcdef', ...invalid } })
+    assert.notEqual(r.rc, 0, JSON.stringify(invalid))
+    assert.doesNotMatch(r.docker, /^network connect |configure-mail\.mjs/m)
+  }
+})
+
+test('isolated bridge: connect, reachability and cleanup failures cannot report ready', () => {
+  for (const failure of [{ STUB_CONNECT_RC: '1' }, { STUB_PRIVATE_DOWN: '1' }, { STUB_DISCONNECT_RC: '1' }]) {
+    const r = runPostUp({ isolated: true, env: { ...MACOS, HOSTNAME: '123456abcdef', ...failure } })
+    assert.notEqual(r.rc, 0, JSON.stringify(failure))
+  }
+})
 
 test('mail (macOS stack): no loopback answer — the helper dials the web container address docker reports', () => {
   const r = runPostUp({ env: MACOS })

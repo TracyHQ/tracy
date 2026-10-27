@@ -165,7 +165,10 @@ test('a redirect is followed only onto another provider picture host', async () 
   )
 })
 
-test('a provider that does not answer in time → 502 (the module gives up on its own timeout)', async () => {
+test('a provider that does not answer in time → 502 (the module gives up on its own timeout)', async (t) => {
+  // The fake fetch has no socket to keep Node alive for AbortSignal.timeout's unreferenced timer.
+  const pendingSocket = setInterval(() => {}, 1000)
+  t.after(() => clearInterval(pendingSocket))
   const pictures = avatarPictures({
     timeoutMs: 20,
     fetchImpl: (_url, init) =>

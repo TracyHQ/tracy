@@ -625,6 +625,9 @@ export async function proxySite(
   /** The response headers every branch below sends: reframed, and on an own domain projected. */
   const outgoing = () => {
     const headers = new Headers(upstream.headers)
+    // A reader must distinguish the routed CMS from a control-plane page or unknown host.
+    headers.delete('x-tracy-site-response')
+    if (label) headers.set('x-tracy-site-response', label)
     for (const h of RESPONSE_REFRAMED) headers.delete(h)
     reframeLocation(headers, target, viewerHost, viewerProto, sameHost)
     if (project)

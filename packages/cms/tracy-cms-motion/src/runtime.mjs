@@ -356,20 +356,64 @@ function carousel(root, config, still) {
     root.append(holder)
   }
   drawDots()
+  // A carousel without optional buttons still needs a keyboard entry point.
+  if (root.getAttribute('tabindex') === null) root.setAttribute('tabindex', '0')
+  const editing = (target) =>
+    target && target !== root && target.closest('a, button, input, select, textarea, [contenteditable]')
   root.addEventListener('keydown', (event) => {
-    if (event.key === 'ArrowLeft') go(index - 1, true)
-    else if (event.key === 'ArrowRight') go(index + 1, true)
+    if (editing(event.target)) return
+    if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return
+    if (typeof event.preventDefault === 'function') event.preventDefault()
+    go(index + (event.key === 'ArrowLeft' ? -1 : 1), true)
   })
-  let startX = null
+  // Native image dragging cancels Pointer Events before pointerup, stranding image-only galleries.
+  root.addEventListener('dragstart', (event) => {
+    if (event.target?.closest('img')) event.preventDefault()
+  })
+  let gesture = null
+  let swallowClick = false
+  const clearGesture = () => {
+    gesture = null
+  }
   root.addEventListener('pointerdown', (event) => {
-    startX = event.clientX
+    swallowClick = false
+    if (event.isPrimary === false || (event.button !== undefined && event.button !== 0)) return
+    if (event.target?.closest('button, input, select, textarea, [contenteditable]')) return
+    gesture = { id: event.pointerId, x: event.clientX, y: event.clientY }
+  })
+  root.addEventListener('pointermove', (event) => {
+    if (!gesture || event.pointerId !== gesture.id) return
+    const dx = Math.abs(event.clientX - gesture.x)
+    const dy = Math.abs(event.clientY - gesture.y)
+    // Capture only an actual horizontal drag; a plain picture-link click retains its target.
+    if (dx > 40 && dx > dy && typeof root.setPointerCapture === 'function')
+      root.setPointerCapture(event.pointerId)
   })
   root.addEventListener('pointerup', (event) => {
-    if (startX === null) return
-    const dx = event.clientX - startX
-    startX = null
-    if (Math.abs(dx) > 40) go(index + (dx < 0 ? 1 : -1), true)
+    if (!gesture || event.pointerId !== gesture.id) return
+    const dx = event.clientX - gesture.x
+    const dy = event.clientY - gesture.y
+    clearGesture()
+    if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) {
+      swallowClick = true
+      go(index + (dx < 0 ? 1 : -1), true)
+    }
   })
+  root.addEventListener('pointercancel', clearGesture)
+  root.addEventListener('lostpointercapture', (event) => {
+    // Touch transfers implicit capture from the image to this root; its bubbling loss is not cancellation.
+    if (event.target === root) clearGesture()
+  })
+  root.addEventListener(
+    'click',
+    (event) => {
+      if (!swallowClick || event.detail === 0) return
+      swallowClick = false
+      event.preventDefault()
+      event.stopPropagation()
+    },
+    true
+  )
   let views = perView()
   window.addEventListener('resize', () => {
     if (perView() === views) {

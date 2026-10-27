@@ -1,3 +1,4 @@
+import { visionLabelOf } from './demo-photo-labels.js'
 /**
  * A read-only editorial pilot: choose sourced passages BEFORE they are pinned into a quickstart.
  * The original brief and profile remain authoritative. This module has no DB, network or write tools.
@@ -116,9 +117,7 @@ export function placeDossier({ revision, accountId, media = [], websitePages = [
       const detail = media.find((m) => m.id === a.id)
       return {
         ...a,
-        ...(detail
-          ? { width: detail.width, height: detail.height, description: detail.labels?.vision?.labels ?? null }
-          : {})
+        ...(detail ? { width: detail.width, height: detail.height, description: visionLabelOf(detail) } : {})
       }
     }),
     policy:

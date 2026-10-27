@@ -138,6 +138,91 @@ export async function hostCall(config, hostName, path, payload = {}, { fetchImpl
   })
 }
 
+/** Read a signed NDJSON capture with backpressure; never retain a whole page's image payloads. */
+export async function hostStreamCall(
+  config,
+  hostName,
+  path,
+  payload,
+  { onFrame, fetchImpl = fetch, timeoutMs = 240_000, signal: parentSignal } = {}
+) {
+  const channel = hostChannel(config, hostName)
+  if (!channel) return { ok: false, status: 0, body: { error: 'unknown_host', host: hostName } }
+  if (typeof onFrame !== 'function')
+    return { ok: false, status: 0, body: { code: 'STREAM_CONSUMER_REQUIRED' } }
+  const controller = new AbortController()
+  const timeout = AbortSignal.timeout(Math.min(300_000, Math.max(1, timeoutMs)))
+  const signal = AbortSignal.any([controller.signal, timeout, ...(parentSignal ? [parentSignal] : [])])
+  const body = JSON.stringify(payload)
+  const target = `/_host${path}`
+  let reader
+  let status = 0
+  let terminal = false
+  try {
+    const signed = await signHostCall({ secret: channel.hostSecret, path: target, body })
+    const response = await fetchImpl(`${channel.origin}${target}`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json', ...signed },
+      body,
+      signal
+    })
+    status = response.status
+    reader = response.body?.getReader()
+    if (!response.ok || !response.headers.get('content-type')?.includes('application/x-ndjson') || !reader)
+      return { ok: false, status, body: { code: 'VISION_STREAM_UNAVAILABLE' } }
+    const decoder = new TextDecoder('utf-8', { fatal: true })
+    let pending = ''
+    let total = 0
+    const invalid = (code) => Object.assign(new Error(code), { code })
+    // These transport budgets match tracy-host's vision-stream.js; neither image imports the other app.
+    const maxLine = 1024 * 1024
+    const maxStream = 32 * 1024 * 1024
+    for (;;) {
+      signal.throwIfAborted()
+      const next = await reader.read()
+      if (next.done) break
+      total += next.value.byteLength
+      if (total > maxStream) throw invalid('VISION_STREAM_TOO_LARGE')
+      // A network chunk is not a frame. Decode in bounded pieces, including when a test/server sends many lines at once.
+      for (let offset = 0; offset < next.value.byteLength; offset += 64 * 1024) {
+        pending += decoder.decode(next.value.subarray(offset, offset + 64 * 1024), { stream: true })
+        let newline
+        while ((newline = pending.indexOf('\n')) >= 0) {
+          const line = pending.slice(0, newline)
+          pending = pending.slice(newline + 1)
+          if (!line.trim()) continue
+          if (terminal || Buffer.byteLength(line) > maxLine) throw invalid('VISION_STREAM_INVALID')
+          let frame
+          try {
+            frame = JSON.parse(line)
+          } catch {
+            throw invalid('VISION_STREAM_INVALID')
+          }
+          if (!frame || typeof frame.type !== 'string') throw invalid('VISION_STREAM_INVALID')
+          signal.throwIfAborted()
+          await onFrame(frame, signal)
+          signal.throwIfAborted()
+          terminal = frame.type === 'end'
+        }
+        if (Buffer.byteLength(pending) > maxLine) throw invalid('VISION_FRAME_TOO_LARGE')
+      }
+    }
+    pending += decoder.decode()
+    if (pending.trim() || !terminal) throw invalid('VISION_STREAM_INCOMPLETE')
+    return { ok: true, status, body: { streamed: true } }
+  } catch (error) {
+    return {
+      ok: false,
+      status,
+      body: { code: typeof error?.code === 'string' ? error.code : 'VISION_STREAM_FAILED' },
+      ...(timeout.aborted ? { timedOut: true } : {})
+    }
+  } finally {
+    controller.abort()
+    await reader?.cancel().catch(() => {})
+  }
+}
+
 /**
  * GET one job's status from `tracy-host`: `${origin}/_host/jobs/${jobId}`. Signed the same way as
  * `hostCall`, with an empty string standing in for the (absent) request body.

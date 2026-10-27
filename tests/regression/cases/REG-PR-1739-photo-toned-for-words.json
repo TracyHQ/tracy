@@ -1,0 +1,41 @@
+{
+  "id": "REG-PR-1739-photo-toned-for-words",
+  "kind": "fix",
+  "title": "A photo that carries words is toned itself for them to read (image.tone), the least it takes and within half, or refused; a saved image's tone may change later",
+  "pr": 1739,
+  "area": "website-opportunities/agent-demo",
+  "cms": ["wp", "jo", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: toneForWords dark on a flat mid-tone photo (150,120,90), on a dark one (30,25,20), on a bright cream one (244,239,230); light on a dark grey one (40,40,40); dark on a PNG cut-out.",
+    "S2: agentImageRecipe with tone dark and with tone grey; makeAgentImage with tone dark on the mid-tone and on the cream photo.",
+    "S3: amendsPlan of a saved image given a tone, its tone changed, its photo changed with a tone, its crop changed with a tone."
+  ],
+  "expect": [
+    "S1: the mid-tone darkens by less than 10 % to ≤ the 4.5:1 ground for white, same size, JPEG, new hash; the dark one is unchanged; the cream one is refused AGENT_DEMO_IMAGE_TONE_UNREACHABLE naming a calmer, darker photo; the grey lightens to ≥ the ground for black within half; the PNG is skipped as transparent.",
+    "S2: tone dark is kept; grey is refused with 'image.tone is \"dark\"'; makeAgentImage tones the mid-tone and refuses the cream with its own code.",
+    "S3: tone set and tone changed pass; photo or crop changed fail."
+  ],
+  "selectors": {
+    "files": "apps/tracy-web/src/opportunities-build/agent-demo-image.js apps/tracy-web/src/opportunities-build/agent-demo.js apps/tracy-web/src/opportunities-build/demo-qa.js",
+    "dom": ""
+  },
+  "evidence": "Local rounds 27–31 (WordPress JA Restaurant): white words over the place's photos failed looks-finished; filter:brightness written into the block failed native-structure, an overlay colour in global styles failed look-kept.",
+  "fence": "TONE (dark p85 ≤ 1.05/4.5−0.05, light p15 ≥ 0.175, limit 0.5); toneForWords; AGENT_DEMO_IMAGE_TONE_UNREACHABLE; amendsPlan untoned",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-concurrency=1",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/agent-demo-image.test.mjs",
+      "apps/tracy-web/test/wo-agent-demo.test.mjs"
+    ],
+    "tests": [
+      "a photo that carries words is toned the least it takes for them to read, within half, or refused",
+      "a saved image's tone may be set or changed later; its photo and crop may not"
+    ],
+    "needs": ["postgres"]
+  }
+}

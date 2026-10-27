@@ -1,0 +1,40 @@
+{
+  "id": "REG-PR-1739-rendered-word-composition",
+  "kind": "fix",
+  "title": "Repeated edits of visible WordPress theme words require proven whole-output composition",
+  "pr": 1739,
+  "area": "site-tools/rendered-words",
+  "cms": ["wp"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "Advertise whole-output composition and inspect the second visible edit of a prior rendered-word replacement.",
+    "Exercise malformed markers and markers from a plugin without composition capability, then run shipped build-fence scenarios with real turn identity."
+  ],
+  "expect": [
+    "The caller forwards the visible before/after words and the proven replaces_rule marker without reverse-mapping raw words.",
+    "Malformed or unadvertised markers refuse without mutation; old plugins retain their original wire shape.",
+    "Assigned build turns refuse questions/approvals while ordinary owner turns preserve their confirmation paths."
+  ],
+  "selectors": {
+    "files": "packages/tools/tracy-site-tools/src/host/rendered-words.mjs packages/tools/tracy-site-tools/test/build-fence-wiring.test.mjs"
+  },
+  "evidence": "Local Levain turn19: normal content.replace, visitor read, apply.revert, visitor read and final composed edit succeeded. PHP plugin suite 3315 PASS.",
+  "fence": "Plugin-issued whole-output provenance is mandatory and caller checks capability, marker and observed anchors/counts.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "packages/tools/tracy-site-tools/test/replace-wordpress-rendered-words.test.mjs",
+      "packages/tools/tracy-site-tools/test/normalize.test.mjs",
+      "packages/tools/tracy-site-tools/test/build-fence-wiring.test.mjs"
+    ],
+    "tests": [
+      "a whole-output capable plugin receives the visible edit with its proven raw rule identity",
+      "unproven composition candidates never dispatch a write (capability false)",
+      "unproven composition candidates never dispatch a write (capability true)"
+    ]
+  }
+}

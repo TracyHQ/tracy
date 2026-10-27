@@ -6,7 +6,9 @@ import {
   agentContactSheet,
   agentImageRecipe,
   LOOK_SHEET,
-  makeAgentImage
+  makeAgentImage,
+  TONE,
+  toneForWords
 } from '../src/opportunities-build/agent-demo-image.js'
 
 const crop = {
@@ -156,4 +158,73 @@ test('the contact sheet shows each photo as a numbered tile, a broken one as gre
   assert.equal(meta.format, 'jpeg')
   assert.equal(meta.width, LOOK_SHEET.columns * LOOK_SHEET.tile.width)
   assert.equal(meta.height, 2 * (LOOK_SHEET.tile.height + LOOK_SHEET.label))
+})
+
+// Plan "10/10" §3 (council 26/10/2026): a photo that carries words is toned itself — local rounds 27–31 had no road to
+// readable words over a photo that a guard check did not fail.
+test('a photo that carries words is toned the least it takes for them to read, within half, or refused', async () => {
+  const flat = async (rgb, width = 400, height = 200) => {
+    const bytes = await sharp({
+      create: { width, height, channels: 3, background: { r: rgb[0], g: rgb[1], b: rgb[2] } }
+    })
+      .jpeg()
+      .toBuffer()
+    return {
+      bytes,
+      ext: 'jpg',
+      width,
+      height,
+      sha256: 'source',
+      recipe: { version: 'sharp-source-variant/1' }
+    }
+  }
+  // a mid-tone photo under light words: darkened a little, to where white reads at 4.5:1, same size
+  const mid = await toneForWords(await flat([150, 120, 90]), 'dark')
+  assert.ok(mid.recipe.tone.change > 0.9 && mid.recipe.tone.change < 1, JSON.stringify(mid.recipe.tone))
+  assert.ok(mid.recipe.tone.after <= TONE.dark.target)
+  assert.notEqual(mid.sha256, 'source')
+  assert.deepEqual(
+    await sharp(mid.bytes)
+      .metadata()
+      .then((m) => [m.width, m.height, m.format]),
+    [400, 200, 'jpeg']
+  )
+  // already dark enough: unchanged bytes, the reading kept
+  const dark = await flat([30, 25, 20])
+  assert.equal((await toneForWords(dark, 'dark')).bytes, dark.bytes)
+  // a bright cream photo would need more than half: refused, with the way out
+  await assert.rejects(toneForWords(await flat([244, 239, 230]), 'dark'), (e) => {
+    assert.equal(e.code, 'AGENT_DEMO_IMAGE_TONE_UNREACHABLE')
+    assert.match(e.why, /calmer, darker photo/)
+    return true
+  })
+  // under dark words: lightened toward white until black reads
+  const light = await toneForWords(await flat([40, 40, 40]), 'light')
+  assert.ok(light.recipe.tone.after >= TONE.light.target && light.recipe.tone.change <= TONE.light.limit)
+  // a transparent cut-out (a logo) is left as cut
+  const logo = { ...(await flat([200, 200, 200])), ext: 'png' }
+  assert.deepEqual((await toneForWords(logo, 'dark')).recipe.tone, { mode: 'dark', skipped: 'transparent' })
+  // the recipe takes tone and says what it must be
+  const recipe = {
+    assetId: 'a',
+    crop: {
+      aspect: 2,
+      source: { width: 400, height: 200 },
+      output: { width: 400, height: 200 },
+      strategy: 'centre'
+    }
+  }
+  assert.equal(agentImageRecipe({ ...recipe, tone: 'dark' }, ['a']).tone, 'dark')
+  assert.throws(
+    () => agentImageRecipe({ ...recipe, tone: 'grey' }, ['a']),
+    (e) => /image\.tone is "dark"/.test(e.why)
+  )
+  // through makeAgentImage: the cut is toned and the refusal keeps its code
+  const source = (await flat([150, 120, 90])).bytes
+  const made = await makeAgentImage(source, { ...recipe, tone: 'dark' })
+  assert.equal(made.recipe.tone.mode, 'dark')
+  const cream = (await flat([244, 239, 230])).bytes
+  await assert.rejects(makeAgentImage(cream, { ...recipe, tone: 'dark' }), {
+    code: 'AGENT_DEMO_IMAGE_TONE_UNREACHABLE'
+  })
 })

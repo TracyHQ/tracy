@@ -1,0 +1,38 @@
+{
+  "id": "REG-PR-1739-pattern-read-as-blocks",
+  "kind": "fix",
+  "title": "A WordPress pattern is read as the blocks it inserts, so a part the build expands to change its words keeps its structure",
+  "pr": 1739,
+  "area": "website-opportunities/agent-demo",
+  "cms": ["wp"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: expandPatterns on a part holding only <!-- wp:pattern {\"slug\":\"t/part-sidebar\"} /-->, whose pattern holds a heading and another pattern; and on a reference the plugin cannot read.",
+    "S2: compareAgentInventory with the frozen part read expanded, against the part stored expanded with its words changed, and against it with one image block added.",
+    "S3: a frozen inventory read before patterns were (no patternsRead, the part as a reference) against an untouched part read expanded, with its reference kept as read."
+  ],
+  "expect": [
+    "S1: both patterns are inlined; the unreadable reference stays as it was.",
+    "S2: changed words pass; the added block fails.",
+    "S3: pass."
+  ],
+  "selectors": {
+    "files": "apps/tracy-web/src/sites/agent-demo-inventory.js",
+    "dom": ""
+  },
+  "evidence": "Local round 33 (26/10/2026, WordPress JA Restaurant): templatePart/sidebar was <!--wp:pattern/--> at install and its expanded blocks after the build changed 'Most Read'; native-structure failed it at checks 4 and 5.",
+  "fence": "expandPatterns (PATTERN_REF, PATTERN_DEPTH, content.get {kind:\"pattern\"}); patternsRead marker; patternsAsRead for frozen inventories read before",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/agent-demo-native-inventory.test.mjs"
+    ],
+    "tests": [
+      "a pattern is read as the blocks it inserts: an expanded part keeps its structure, an added block does not"
+    ],
+    "needs": []
+  }
+}

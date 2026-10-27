@@ -1,0 +1,38 @@
+{
+  "id": "REG-PR-1739-emdash-isolated-setup",
+  "kind": "fix",
+  "title": "EmDash setup borrows and releases the verified host connection to an isolated site",
+  "pr": 1739,
+  "area": "fleet/emdash-provision",
+  "cms": ["em"],
+  "needs": [],
+  "flaky_model": false,
+  "selectors": {
+    "files": "packages/fleet/tracy-fleet-operation/scripts/provision/platform/emdash.sh"
+  },
+  "steps": [
+    "Run the real post-up function with isolated-site, bridged-host and fleet-loopback fixtures.",
+    "Interrupt connect, fail each network/helper boundary, vary host identity and supply an existing connection."
+  ],
+  "expect": [
+    "The site remains on its private network and helpers use its inspected IP, even when a loopback listener appears later.",
+    "Only a running tracy-host on the correct stack borrows a connection; its connection is released on success, helper failure, INT and TERM.",
+    "Preexisting connections survive; failed cleanup cannot report success; fleet loopback does not join a network."
+  ],
+  "evidence": "Local EmDash build 78122c67 failed because the isolated site was absent from the old shared network. The original orchestration failed the new regression before the fix. A real local hook subsequently completed mail, all 80 forms and Content API registration and released the host endpoint.",
+  "fence": "The post-up subshell owns a temporary host endpoint under provision's per-label flock; the site's network and protected-token origin checks stay intact.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "packages/fleet/tracy-fleet-operation/test/emdash-post-up.test.mjs"
+    ],
+    "tests": [
+      "isolated bridge: setup, mail and forms borrow only this host connection and release it",
+      "isolated bridge: interrupting connect releases the lease without running a helper",
+      "isolated bridge: a later loopback listener cannot replace the selected private origin"
+    ]
+  }
+}
