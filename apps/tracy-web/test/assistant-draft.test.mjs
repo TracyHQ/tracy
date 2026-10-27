@@ -45,6 +45,7 @@ test('invalid model output never crosses the boundary', () => {
   for (const delta of [
     { platform: 'drupal' },
     { answersByFeed: { password: 'secret' } },
+    { answersByFeed: { name: 'Hoa Mai', about: 'Bakery' } },
     { answersByFeed: { 'site.name': 12 } },
     { answersByFeed: { 'site.languages': ['vi', 'en'] } },
     { answersByFeed: { 'site.languages': ['unknown'] } },
