@@ -5,7 +5,6 @@
  * `create-brief-sheet.test.mjs` (`fixtures/create-platform-entry.tsx`; only `window.fetch` is mocked).
  */
 import assert from 'node:assert/strict'
-import { currentStep, goToStep, submitCreate } from './wizard-navigation.mjs'
 import { execFileSync } from 'node:child_process'
 import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import http from 'node:http'
@@ -14,6 +13,7 @@ import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { after, before, test } from 'node:test'
 import { fileURLToPath, pathToFileURL } from 'node:url'
+import { currentStep, goToStep, submitCreate } from './wizard-navigation.mjs'
 
 const here = path.dirname(fileURLToPath(import.meta.url))
 const pkgRoot = path.join(here, '..', '..')
@@ -127,7 +127,11 @@ async function withPage(query, run, { prepare, path: at = '/new/s/fixture-sessio
     const pageErrors = []
     page.on('pageerror', (e) => pageErrors.push(e.message))
     await page.goto(`${base}${at}${query ? `?${query}` : ''}`)
-    await page.waitForFunction(() => window.__harness?.registered === true, null, { timeout: 8000 })
+    await page
+      .waitForFunction(() => window.__harness?.registered === true, null, { timeout: 8000 })
+      .catch((error) => {
+        throw new Error(`${error.message}; page errors: ${pageErrors.join('; ')}`)
+      })
     await run(page)
     assert.deepEqual(pageErrors, [], 'no uncaught errors in the page')
   } finally {
@@ -446,6 +450,7 @@ test('pick a system in the sheet: it closes and the card names it; another platf
       await goToStep(page, 'platform')
       await page.getByRole('button', { name: 'EmDash', exact: true }).click()
       await noCardAfter(page, 'tracy-business/emdash-0.x|emdash')
+      await goToStep(page, 'platform')
       await page.getByRole('button', { name: 'Joomla', exact: true }).click()
       await dsState(page)
       assert.equal(await sheet.locator('[data-design-system="default"]').getAttribute('aria-pressed'), 'true')
@@ -937,5 +942,125 @@ test('full-page wizard has no card frame or horizontal overflow and a responsive
           window.__dsLibraryCount = 12
         })
     }
+  )
+})
+
+// A deliberate platform or preview Use press already answers the page's question.
+test('platform selection moves forward once, supports the keyboard and keeps Back editable', async () => {
+  await withPage('', async (page) => {
+    await goToStep(page, 'platform')
+    const wordpress = page.getByRole('button', { name: 'WordPress', exact: true })
+    await wordpress.focus()
+    await page.keyboard.press('ArrowRight')
+    assert.equal(await currentStep(page), 'platform', 'arrow keys never navigate')
+    await wordpress.press('Enter')
+    await page.locator('[data-wizard-current="design"]').waitFor({ timeout: 5000 })
+    await page.waitForFunction(() => document.activeElement?.classList.contains('tas-wizard-title'))
+    await page.locator('[data-wizard-back]').click()
+    assert.equal(await currentStep(page), 'platform')
+    assert.equal(await wordpress.getAttribute('aria-pressed'), 'true')
+    await page.getByRole('button', { name: 'Joomla', exact: true }).click()
+    await page.locator('[data-wizard-current="design"]').waitFor()
+    assert.deepEqual(await page.evaluate(() => window.__harness.posts), [])
+    const folder = process.env.TRACY_TEST_ARTIFACT_DIR
+    if (folder)
+      await page.screenshot({ path: path.join(folder, 'platform-select-and-continue.png'), fullPage: true })
+  })
+})
+
+for (const supports of [true, false]) {
+  test(`Use starting design advances without another Continue (support: ${supports})`, async () => {
+    await withPage(
+      '',
+      async (page) => {
+        await formReady(page)
+        const card = page.locator('[data-start-template="tracy-business"]')
+        await card.click({ position: { x: 12, y: 12 } })
+        assert.equal(await currentStep(page), 'design', 'gallery picks remain available for comparison')
+        await card
+          .locator('..')
+          .getByRole('button', { name: /preview/i })
+          .click()
+        await page.locator('[data-starting-design-use]').click()
+        await page
+          .locator(`[data-wizard-current="${supports ? 'system' : 'address'}"]`)
+          .waitFor({ timeout: 5000 })
+        await page.waitForFunction(() => document.activeElement?.classList.contains('tas-wizard-title'))
+        const folder = process.env.TRACY_TEST_ARTIFACT_DIR
+        if (folder)
+          await page.screenshot({
+            path: path.join(folder, `preview-use-support-${supports}.png`),
+            fullPage: true
+          })
+        await page.locator('[data-wizard-back]').click()
+        assert.equal(await currentStep(page), 'design')
+        assert.equal(await card.getAttribute('aria-pressed'), 'true')
+        assert.deepEqual(await page.evaluate(() => window.__harness.posts), [])
+      },
+      supported(supports ? ['tracy-business/joomla-6'] : [])
+    )
+  })
+}
+
+for (const nextSupported of [true, false]) {
+  test(`Use another template waits for its own support answer (next supported: ${nextSupported})`, async () => {
+    await withPage(
+      '',
+      async (page) => {
+        await formReady(page)
+        await page.waitForFunction(() =>
+          window.__harness.dsSupportCalls.includes('tracy-business/joomla-6|joomla')
+        )
+        await page.evaluate(() => {
+          const fetch = window.fetch
+          window.fetch = async (input, init) => {
+            const url = String(input)
+            if (url.includes('/api/design-system/support') && url.includes('tracy-base')) {
+              window.__supportHeld = true
+              await new Promise((resolve) => {
+                window.__releaseSupport = resolve
+              })
+            }
+            return fetch(input, init)
+          }
+        })
+        const card = page.locator('[data-start-template="tracy"]')
+        await card
+          .locator('..')
+          .getByRole('button', { name: /preview/i })
+          .click()
+        await page.locator('[data-starting-design-use]').click()
+        await page.waitForFunction(() => window.__supportHeld === true)
+        assert.equal(await currentStep(page), 'design', 'the previous template never decides the next step')
+        assert.equal(await page.locator('[data-wizard-continue]').isEnabled(), false)
+        assert.equal(await page.locator('[data-wizard-step]').getAttribute('aria-busy'), 'true')
+        await page.evaluate(() => window.__releaseSupport())
+        await page
+          .locator(`[data-wizard-current="${nextSupported ? 'system' : 'address'}"]`)
+          .waitFor({ timeout: 5000 })
+        assert.deepEqual(await page.evaluate(() => window.__harness.posts), [])
+      },
+      supported(nextSupported ? ['tracy-base/joomla-6'] : ['tracy-business/joomla-6'])
+    )
+  })
+}
+
+test('Use from Review edits the template and returns to Review without creating a site', async () => {
+  await withPage(
+    '',
+    async (page) => {
+      await goToStep(page, 'review')
+      await page.locator('[data-wizard-review-row="design"] button').click()
+      const card = page.locator('[data-start-template="tracy"]')
+      await card
+        .locator('..')
+        .getByRole('button', { name: /preview/i })
+        .click()
+      await page.locator('[data-starting-design-use]').click()
+      await page.locator('[data-wizard-current="review"]').waitFor({ timeout: 5000 })
+      assert.match(await page.locator('[data-wizard-review-row="design"]').innerText(), /Tracy Base/)
+      assert.deepEqual(await page.evaluate(() => window.__harness.posts), [])
+    },
+    supported(['tracy-business/joomla-6', 'tracy-base/joomla-6'])
   )
 })

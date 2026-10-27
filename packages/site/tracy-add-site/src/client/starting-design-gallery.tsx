@@ -14,13 +14,16 @@ export function StartingDesignGallery({
   templates,
   platform,
   selected,
-  onSelect
+  onSelect,
+  onUse
 }: {
   t: Translate
   templates: any[]
   platform: string
   selected: string
   onSelect: (id: string) => void
+  /** The preview's explicit confirmation selects the design and continues the wizard. */
+  onUse: (id: string) => void
 }): JSX.Element {
   const [filter, setFilter] = useState<SystemFilter>(NO_FILTER)
   const [previewId, setPreviewId] = useState<string | null>(null)
@@ -104,7 +107,7 @@ export function StartingDesignGallery({
           platform={platform}
           returnTo={returnTo}
           onUse={() => {
-            onSelect(preview.card.id)
+            onUse(preview.card.id)
             setPreviewId(null)
           }}
           onBack={() => setPreviewId(null)}

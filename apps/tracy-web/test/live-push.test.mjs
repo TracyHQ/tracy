@@ -913,6 +913,56 @@ test(
 )
 
 test(
+  'Send answers once the writes are in: the Sync from live after them starts at once, the push’s lease handed to it',
+  opts,
+  async () => {
+    const { pool } = db
+    const net = network({
+      answers: {
+        ...ANSWERS,
+        'webroot-live-push-preview': {
+          ...PREVIEWED,
+          sync: { ok: true, state: 'applied', unchanged: 'fingerprint' }
+        },
+        'webroot-live-push-apply': { ...PUSHED, sync: { ok: true, state: 'later' } }
+      }
+    })
+    net.running.add('webroot-sync')
+    const { send, cookieFor } = harness(pool, net.fetchImpl)
+    await importedSite(pool)
+    const owner = await cookieFor('owner@x.y')
+    const p = await previewed(send, owner)
+    const started = await send('POST', `/api/sites/${SITE}/push`, owner, { previewId: p.id })
+    assert.equal(started.status, 202, started.text)
+    const apply = [...net.jobs.values()].find((j) => j.kind === 'webroot-live-push-apply')
+    assert.equal(apply.settle, 'later', 'the host is told the sync after the writes is not its to run')
+    const read = await send('GET', `/api/sites/${SITE}/push`, owner)
+    assert.equal(read.body.push.state, 'pushed', read.text)
+    // The sync after the writes: an ordinary Sync from live, running, reading the live site's door.
+    const sync = [...net.jobs.values()].find((j) => j.kind === 'webroot-sync')
+    assert.ok(sync, 'a Sync from live was started')
+    assert.equal(sync.endpoint, LIVE)
+    const { rows } = await pool.query('select id, state from site_sync order by created_at')
+    assert.deepEqual(
+      rows.map((r) => r.state),
+      ['applied', 'running'],
+      'the preview’s sync, then the one after the writes; no row for the push’s own'
+    )
+    const { rows: lease } = await pool.query(
+      'select holder_session from site_write_lease where site_key = $1',
+      [SITE]
+    )
+    assert.equal(
+      lease[0]?.holder_session,
+      `sync:${rows[1].id}`,
+      'the lease went from the push to the sync, never free'
+    )
+    const syncRead = await send('GET', `/api/sites/${SITE}/sync`, owner)
+    assert.equal(syncRead.body.sync.state, 'running')
+  }
+)
+
+test(
   'the Sync from live a push runs is a site_sync row of its own: the Sync from live door reads it, the site’s last write is stamped',
   opts,
   async () => {

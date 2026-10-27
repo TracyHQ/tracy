@@ -2519,6 +2519,11 @@ test('validateWebrootBody: Sync to live takes its preview or push, the live door
   const undo = { kind: 'webroot-live-push-undo', label: 'x', pushId, ...door, byEmail: 'lee@example.com' }
   assert.equal(validateWebrootBody(undo), null)
   assert.equal(validateWebrootBody({ ...undo, previewId }), 'refused previewId')
+  // The Sync from live after the writes left to tracy-web: `later`, and nothing else.
+  assert.equal(validateWebrootBody({ ...apply, settle: 'later' }), null)
+  assert.equal(validateWebrootBody({ ...undo, settle: 'later' }), null)
+  assert.equal(validateWebrootBody({ ...apply, settle: 'now' }), 'refused settle')
+  assert.equal(validateWebrootBody({ ...undo, settle: true }), 'refused settle')
 })
 
 test('runWebrootJob: a push hands the script its ids and the owner’s word as flags, the door and token only in the environment', async () => {
@@ -2546,6 +2551,7 @@ test('runWebrootJob: a push hands the script its ids and the owner’s word as f
       previewId: '0f8e2c1a-1111-4222-8333-444455556666',
       pushId: '1f8e2c1a-1111-4222-8333-444455556666',
       confirm: { deletes: true, php: true },
+      settle: 'later',
       endpoint: 'https://shop.example/index.php?option=com_claudecowork',
       token: 'live-token-abc123',
       byEmail: 'lee@example.com'
@@ -2566,6 +2572,7 @@ test('runWebrootJob: a push hands the script its ids and the owner’s word as f
     '1f8e2c1a-1111-4222-8333-444455556666',
     '--confirm-deletes',
     '--confirm-php',
+    '--settle-later',
     '--by-email',
     'lee@example.com',
     '--by-name',

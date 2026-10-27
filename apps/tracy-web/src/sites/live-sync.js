@@ -24,7 +24,7 @@
  * the agent on the copy can read its database.
  */
 import { randomBytes, randomUUID } from 'node:crypto'
-import { audit, auditSiteWrite, releaseWriteLease, takeWriteLease } from './store.js'
+import { audit, auditSiteWrite, handOverWriteLease, releaseWriteLease, takeWriteLease } from './store.js'
 
 /**
  * The platforms whose adapter passed the merge's cases (plan §4): Joomla, and WordPress with its address
@@ -130,8 +130,10 @@ export function liveSync({
   /**
    * Start a sync of `site`. `allowHeld`: a person saw the live records the last sync held (new on
    * both sites in a table the merge cannot number again) and said to go on keeping the copy's.
+   * `handOver`: the write lease this sync takes from its holder (a Sync to live that just wrote,
+   * `push:<id>`), so nothing writes the copy between the two.
    */
-  async function start(site, { email, name, allowHeld = false }) {
+  async function start(site, { email, name, allowHeld = false, handOver = null }) {
     if (site.origin !== 'migrated') return { refused: { code: 'SYNC_NOT_IMPORTED' }, status: 409 }
     if (!SYNC_PLATFORMS.has(site.platform))
       return { refused: { code: 'SYNC_UNSUPPORTED_PLATFORM', platform: site.platform }, status: 409 }
@@ -142,11 +144,21 @@ export function liveSync({
     const live = await liveCredential(site)
     if (live.why) return { refused: { code: 'SYNC_NO_LIVE_DOOR', why: live.why }, status: 409 }
     const id = randomUUID()
-    const lease = await takeWriteLease(pool, {
-      siteKey: site.site_key,
-      sessionId: `sync:${id}`,
-      actor: email ?? 'sync'
-    })
+    const handed =
+      handOver &&
+      (await handOverWriteLease(pool, {
+        siteKey: site.site_key,
+        from: handOver,
+        to: `sync:${id}`,
+        actor: email ?? 'sync'
+      }))
+    const lease = handed
+      ? { ok: true }
+      : await takeWriteLease(pool, {
+          siteKey: site.site_key,
+          sessionId: `sync:${id}`,
+          actor: email ?? 'sync'
+        })
     if (!lease.ok)
       return { refused: { code: 'SYNC_SITE_BUSY', holder: lease.holder?.holder_actor ?? null }, status: 409 }
     const own = await ensureCopyToken(site, live.cred, email)

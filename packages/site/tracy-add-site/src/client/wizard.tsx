@@ -19,6 +19,9 @@
  * Input, Label, RadioGroup, Separator, Alert. Colours go only through tokens — no `#hex` here, and
  * dark mode follows dsh automatically (DESIGN.md §1.2). The remaining hand-written CSS is in `styles.ts`.
  */
+
+import { interfaceLocale } from '@tracy/core/interface-languages'
+import { uiSwitches } from '@tracy/core/ui-switches'
 import {
   Alert,
   AlertDescription,
@@ -33,7 +36,8 @@ import {
 } from '@tracy/ui'
 import { CheckCircle2, Loader2, XCircle } from 'lucide-react'
 import { type JSX, useEffect, useId, useMemo, useRef, useState, useSyncExternalStore } from 'react'
-
+// The left column's own reading of "which site is this page open on" — reused, not restated.
+import { currentSiteKey, readSites, sharedSites } from '../../../../ui/tracy-sidebar/src/client/sites.mjs'
 import { START_POLL_MS } from './agent-start.mjs'
 import { agentWaitVerdict, buildLanding, pressAgent, watchBuild } from './build-watch.mjs'
 import { CHIP_SELECTED, ChoiceOption, FIELD_LABEL, Note } from './choice'
@@ -48,43 +52,36 @@ import {
   wizardOpened,
   wizardStep
 } from './create'
-import { nativeBriefAnswers, readNativeSeed } from './native-seed.mjs'
-import { forkUrlRefusal, normalizeForkUrl } from './fork-url.mjs'
-import { ImportWizard } from './import-wizard'
-import { readyLanding, workspacePath } from './open-workspace.mjs'
-import { CreateStep, CreateRefusalProblem } from './create-step'
-import { REDIRECT_WAIT_MS, createRefusalGuidance, createRefusalTitle } from './create-step-model.mjs'
-import { ImportProblem } from './import-problems'
-import { interfaceLocale } from '@tracy/core/interface-languages'
-import { DesignSystemCard } from './design-system-card'
 import { createDoneBefore, createEntryStep, createNextStep, createStepIds } from './create-navigation.mjs'
-import { wizardStepName } from './wizard-usage.mjs'
-import { WizardSteps } from './wizard-steps'
-import { WizardFooter } from './wizard-footer'
-import { reviewBusiness, WizardReview } from './wizard-review'
-import { DesignSystemPage } from './design-system-sheet'
+import { CreateRefusalProblem, CreateStep } from './create-step'
+import { createRefusalGuidance, createRefusalTitle, REDIRECT_WAIT_MS } from './create-step-model.mjs'
+import { DesignSystemCard } from './design-system-card'
 import { pickLine, pickOf, quickstartTagOf, swatchesOf } from './design-system-pick.mjs'
 import { PickStep, ReadyPick, usePickRetry } from './design-system-ready'
+import { DesignSystemPage } from './design-system-sheet'
 import { useDesignSystemField } from './design-system-state'
-import { StartingDesignGallery } from './starting-design-gallery'
-import { startingDesignImage } from './starting-design-image.mjs'
-import { applyPress, chosenPlatform, initialPress } from './press-state.mjs'
-import { draftOf, forgetDraft, keepDraft } from './wizard-draft.mjs'
+import { chosenDesign } from './dsh-url'
+import { forkUrlRefusal, normalizeForkUrl } from './fork-url.mjs'
+import { FromBusiness } from './from-business'
+import { keptBusiness } from './from-business-flow.mjs'
+import { ImportProblem } from './import-problems'
+import { recoveryAsk } from './import-recovery.mjs'
+import { ImportWizard } from './import-wizard'
+import { nativeBriefAnswers, readNativeSeed } from './native-seed.mjs'
+import { readyLanding, workspacePath } from './open-workspace.mjs'
 import { CREATE_PLATFORMS, type CreatePlatform, DEFAULT_CREATE_PLATFORM, toggleKeyFor } from './platforms'
+import { applyPress, chosenPlatform, initialPress } from './press-state.mjs'
 import { canFrameCopy } from './preview.mjs'
+import { QuestionsPage, type QuestionsState, QuestionsStatus, type SheetAnswers } from './questions-sheet'
 import {
   backgroundKey,
   clearJob,
   onScreen,
-  rememberSeen,
   pendingForSite,
   readPending,
+  rememberSeen,
   writePending
 } from './resume.mjs'
-// The left column's own reading of "which site is this page open on" — reused, not restated.
-import { currentSiteKey, readSites, sharedSites } from '../../../../ui/tracy-sidebar/src/client/sites.mjs'
-import { useSiteDomain } from './site-domain'
-import { QuestionsStatus, QuestionsPage, type QuestionsState, type SheetAnswers } from './questions-sheet'
 import {
   briefAnswered,
   briefProgress,
@@ -96,7 +93,7 @@ import {
   sheetOrder,
   toBrief
 } from './site-brief.mjs'
-import { recoveryAsk } from './import-recovery.mjs'
+import { useSiteDomain } from './site-domain'
 import { siteLabelRefusal } from './site-label.mjs'
 import {
   appliesTo,
@@ -106,12 +103,15 @@ import {
   START_TEMPLATE,
   startTemplateFrom
 } from './start-template.mjs'
-import { chosenDesign } from './dsh-url'
+import { StartingDesignGallery } from './starting-design-gallery'
+import { startingDesignImage } from './starting-design-image.mjs'
 import { stepsFrom } from './steps.mjs'
 import type { Translate } from './strings'
-import { FromBusiness } from './from-business'
-import { keptBusiness } from './from-business-flow.mjs'
-import { uiSwitches } from '@tracy/core/ui-switches'
+import { draftOf, forgetDraft, keepDraft } from './wizard-draft.mjs'
+import { WizardFooter } from './wizard-footer'
+import { reviewBusiness, WizardReview } from './wizard-review'
+import { WizardSteps } from './wizard-steps'
+import { wizardStepName } from './wizard-usage.mjs'
 
 /**
  * The store for the unfinished-run pointer.
@@ -467,6 +467,7 @@ export function AddSiteWizard({
   // a press of another card must not create from the previous card's template (#386).
   const appliedPress = useRef(pressKey)
   const [wantedDesign, setWantedDesign] = useState<string | undefined>(start.design)
+  const [confirmedDesign, setConfirmedDesign] = useState<string | null>(null)
   useEffect(() => {
     // The address is read again, not kept: the press that named no design wrote it there last.
     const next = applyPress(appliedPress.current, {
@@ -478,6 +479,7 @@ export function AddSiteWizard({
     })
     if (next === null) return
     appliedPress.current = next.key
+    setConfirmedDesign(null)
     if (next.platform !== undefined) setPlatform(next.platform as CreatePlatform)
     if (next.origin !== undefined) setOrigin(next.origin as Origin)
     setWantedDesign(next.design)
@@ -840,6 +842,19 @@ export function AddSiteWizard({
     setWaitingForSupport(false)
     advance()
   }, [waitingForSupport, dsShown, ds.support])
+  // A preview's Use action confirms this design. Wait for its own catalogue/support answer:
+  // the previous card's support must never decide which page follows the newly confirmed card.
+  useEffect(() => {
+    if (confirmedDesign === null) return
+    if (activeStep !== 'design') {
+      setConfirmedDesign(null)
+      return
+    }
+    if ((startCard as { id?: string } | null)?.id !== confirmedDesign) return
+    if (dsShown && ds.support === 'loading') return
+    setConfirmedDesign(null)
+    advance()
+  }, [confirmedDesign, activeStep, startCard, dsShown, ds.support])
   const goBack = () => {
     setCurrentStep(createIds[Math.max(0, createIds.indexOf(activeStep) - 1)])
     setReturnToReview(false)
@@ -1244,7 +1259,7 @@ export function AddSiteWizard({
                   key={step.key}
                   data-done={step.done ? '1' : '0'}
                   className={cn(
-                    'flex items-center gap-2 text-xs font-normal',
+                    'flex items-center gap-2 font-normal text-xs',
                     !step.done && 'text-muted-foreground'
                   )}
                 >
@@ -1666,7 +1681,11 @@ export function AddSiteWizard({
         ref={formRoot}
         className={cn(ROOT, 'tas-wizard-card')}
         data-wizard-step={activeStep}
-        aria-busy={waitingForSupport || (currentStep === 'system' && ds.support === 'loading')}
+        aria-busy={
+          confirmedDesign !== null ||
+          waitingForSupport ||
+          (currentStep === 'system' && ds.support === 'loading')
+        }
         hidden={(shownOrigin === 'import' || shownOrigin === 'business') && currentStep !== 'source'}
         onPointerDownCapture={() => {
           nativeSeedAllowed.current = false
@@ -1764,6 +1783,7 @@ export function AddSiteWizard({
                       onClick={() => {
                         if (!buildsOn(startCard, entry.value)) setWantedDesign(START_TEMPLATE)
                         setPlatform(entry.value)
+                        advance()
                       }}
                     >
                       {entry.label}
@@ -1781,7 +1801,14 @@ export function AddSiteWizard({
                 templates={templates}
                 platform={chosen.value}
                 selected={wantedDesign ?? START_TEMPLATE}
-                onSelect={setWantedDesign}
+                onSelect={(id) => {
+                  setConfirmedDesign(null)
+                  setWantedDesign(id)
+                }}
+                onUse={(id) => {
+                  setWantedDesign(id)
+                  setConfirmedDesign(id)
+                }}
               />
             </div>
           ) : null}
@@ -1987,7 +2014,7 @@ export function AddSiteWizard({
             }
             continueLabel={activeStep === 'review' ? (busy ? t('submitting') : t('submit')) : undefined}
             disabled={Boolean(blocked)}
-            busy={busy || waitingForSupport}
+            busy={busy || waitingForSupport || confirmedDesign !== null}
             onSkip={
               activeStep === 'customize' && asksQuestions && questions.at !== 'unwritable'
                 ? () => {

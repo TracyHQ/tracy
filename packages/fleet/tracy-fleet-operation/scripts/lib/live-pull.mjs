@@ -468,8 +468,9 @@ function rowScanner({ onTuple, onOther }) {
  */
 function rowDigest(skip = null) {
   const hash = createHash('sha256')
+  const other = otherLines((line) => hash.update(line))
   const scan = rowScanner({
-    onOther: (bytes) => hash.update(bytes),
+    onOther: other.write,
     onTuple: (tuple) => {
       if (skip?.test(tuple.toString('utf8'))) return
       hash.update(tuple)
@@ -480,8 +481,33 @@ function rowDigest(skip = null) {
     write: (input) => scan.write(input),
     end() {
       scan.end()
+      other.end()
       return hash.digest('hex')
     }
+  }
+}
+
+/**
+ * A dump's lines outside its rows, whole, each as the table is rather than as its counter stands:
+ * `CREATE TABLE … AUTO_INCREMENT=98679` moves with every row the site inserts — a transient WP-Cron
+ * sets, a row skipped as housekeeping — so with it in, two reads of a WordPress site with nothing new
+ * never had the same digest, and every sync read and merged for a minute (dev, 27/10/2026).
+ */
+const AUTO_INCREMENT = /\sAUTO_INCREMENT=\d+/g
+function otherLines(onLine) {
+  let parts = []
+  const flush = () => {
+    if (!parts.length) return
+    onLine(Buffer.concat(parts).toString('utf8').replace(AUTO_INCREMENT, ''))
+    parts = []
+  }
+  return {
+    // A line can come in two pieces (a chunk ends inside it): held until its newline.
+    write: (bytes) => {
+      parts.push(Buffer.from(bytes))
+      if (bytes[bytes.length - 1] === 10) flush()
+    },
+    end: flush
   }
 }
 
@@ -542,10 +568,11 @@ function rowsMoved(table, pathA, pathB) {
   const place = nameAt(table)
   const rowsOf = (path) => {
     const rows = new Map()
-    let other = createHash('sha256')
+    const other = createHash('sha256')
+    const lines = otherLines((line) => other.update(line))
     let tooMany = false
     const scan = rowScanner({
-      onOther: (bytes) => other.update(bytes),
+      onOther: lines.write,
       onTuple: (tuple) => {
         if (tooMany) return
         const text = tuple.toString('utf8')
@@ -560,6 +587,7 @@ function rowsMoved(table, pathA, pathB) {
     })
     scan.write(readFileSync(path))
     scan.end()
+    lines.end()
     return { rows: tooMany ? null : rows, other: other.digest('hex') }
   }
   const a = rowsOf(pathA)
@@ -764,6 +792,7 @@ async function readDatabase(
     new PullFailed('LIVE_BUSY', `${table} kept changing while it was read`, {
       tables: [{ table, rows: null, count: true, housekeeping: false }]
     })
+  const began = Date.now()
   if (ability.dumpMany) {
     let pending = tables
     for (let attempt = 1; pending.length; attempt++) {
@@ -772,8 +801,7 @@ async function readDatabase(
       pending = pending.filter((t) => !got.get(t).still && counted(t))
       if (pending.length && attempt >= TABLE_READS) throw countBusy(pending[0])
       reread += pending.length
-      if (pending.length)
-        process.stderr.write(`==> live database: ${pending.slice(0, 5).join(', ')} moved while read; again\n`)
+      if (pending.length) note(`database: ${pending.slice(0, 5).join(', ')} moved while read; again`)
     }
   } else
     for (const table of tables) {
@@ -783,9 +811,20 @@ async function readDatabase(
         if (read.still || !counted(table)) break
         if (attempt >= TABLE_READS) throw countBusy(table)
         reread++
-        process.stderr.write(`==> live database: ${table} moved while it was read; reading it again\n`)
+        note(`database: ${table} moved while it was read; reading it again`)
       }
     }
+  // What this read asked the site for and how long it took, the largest tables by rows named: which
+  // table a slow read spends its time on (names and counts only).
+  if (reads.size) {
+    const largest = [...reads]
+      .sort((a, b) => (b[1].rows ?? 0) - (a[1].rows ?? 0))
+      .slice(0, 3)
+      .map(([table, r]) => `${table} ${r.rows ?? 0}`)
+    note(
+      `database: ${reads.size} table(s) asked for in ${Math.round((Date.now() - began) / 100) / 10}s (rows: ${largest.join(', ')})`
+    )
+  }
   const kept = new Map([...(reuse ?? new Map()), ...(previous?.parts ?? []).map((p) => [p.table, p])])
   const parts = all
     .filter((table) => reads.has(table) || kept.has(table))
@@ -837,6 +876,29 @@ async function reusableTables(last, now, dir) {
   for (const [table, { w, path }] of open) {
     await w.close()
     out.set(table, { table, path, digest: digestOf(path, table), rows: null, reused: true })
+  }
+  return out
+}
+
+/** The tables named, each in a file of its own under `dir`, out of a gzipped dump: `Map<table, path>`. */
+async function tablesOf(gzPath, tables, dir) {
+  const out = new Map()
+  if (!tables.size) return out
+  mkdirSync(dir, { recursive: true, mode: 0o700 })
+  const open = new Map()
+  const discard = { write: async () => {}, close: async () => {} }
+  const split = tableSplitter(async (table) => {
+    if (!tables.has(table) || open.has(table)) return discard
+    const path = join(dir, `t${open.size}.sql`)
+    const w = writer(path, false)
+    open.set(table, { w, path })
+    return w
+  })
+  for await (const chunk of createReadStream(gzPath).pipe(createGunzip())) await split.write(chunk)
+  await split.end()
+  for (const [table, { w, path }] of open) {
+    await w.close()
+    out.set(table, path)
   }
   return out
 }
@@ -950,12 +1012,12 @@ async function pullDatabase(endpoint, token, path, scratch, ability, checksumsBe
           digests
         }
       }
-      process.stderr.write(`==> live database: ${moved.slice(0, 5).join(', ')} changed while read; again\n`)
+      note(`database: ${moved.slice(0, 5).join(', ')} changed while read; again`)
       const what = moved.map((table) => differed.get(table) ?? { table, rows: null, housekeeping: false })
       // As with two reads: one more when all that kept moving looks like the site's own housekeeping.
       if (round >= rounds && rounds === DB_ROUNDS && what.every((m) => m.housekeeping)) {
         rounds++
-        process.stderr.write("==> live database: only the site's own housekeeping moved; once more\n")
+        note("database: only the site's own housekeeping moved; once more")
       }
       if (round >= rounds) throw dbBusy(what)
       const was = new Map(read.parts.map((p) => [p.table, p]))
@@ -1005,12 +1067,12 @@ async function pullDatabase(endpoint, token, path, scratch, ability, checksumsBe
         ? rowsMoved(table, partOf.get(table).path, after.parts.find((p) => p.table === table).path)
         : { table, rows: null, housekeeping: false }
     )
-    process.stderr.write(
-      `==> live database: changed between two reads (${what.slice(0, 5).map(movedLine).join('; ') || 'the list of tables'}); reading again\n`
+    note(
+      `database: changed between two reads (${what.slice(0, 5).map(movedLine).join('; ') || 'the list of tables'}); reading again`
     )
     if (round >= rounds && rounds === DB_ROUNDS && what.length && what.every((m) => m.housekeeping)) {
       rounds++
-      process.stderr.write("==> live database: only the site's own housekeeping moved; once more\n")
+      note("database: only the site's own housekeeping moved; once more")
     }
     if (round >= rounds) throw dbBusy(what)
     before = after
@@ -1051,7 +1113,7 @@ async function pullFiles(endpoint, token, path, paths = null) {
     files += packed.files ?? 0
     bytes += packed.bytes ?? 0
     cursor = { path: packed.next_path, offset: packed.next_offset, size: packed.next_size ?? 0 }
-    if (part % 10 === 0) process.stderr.write(`==> live files: ${files} files, ${bytes} bytes\n`)
+    if (part % 10 === 0) note(`files: ${files} files, ${bytes} bytes`)
     if (packed.done) break
   }
   await out.close()
@@ -1261,9 +1323,7 @@ async function pullWebroot(endpoint, token, live, ability, steady = null) {
           listing.set(path, statSync(file).size === f.size ? { ...known, sha1 } : { ...f, moved: true })
         } else if (sha1 !== f.sha1) listing.set(path, { ...f, moved: true })
       }
-      process.stderr.write(
-        `==> live files: ${lot.length} file(s) file.read does not serve, in one cut pack\n`
-      )
+      note(`files: ${lot.length} file(s) file.read does not serve, in one cut pack`)
     }
     if (refused) {
       mode = 'full'
@@ -1326,7 +1386,7 @@ async function pullWebroot(endpoint, token, live, ability, steady = null) {
     if (moved.size === 0) break
     if (round >= FILE_ROUNDS)
       throw filesBusy([...moved], `files kept changing (${[...moved].slice(0, 3).join(', ')})`)
-    process.stderr.write(`==> live files: ${moved.size} changed while they were read; read again\n`)
+    note(`files: ${moved.size} changed while they were read; read again`)
   }
 
   // With the cheap listing, each file's size and mtime too: the next read hashes only what moved.
@@ -1442,13 +1502,20 @@ async function sameRows(endpoint, token, ability, stored, fingerprint, scratch) 
       partial: true
     })
     const was = await dumpDigests(base, new Set(moved))
-    return {
-      same:
-        read.parts.length === moved.length &&
-        read.parts.every((p) => was.has(p.table) && was.get(p.table) === p.digest),
-      tables: moved,
-      rows: read.parts.reduce((n, p) => n + (p.rows ?? 0), 0)
+    const same =
+      read.parts.length === moved.length &&
+      read.parts.every((p) => was.has(p.table) && was.get(p.table) === p.digest)
+    // Which rows differ, by name only (an option's, a meta's key): a WordPress read with nothing new
+    // still went on to read and merge for 60 s, and nothing said which row held it (dev, 27/10/2026).
+    if (!same) {
+      const differs = read.parts.filter((p) => was.get(p.table) !== p.digest).map((p) => p.table)
+      const files = await tablesOf(base, new Set(differs), join(scratch, 'base'))
+      for (const part of read.parts) {
+        const at = files.get(part.table)
+        if (at) note(`compare: ${movedLine(rowsMoved(part.table, at, part.path))}`)
+      }
     }
+    return { same, tables: moved, rows: read.parts.reduce((n, p) => n + (p.rows ?? 0), 0) }
   } finally {
     rmSync(scratch, { recursive: true, force: true })
   }
@@ -1460,6 +1527,16 @@ const readJson = (path) => {
   } catch {
     return null
   }
+}
+
+/**
+ * One line of the read in the job's progress, timed like webroot-sync.sh's steps (`==> [Ns] live read:
+ * …`, seconds since the read began): the host keeps only timed lines, and a read that took 55 s said
+ * nothing of where (dev, 27/10/2026).
+ */
+const READ_STARTED = Date.now()
+function note(text) {
+  process.stderr.write(`==> [${Math.round((Date.now() - READ_STARTED) / 1000)}s] live read: ${text}\n`)
 }
 
 async function main(dir) {
@@ -1489,6 +1566,7 @@ async function main(dir) {
     writeFileSync(join(out, 'fingerprint.json'), JSON.stringify(fingerprint), { mode: 0o600 })
     timing.fingerprint = since(at)
     stored = readJson(process.env.TRACY_SYNC_FINGERPRINT_IN)
+    note(`fingerprint ${timing.fingerprint}s${sameFingerprint(stored, fingerprint) ? ': nothing moved' : ''}`)
     if (sameFingerprint(stored, fingerprint))
       return {
         ok: true,
@@ -1510,16 +1588,16 @@ async function main(dir) {
   const compared = await sameRows(live, token, ability, stored, fingerprint, join(out, 'compare'))
   if (compared) {
     timing.compare = since(at)
-    process.stderr.write(
-      `==> live database: ${compared.tables.slice(0, 5).join(', ')} moved; row by row ${compared.same ? "only the site's own housekeeping: unchanged" : 'a row of substance differs: reading the site'}\n`
+    note(
+      `database: ${compared.tables.slice(0, 5).join(', ')} moved; row by row ${compared.same ? "only the site's own housekeeping: unchanged" : 'a row of substance differs: reading the site'}`
     )
   } else if (comparable(stored, fingerprint)) {
     // Why the whole database is read although a fingerprint was there to compare with: the tables that
     // moved since (names only), and whether the files did. A WordPress sync read 35 s with nothing new
     // and its log did not say which table moved (dev, 26/10/2026).
     const moved = movedTables(stored.tables, fingerprint.tables, isNoise) ?? []
-    process.stderr.write(
-      `==> live database: moved since the last read: ${moved.slice(0, 8).join(', ') || 'no table'}${moved.length > 8 ? ` (+${moved.length - 8})` : ''}; files ${sameFiles(stored, fingerprint) ? 'unchanged' : 'moved'}\n`
+    note(
+      `database: moved since the last read: ${moved.slice(0, 8).join(', ') || 'no table'}${moved.length > 8 ? ` (+${moved.length - 8})` : ''}; files ${sameFiles(stored, fingerprint) ? 'unchanged' : 'moved'}`
     )
   }
   if (compared?.same)
@@ -1548,6 +1626,9 @@ async function main(dir) {
       : null
   )
   timing.database = since(at)
+  note(
+    `database ${timing.database}s: ${db.tablesRead ?? db.tables ?? '?'} of ${db.tables ?? '?'} table(s) read, ${db.dbRounds ?? '?'} round(s) (${db.dbCheck ?? '?'})`
+  )
   at = Date.now()
   // The files did not move since the fingerprint compared with (the import's, or the last applied
   // read's): every page of the walk the same. The webroot is not read at all — the tree compared
@@ -1588,6 +1669,7 @@ async function main(dir) {
         : null
     )
   timing.files = since(at)
+  note(`files ${timing.files}s: ${files.mode ?? '?'}, ${files.read ?? 0} read, ${files.deleted ?? 0} gone`)
   // No fingerprint to ask (an older engine): nothing read differs from the last read, table by
   // table and file by file — the same answer, after the read instead of before it.
   let unchanged = null

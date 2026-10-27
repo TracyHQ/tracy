@@ -27,8 +27,14 @@ Stage lines, exactly in the form `==> [Ns] stage: <name>` (web reads the name to
 | job | stages, in order |
 |---|---|
 | preview | `syncing` (Sync from live) → `comparing` (compute the changeset) |
-| apply | `writing` (write to live) → `settling` (Sync from live after writing; absent when no item was written) |
-| undo | `undoing` (revert on live) → `settling` |
+| apply | `writing` (write to live) → `settling` (Sync from live after writing; absent when no item was written, and with `settle: "later"`) |
+| undo | `undoing` (revert on live) → `settling` (same) |
+
+`settle: "later"` (apply, undo; `--settle-later`, 27/10/2026): the job answers as soon as the writes are done, with
+`"sync": {"ok": true, "state": "later"}`. tracy-web then starts the Sync from live itself (`webroot-sync`, an ordinary
+`site_sync` row), handing the push's write lease `push:<id>` to it as `sync:<id>` in one statement, so no Apply runs between
+the writes and that sync. `sync/pushed.json` waits for it exactly as for the sync inside the job. The Owner no longer waits
+for a whole Sync from live (60–90 s on WordPress) to see what was written.
 Token and endpoint reach the script only through environment variables (`TRACY_SYNC_ENDPOINT`, `TRACY_SYNC_TOKEN`), never argv,
 never the job record, never the answer.
 
@@ -178,7 +184,8 @@ Cut off midway (deploy) → calling again with the same `pushId` continues from 
   "sync": { "ok": true, "state": "applied", "liveReadAt": "…", "version": 13, "timing": { "seconds": 38 }, … },
                                     // the FULL answer of Sync from live after the push (as in preview); ok:false →
                                     // live has changed, the copy catches up on the next Sync; {"ok":true,"state":"skipped"} when
-                                    // no item was written (no sync; the web writes no site_sync row for it)
+                                    // no item was written (no sync; the web writes no site_sync row for it);
+                                    // {"ok":true,"state":"later"} with `settle: "later"`: tracy-web runs it next
   "applyId": "tracy-push-<pushId>"  // apply_id in the engine's undo journal on the real site
 }
 ```

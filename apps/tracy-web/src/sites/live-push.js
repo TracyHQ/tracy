@@ -366,10 +366,13 @@ export function livePush({
       const stage = step ? pushStageOf(step) : null
       return stage && stage !== row.step ? update(row.id, { step: stage }) : row
     }
-    await release(site, row.id)
     // A job that ended with no answer of its own still said why in its progress
     // (`==> [Ns] <phase> stopped: CODE: why`, webroot-live-push.sh `said_stop`): kept as its answer.
     const said = lastJson(job.output) ?? stoppedAnswer(job)
+    // Writes done and their Sync from live left to tracy-web (`sync: {state: 'later'}`): the lease goes
+    // on to that sync (`recordSync`), never back to the agent in between.
+    if (!(job.state === 'done' && said?.ok === true && said?.sync?.state === 'later'))
+      await release(site, row.id)
     if (job.state === 'failed' && job.orphanedAt != null)
       return ended(site, row, { state: 'failed', error: 'PUSH_INTERRUPTED', said })
     if (job.state !== 'done' || !said)
@@ -481,6 +484,19 @@ export function livePush({
     // A push that wrote nothing ran no sync (contract §3 `{"ok":true,"state":"skipped"}`): no row. Filed
     // as a failed sync, it became the site's newest one and Sync from live read "failed" (dev, 26/10/2026).
     if (s.ok !== false && s.state === 'skipped') return
+    // The writes are in and the Owner has the answer; the Sync from live that takes them in as the base
+    // runs now as an ordinary sync, the push's lease handed to it. Refused (the copy's token could not
+    // be set): the lease goes back, and the next sync or preview takes the pushed places in the same way
+    // (`sync/pushed.json`).
+    if (s.ok !== false && s.state === 'later') {
+      const started = await sync.start(site, {
+        email: actor ?? undefined,
+        name: actor ?? undefined,
+        handOver: leaseOf(row.id)
+      })
+      if (!started?.row) await release(site, row.id)
+      return
+    }
     const state =
       s.ok === false
         ? 'failed'

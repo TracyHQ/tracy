@@ -413,8 +413,8 @@ function validateLivePush(body, { exportOverHttp = false } = {}) {
   const kind = body.kind
   const allowed = {
     'webroot-live-push-preview': ['previewId', 'baseWebrootUrl', 'baseDbUrl', 'baseFingerprint'],
-    'webroot-live-push-apply': ['previewId', 'pushId', 'confirm'],
-    'webroot-live-push-undo': ['pushId']
+    'webroot-live-push-apply': ['previewId', 'pushId', 'confirm', 'settle'],
+    'webroot-live-push-undo': ['pushId', 'settle']
   }[kind]
   for (const key of ['previewId', 'pushId']) {
     if (!allowed.includes(key)) continue
@@ -459,6 +459,9 @@ function validateLivePush(body, { exportOverHttp = false } = {}) {
     )
       return 'refused confirm'
   }
+  // `later`: the Sync from live after the writes is tracy-web's to start, once the answer is in.
+  if (allowed.includes('settle') && body.settle !== undefined && body.settle !== 'later')
+    return 'refused settle'
   if (body.byEmail !== undefined && (typeof body.byEmail !== 'string' || body.byEmail.length > 254))
     return 'refused byEmail'
   if (body.byName !== undefined && (typeof body.byName !== 'string' || body.byName.length > 200))
@@ -752,6 +755,7 @@ export async function runWebrootJob({ jobId, body, config, jobs, run }) {
     if (body.confirm?.deletes === true) args.push('--confirm-deletes')
     // The owner's own OK for the preview's PHP files (each linted for the live site's PHP first).
     if (body.confirm?.php === true) args.push('--confirm-php')
+    if (body.settle === 'later') args.push('--settle-later')
     if (body.byEmail)
       args.push('--by-email', String(body.byEmail), '--by-name', String(body.byName || body.byEmail))
     jobEnv.TRACY_SYNC_ENDPOINT = String(body.endpoint)

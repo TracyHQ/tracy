@@ -663,6 +663,61 @@ test('preview, apply, a second preview and Undo: the copy’s changes reach the 
   }
 })
 
+test('--settle-later: the answer comes once the writes are in; the Sync from live after them, run on its own, brings nothing back twice', {
+  ...opts,
+  timeout: 900_000
+}, async () => {
+  const s = stack()
+  const engine = await liveEngine(s.live)
+  try {
+    sql(
+      "INSERT INTO jos_content (id, title, alias, introtext, `fulltext`) VALUES (3, 'Tracy news', 'tracy-news', 'new by Tracy', '')",
+      'joomla'
+    )
+    sql(
+      "INSERT INTO jos_content (title, alias, introtext, `fulltext`) VALUES ('Customer news', 'customer-news', 'by the customer', '')",
+      'livesrc'
+    )
+    const previewId = id()
+    const { answer: preview } = await s.runPush(['--op', 'preview', '--preview-id', previewId], engine)
+    assert.equal(preview.state, 'ready', JSON.stringify(preview))
+    const pushId = id()
+    const { answer: pushed, log } = await s.runPush(
+      ['--op', 'apply', '--preview-id', previewId, '--push-id', pushId, '--settle-later'],
+      engine
+    )
+    assert.equal(pushed.ok, true, JSON.stringify(pushed))
+    assert.deepEqual(
+      pushed.written.map((w) => w.id),
+      ['article:new:3']
+    )
+    assert.deepEqual(pushed.sync, { ok: true, state: 'later' })
+    assert.doesNotMatch(log, /stage: settling/, 'no Sync from live inside the apply')
+    assert.ok(existsSync(join(s.priv, 'sync', 'pushed.json')), 'the pushed places wait for the next sync')
+    // tracy-web's Sync from live, right after: the live site's copy of Tracy's article is the copy's own.
+    const dir = join(s.srv, 'later')
+    mkdirSync(dir)
+    const sync = s.runSync(SYNC, ['--op', 'sync', '--dir', dir], {
+      TRACY_SYNC_ENDPOINT: engine.endpoint,
+      TRACY_SYNC_TOKEN: TOKEN
+    })
+    assert.equal(sync.state, 'applied', JSON.stringify(sync))
+    assert.deepEqual(rows('SELECT id, title FROM jos_content ORDER BY id'), [
+      ['1', 'Hello'],
+      ['2', 'About'],
+      ['3', 'Tracy news'],
+      ['4', 'Customer news']
+    ])
+    assert.ok(!existsSync(join(s.priv, 'sync', 'pushed.json')), 'the read in place holds the push')
+    // The next preview offers nothing: the push is in the base.
+    const { answer: second } = await s.runPush(['--op', 'preview', '--preview-id', id()], engine)
+    assert.equal(second.state, 'nothing', JSON.stringify(second.items))
+  } finally {
+    await engine.close()
+    s.dispose()
+  }
+})
+
 test('template files: a template’s own CSS goes through the live site’s template door, a new one too; Undo takes both back, the copy keeps them', {
   ...opts,
   timeout: 900_000

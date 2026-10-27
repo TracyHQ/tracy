@@ -15,7 +15,7 @@
 #       a sync held for a person stops here (SYNC_NEEDS_ATTENTION). Then, under the site's lock, the
 #       changeset (lib/live_push.py): copy − base, kind by kind, in the live site's numbers and
 #       address, with what cannot be pushed named. Kept in <private>/push/previews/P/.
-#   --op apply --preview-id P --push-id U [--confirm-deletes] [--confirm-php]
+#   --op apply --preview-id P --push-id U [--confirm-deletes] [--confirm-php] [--settle-later]
 #       Refuses PREVIEW_STALE when the copy, the base or the id map moved since the preview. Then each
 #       item on the live site (lib/live-write.mjs): written only where the live site still holds the
 #       base's value, else a conflict; at most 200 items; deletes only when confirmed. What the live
@@ -23,7 +23,7 @@
 #       site gave new records join `sync/id-map.json`, the places written join `sync/pushed.json`
 #       (the next merge takes them as base: lib/live_sync.py `seed_pushed`), and Sync from live runs
 #       again so the base is the live site with the push in it.
-#   --op undo --push-id U
+#   --op undo --push-id U [--settle-later]
 #       Each written item back to what it was before — only where the live site still holds what the
 #       push left; then Sync from live. The copy keeps Tracy's change.
 #
@@ -42,7 +42,7 @@ LIB_DIR="${TRACY_LIB_DIR:-$HERE/../lib}"
 # shellcheck source=../lib/site-backup.sh
 . "$LIB_DIR/site-backup.sh"
 
-LABEL="" OP="" PREVIEW_ID="" PUSH_ID="" CONFIRM_DELETES=0 CONFIRM_PHP=0 BY_NAME="" BY_EMAIL=""
+LABEL="" OP="" PREVIEW_ID="" PUSH_ID="" CONFIRM_DELETES=0 CONFIRM_PHP=0 SETTLE_LATER=0 BY_NAME="" BY_EMAIL=""
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --label) LABEL="$2"; shift 2 ;;
@@ -51,6 +51,7 @@ while [[ $# -gt 0 ]]; do
     --push-id) PUSH_ID="$2"; shift 2 ;;
     --confirm-deletes) CONFIRM_DELETES=1; shift ;;
     --confirm-php) CONFIRM_PHP=1; shift ;;
+    --settle-later) SETTLE_LATER=1; shift ;;
     --by-name) BY_NAME="$2"; shift 2 ;;
     --by-email) BY_EMAIL="$2"; shift 2 ;;
     *) echo "unknown flag: $1" >&2; exit 2 ;;
@@ -351,12 +352,22 @@ PYEOF
       --id-map "$ID_MAP" --pushed "$PUSHED" >&2
     touch "$PUSH_DIR/recorded"
   fi
-  step "stage: settling"
-  if [[ "$written" -gt 0 ]]; then forward_sync "$PUSH_DIR/sync"; else echo '{"ok":true,"state":"skipped"}' > "$PUSH_DIR/sync.json"; fi
+  settle_after "$written"
   rm -rf "$PUSH_DIR/sync"
   finish "$PUSH_DIR/written.json" "$PUSH_DIR/result.json"
   rm -rf "$PREVIEW_DIR"
   cat "$PUSH_DIR/result.json"; echo
+}
+
+# The Sync from live after the writes (the live site's new values become the base, and what the push
+# made is not read back as the customer's): here, or `later` — tracy-web starts it as an ordinary sync
+# the moment the answer is in, the site's write lease handed over to it, so the Owner is not kept
+# waiting on it (`--settle-later`). None when nothing was written.
+settle_after() { # count written or restored
+  if [[ "$1" -eq 0 ]]; then echo '{"ok":true,"state":"skipped"}' > "$PUSH_DIR/sync.json"; return; fi
+  if [[ "$SETTLE_LATER" == 1 ]]; then echo '{"ok":true,"state":"later"}' > "$PUSH_DIR/sync.json"; return; fi
+  step "stage: settling"
+  forward_sync "$PUSH_DIR/sync"
 }
 
 # What moved since the preview, or nothing: the copy's files, its database, the base, the id map.
@@ -416,8 +427,7 @@ undo() {
       --id-map "$ID_MAP" --pushed "$PUSHED" --undo >&2
     touch "$PUSH_DIR/undo-recorded"
   fi
-  step "stage: settling"
-  if [[ "$restored" -gt 0 ]]; then forward_sync "$PUSH_DIR/sync"; else echo '{"ok":true,"state":"skipped"}' > "$PUSH_DIR/sync.json"; fi
+  settle_after "$restored"
   rm -rf "$PUSH_DIR/sync"
   finish "$PUSH_DIR/restored.json" "$PUSH_DIR/undone.json"
   cat "$PUSH_DIR/undone.json"; echo

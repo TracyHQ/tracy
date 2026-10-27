@@ -152,6 +152,9 @@ async function engine(options = {}) {
             const all = db[table]
             const start = row === null ? 0 : all.findIndex((r) => String(r[0]) === row) + 1
             if (start === 0) sql += `-- table \`${table}\`\nDROP TABLE IF EXISTS \`${table}\`;\n`
+            // As MariaDB's dumper writes it: the table, with the counter its next insert takes.
+            if (start === 0 && options.createTables)
+              sql += `CREATE TABLE \`${table}\` (\n  \`id\` bigint(20) unsigned NOT NULL AUTO_INCREMENT,\n  PRIMARY KEY (\`id\`)\n) ENGINE=InnoDB AUTO_INCREMENT=${Math.max(0, ...all.map((r) => Number(r[0]) || 0)) + 1} DEFAULT CHARSET=utf8mb4;\n`
             const page = all.slice(start, start + per)
             if (page.length)
               sql += `INSERT INTO \`${table}\` VALUES ${page.map((r) => `(${r.map((v) => `'${v}'`).join(',')})`).join(',')};\n`
@@ -1434,7 +1437,8 @@ test("with table checksums, a WordPress site's own housekeeping moving wp_option
 })
 
 test('a WordPress site whose only moves since the last read are its own housekeeping is answered unchanged by its rows, early; a real option edit is read', async () => {
-  const site = await wpEngine({ modern: true, fpVersion: 2 })
+  // Its tables as MariaDB dumps them: a transient set moves `AUTO_INCREMENT`, which says nothing.
+  const site = await wpEngine({ modern: true, fpVersion: 2, createTables: true })
   site.db.wp_terms = [[1, 'Uncategorized', 'uncategorized']]
   try {
     const first = join(root, 'wp-rows-first')
@@ -1475,6 +1479,10 @@ test('a WordPress site whose only moves since the last read are its own housekee
     assert.equal(edited.answer.mode, 'files-unchanged')
     assert.match(dump(join(root, 'wp-rows-edited')), /'blogname','Shop & Co'/)
     assert.match(edited.err, /a row of substance differs: reading the site/)
+    // Which row, by its name alone (never its value), in a timed line the host keeps; the cron tick beside
+    // it is the site's own and not named.
+    assert.match(edited.err, /^==> \[\d+s\] live read: compare: wp_options \(blogname\)$/m)
+    assert.doesNotMatch(edited.err, /Shop & Co/)
     // A post edited: its table has a rule too (auto-drafts), and the post differs row by row.
     site.db.wp_options[0][2] = 'Shop'
     site.db.wp_posts[0][5] = 'Hello again'

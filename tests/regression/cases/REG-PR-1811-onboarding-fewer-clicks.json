@@ -1,0 +1,28 @@
+{
+  "id": "REG-PR-1811-onboarding-fewer-clicks",
+  "kind": "fix",
+  "title": "Explicit platform and preview Use choices continue once while preserving comparison, support ordering and Review",
+  "pr": 1811,
+  "area": "onboarding/add-site",
+  "cms": ["any"],
+  "needs": ["browser"],
+  "flaky_model": false,
+  "steps": [
+    "Run tests/regression/scripts/REG-PR-1811-onboarding-fewer-clicks.mjs; it starts the real wizard/CSS browser fixture with API mocks and closes its browser/server."
+  ],
+  "expect": [
+    "Platform Enter continues once; arrows do not navigate; Back preserves the choice.",
+    "Preview Use continues to system/address according to the selected template; ordinary gallery selection stays available for comparison.",
+    "A delayed support response for a newly used template cannot reuse the previous template's response.",
+    "Editing a template from Review returns to Review, with no create request before confirmation."
+  ],
+  "selectors": {
+    "step": "[data-wizard-current]",
+    "use": "[data-starting-design-use]",
+    "platform": "[data-wizard-current=platform]",
+    "back": "[data-wizard-back]"
+  },
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-1811-onboarding-fewer-clicks.mjs"]
+  }
+}

@@ -86,17 +86,20 @@ export function jobBody(
       ...(baseFingerprint && typeof baseFingerprint === 'object' ? { baseFingerprint } : {}),
       ...by
     }
+  // The Sync from live after an apply or an undo is not the Owner's to wait for: the host answers once
+  // the writes are done (`sync: {state: 'later'}`) and tracy-web starts it, the lease handed over.
   if (phase === 'apply')
     return {
       kind: PUSH_KINDS.apply,
       previewId: id,
       pushId: id,
       confirm: { deletes: deletes === true, php: php === true },
+      settle: 'later',
       endpoint,
       token,
       ...by
     }
-  return { kind: PUSH_KINDS.undo, pushId: id, endpoint, token, ...by }
+  return { kind: PUSH_KINDS.undo, pushId: id, settle: 'later', endpoint, token, ...by }
 }
 
 /** The state a phase's answer settles its row in, or null for a failure. */

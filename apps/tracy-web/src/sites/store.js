@@ -1066,6 +1066,22 @@ export async function takeWriteLease(pool, { siteKey, sessionId, actor, turnId =
  * @param {import('pg').Pool} pool @param {{ siteKey: string, sessionId: string, actor?: string|null, turnId?: string|null }} who
  * @returns {Promise<boolean>} whether a hold was given back.
  */
+/**
+ * The site's write lease passed from one holder to the next in one statement (a Sync to live's
+ * `push:<id>` to the Sync from live after it, `sync:<id>`): no moment in which an Apply could take the
+ * site between them. False when `from` no longer holds it.
+ */
+export async function handOverWriteLease(pool, { siteKey, from, to, actor }) {
+  const { rowCount } = await pool.query(
+    `update site_write_lease
+        set holder_session = $3, holder_actor = $4, taken_at = now(), wrote_at = now(), updated_at = now(),
+            holder_turn_root = null, holder_turn = null
+      where site_key = $1 and holder_session = $2`,
+    [siteKey, from, to, actor]
+  )
+  return (rowCount ?? 0) > 0
+}
+
 export async function releaseWriteLease(pool, { siteKey, sessionId, actor = null, turnId = null }) {
   const turn = parseTurnId(turnId)
   const { rowCount } = await pool.query(
