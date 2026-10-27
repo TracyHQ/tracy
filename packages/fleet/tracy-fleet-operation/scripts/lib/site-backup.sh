@@ -249,15 +249,20 @@ _tracy_dump_mysql() {
   [ "$n" -gt 0 ] || { BK_ERROR="database $db has no tables"; return 1; }
   local rc
   set +e
-  # gzip -6 on the host's cores (lib/pgzip.py): one core of gzip was most of a dump's time.
-  ( umask 077
-    ( cd "$STACK" && docker compose exec -T -e MYSQL_PWD="$(_tracy_env_value DB_PASSWORD)" db \
-        mariadb-dump -uroot --single-transaction --quick --routines --triggers --events \
-          --max-allowed-packet=256M ${ignore[@]+"${ignore[@]}"} "$db" ) | python3 "$_TRACY_BACKUP_LIB/pgzip.py" -6 > "$tmp"
-    rcs=("${PIPESTATUS[@]}")
-    [ "${rcs[1]}" = 0 ] || exit 1
-    exit "${rcs[0]}" )
-  rc=$?
+  if [ -n "${TRACY_BACKUP_SCHEMA:-}" ] && [ "${TRACY_DUMP_STREAMS:-4}" -gt 1 ] && [ "$n" -gt 1 ] \
+      && _tracy_dump_parts "$db" "$tmp" "${TRACY_DUMP_STREAMS:-4}" "${tables[@]}"; then
+    rc=0
+  else
+    # gzip -6 on the host's cores (lib/pgzip.py): one core of gzip was most of a dump's time.
+    ( umask 077
+      ( cd "$STACK" && docker compose exec -T -e MYSQL_PWD="$(_tracy_env_value DB_PASSWORD)" db \
+          mariadb-dump -uroot --single-transaction --quick --routines --triggers --events \
+            --max-allowed-packet=256M ${ignore[@]+"${ignore[@]}"} "$db" ) | python3 "$_TRACY_BACKUP_LIB/pgzip.py" -6 > "$tmp"
+      rcs=("${PIPESTATUS[@]}")
+      [ "${rcs[1]}" = 0 ] || exit 1
+      exit "${rcs[0]}" )
+    rc=$?
+  fi
   set -e
   # One read of the file proves both: gunzip checks every byte against the CRC (what `gzip -t` did
   # on a read of its own), and the dump's last line says mariadb-dump got to its end.
@@ -291,6 +296,67 @@ _tracy_dump_sqlite() {
   mv "$dir/.v$version.uploads.tar.gz.tmp" "$dir/v$version.uploads.tar.gz"
   chmod 600 "$dir/v$version.sqlite.gz" "$dir/v$version.uploads.tar.gz"
   _tracy_dump_record "$dir/v$version.sqlite.gz" sqlite "$n" "$dir/v$version.uploads.tar.gz"
+}
+
+# _tracy_dump_parts <schema> <out.gz> <streams> <table…>: a scratch schema nobody writes (a sync's
+# result, `webroot-backup.sh --op create-from`) dumped in parts side by side — its tables shared out
+# by size among <streams> mariadb-dumps, then its routines and events alone — each part a gzip member
+# of <out.gz>, in that order. One mariadb-dump of a WordPress result took 9–13 s of every sync, the
+# database's other core idle (dev, 28/10/2026). Each part is a whole mariadb-dump of its own (its
+# head sets FOREIGN_KEY_CHECKS=0 and its tail puts it back), so the file loads in one stream as the
+# one dump did, and `dump_tables.py` cuts it part after part. Not for a schema a site writes: each
+# part is a transaction of its own. 1 (nothing written) when the schema holds a view or a part did
+# not end as mariadb-dump ends; the caller then dumps it the one way.
+_tracy_dump_parts() {
+  local db="$1" out="$2" k="$3" sizes shares i f names one failed=0 pids=() pid
+  shift 3
+  [ "$(tracy_db_exec mariadb -uroot -N -B -e \
+      "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema='$db' AND table_type<>'BASE TABLE'" 2>/dev/null)" = 0 ] || return 1
+  sizes="$(tracy_db_exec mariadb -uroot -N -B -e \
+      "SELECT table_name, IFNULL(data_length, 0) FROM information_schema.tables WHERE table_schema='$db' AND table_type='BASE TABLE'" 2>/dev/null)" || return 1
+  shares="$(mktemp -d "/tmp/backup-parts-$LABEL.XXXXXX")"
+  printf '%s\n' "$@" | python3 -c 'import os, sys
+out, k, sizes = sys.argv[1], int(sys.argv[2]), {}
+for line in sys.argv[3].splitlines():
+    name, _, size = line.partition("\t")
+    sizes[name] = int(size) if size.isdigit() else 0
+names = [l.rstrip("\n") for l in sys.stdin if l.strip()]
+names.sort(key=lambda t: -sizes.get(t, 0))
+k = max(1, min(k, len(names)))
+shares, weight = [[] for _ in range(k)], [0] * k
+for name in names:
+    i = weight.index(min(weight))
+    shares[i].append(name)
+    weight[i] += sizes.get(name, 0) + 1
+for i, share in enumerate(shares):
+    open(os.path.join(out, str(i)), "w").write("".join(n + "\n" for n in share))' "$shares" "$k" "$sizes" || { rm -rf "$shares"; return 1; }
+  i=0
+  for f in "$shares"/[0-9]*; do
+    names=()
+    while IFS= read -r one; do names+=("$one"); done < "$f"
+    ( set -o pipefail; umask 077
+      ( cd "$STACK" && docker compose exec -T -e MYSQL_PWD="$(_tracy_env_value DB_PASSWORD)" db \
+          mariadb-dump -uroot --single-transaction --quick --triggers --skip-routines --skip-events \
+            --max-allowed-packet=256M "$db" "${names[@]}" ) | gzip -6 > "$shares/part-$i.gz" ) & pids+=("$!")
+    i=$((i + 1))
+  done
+  ( set -o pipefail; umask 077
+    ( cd "$STACK" && docker compose exec -T -e MYSQL_PWD="$(_tracy_env_value DB_PASSWORD)" db \
+        mariadb-dump -uroot --no-data --no-create-info --skip-triggers --routines --events "$db" ) \
+      | gzip -6 > "$shares/part-z.gz" ) & pids+=("$!")
+  for pid in "${pids[@]}"; do wait "$pid" || failed=1; done
+  # Every part read back whole (gunzip checks each byte) and ending as mariadb-dump ends.
+  for f in "$shares"/part-*.gz; do
+    [ "$failed" = 0 ] || break
+    (set -o pipefail; gzip -dc "$f" 2>/dev/null | tail -c 200 | grep 'Dump completed' >/dev/null) || failed=1
+  done
+  if [ "$failed" = 0 ]; then
+    local parts=() j
+    for ((j = 0; j < i; j++)); do parts+=("$shares/part-$j.gz"); done
+    ( umask 077; cat "${parts[@]}" "$shares/part-z.gz" > "$out" ) || failed=1
+  fi
+  rm -rf "$shares"
+  [ "$failed" = 0 ] || { rm -f "$out"; return 1; }
 }
 
 _tracy_dump_record() {

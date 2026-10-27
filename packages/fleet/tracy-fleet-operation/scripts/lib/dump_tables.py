@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """A mariadb-dump stream cut to the tables named: its head (the session settings), each named
 table's section (structure, rows and its triggers) and its tail. Routines, events and every other
-table are left out. Reads stdin, writes stdout; the number of tables kept goes to the file named
+table are left out. A dump in parts (one mariadb-dump after another, each with its head and tail)
+is cut part after part. Reads stdin, writes stdout; the number of tables kept goes to the file named
 by --count.
 
   gzip -dc v12.mysql.gz | python3 dump_tables.py --tables tables.txt --count n.txt | mariadb scratch
@@ -28,8 +29,12 @@ def cut(src, out, wanted: set[str]) -> int:
     tail = False
     for line in src:
         if tail:
-            out.write(line)
-            continue
+            # A dump in parts (site-backup.sh `_tracy_dump_parts`): the next part's tables, views,
+            # routines or events come after this part's tail, and are cut like the first part's.
+            if not (SECTION.match(line) or line.startswith(VIEW) or line.startswith(END[:2])):
+                out.write(line)
+                continue
+            tail = False
         if line.startswith(END):
             # Routines and events are the schema's, not a table's: skipped up to the tail; the tail
             # itself (the settings put back) is kept. A stray `--` comment line between costs nothing.

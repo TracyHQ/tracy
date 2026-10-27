@@ -773,6 +773,75 @@ test(
   }
 )
 
+test(
+  "MariaDB: a sync's result point is dumped in parts side by side, and puts the site in place by its changed tables or whole",
+  mysqlOpts,
+  () => {
+    freshWordpress()
+    const s = stack('wordpress')
+    try {
+      s.run(GIT, ['--op', 'ensure'])
+      s.backup(['--op', 'initial-backup'])
+      // A sync's result in its scratch schema: the site's tables, one holding a post from the live site.
+      sql('DROP DATABASE IF EXISTS wordpress_tracy_result; CREATE DATABASE wordpress_tracy_result')
+      sql(
+        "CREATE TABLE wp_posts LIKE wordpress.wp_posts; INSERT INTO wp_posts SELECT * FROM wordpress.wp_posts; INSERT INTO wp_posts (title) VALUES ('From live'); CREATE TABLE wp_options LIKE wordpress.wp_options; INSERT INTO wp_options SELECT * FROM wordpress.wp_options",
+        'wordpress_tracy_result'
+      )
+      sql(
+        "CREATE TRIGGER wp_posts_keep BEFORE INSERT ON wp_posts FOR EACH ROW SET NEW.title = CONCAT(NEW.title, '')",
+        'wordpress_tracy_result'
+      )
+      const head = s.git('rev-parse', 'HEAD').trim()
+      const made = s.backup(
+        [
+          '--op',
+          'create-from',
+          '--commit',
+          head,
+          '--schema',
+          'wordpress_tracy_result',
+          '--title',
+          'Sync from live'
+        ],
+        { TRACY_DUMP_STREAMS: '3' }
+      )
+      assert.equal(made.ok, true, JSON.stringify(made))
+      const dump = execFileSync('gzip', ['-dc', join(s.backups, `v${made.version}.mysql.gz`)], {
+        encoding: 'utf8'
+      })
+      assert.equal((dump.match(/^-- MariaDB dump/gm) ?? []).length, 3, 'a part a table, then the routines')
+      assert.match(dump, /TRIGGER `?wp_posts_keep`? BEFORE INSERT/, 'with its table, in its part')
+      assert.match(dump, /-- Dump completed on [^\n]*\n$/)
+      assert.match(
+        s.git('tag', '-l', '--format=%(contents)', `tracy-release/v${made.version}`),
+        /^Tracy-Database: sha256:[0-9a-f]{64} size:\d+ kind:mysql tables:2$/m
+      )
+      // As a sync puts it in place: the table it changed alone.
+      const only = join(s.srv, 'only-tables.txt')
+      writeFileSync(only, 'wp_posts\n')
+      const done = s.run(BACKUP, [
+        '--op',
+        'restore-everything',
+        '--version',
+        String(made.version),
+        '--only-tables',
+        only
+      ])
+      assert.equal(done.ok, true, JSON.stringify(done))
+      assert.deepEqual(titles(), ['Hello world', 'From live'])
+      // And whole.
+      sql("UPDATE wp_options SET value='Later' WHERE name='blogname'", 'wordpress')
+      const whole = s.restore(made.version)
+      assert.equal(whole.ok, true, JSON.stringify(whole))
+      assert.equal(sql("SELECT value FROM wp_options WHERE name='blogname'", 'wordpress'), 'Before')
+      assert.deepEqual(titles(), ['Hello world', 'From live'])
+    } finally {
+      s.dispose()
+    }
+  }
+)
+
 test('MariaDB: a check that fails after the swap swaps back and puts the files back', mysqlOpts, () => {
   freshWordpress()
   const s = stack('wordpress')
