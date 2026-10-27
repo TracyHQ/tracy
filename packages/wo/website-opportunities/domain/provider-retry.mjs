@@ -6,6 +6,9 @@
  *
  * The attempt throws an error carrying `status` (the HTTP status) and, when the provider sent one,
  * `retryAfter` (the header's raw value). Tests inject `sleep`, so no test waits for real.
+ *
+ * `onTry` hears every try as it ends (`{n, error}`, `error` null on success), so a caller can list each one with its
+ * code: a retried 429 is then visible as two or three tries, not one.
  */
 
 /** HTTP statuses worth one more try: rate limited, or the provider's side briefly down. */
@@ -48,18 +51,29 @@ export function retryDelayOf(
  * Runs `attempt(n)` and tries again on a retryable error while the wait budget lasts.
  * @template T
  * @param {(n: number) => Promise<T>} attempt
- * @param {{retries?: number, baseDelayMs?: number, maxWaitMs?: number, sleep?: (ms: number) => Promise<void>, now?: () => number}} [options]
+ * @param {{retries?: number, baseDelayMs?: number, maxWaitMs?: number, sleep?: (ms: number) => Promise<void>, now?: () => number,
+ *   onTry?: (t: {n: number, error: any}) => void}} [options]
  * @returns {Promise<T>}
  */
 export async function withProviderRetry(attempt, options = {}) {
   const retries = options.retries ?? PROVIDER_RETRY.retries
   const maxWaitMs = options.maxWaitMs ?? envMaxWait() ?? PROVIDER_RETRY.maxWaitMs
   const sleep = options.sleep ?? realSleep
+  const heard = (n, error) => {
+    try {
+      options.onTry?.({ n, error })
+    } catch {
+      // A listener that throws never changes the call's outcome.
+    }
+  }
   let waited = 0
   for (let n = 0; ; n += 1) {
     try {
-      return await attempt(n)
+      const out = await attempt(n)
+      heard(n, null)
+      return out
     } catch (error) {
+      heard(n, error)
       if (n >= retries || !isRetryable(error)) throw error
       const delay = retryDelayOf(error, n, options)
       if (waited + delay > maxWaitMs) throw error

@@ -231,3 +231,47 @@ test('Google Place Details: a lasting 429 still ends as QUOTA', async () => {
   assert.deepEqual(clock.waits, [1000])
   assert.equal(net.calls.length, 2)
 })
+
+test('retry: onTry hears every try with its error, the success last', async () => {
+  const clock = fakeSleep()
+  const heard = []
+  let n = 0
+  const out = await withProviderRetry(
+    async () => {
+      n += 1
+      if (n < 3) throw httpError(429)
+      return 'ok'
+    },
+    {
+      sleep: clock.sleep,
+      baseDelayMs: 100,
+      maxWaitMs: 4000,
+      onTry: ({ n: i, error }) => heard.push([i, error?.code ?? null])
+    }
+  )
+  assert.equal(out, 'ok')
+  assert.deepEqual(heard, [
+    [0, 'HTTP_429'],
+    [1, 'HTTP_429'],
+    [2, null]
+  ])
+})
+
+test('google maps (SerpApi): a lasting 429 tells onTry about each HTTP try', async () => {
+  const { fetch } = scripted([json({}, 429)])
+  const heard = []
+  await assert.rejects(
+    googleMapsSerpapiCall(
+      'place',
+      { placeId: 'ChIJHarbourSportClub1' },
+      {
+        key: 'test-key',
+        fetch,
+        retry: { sleep: async () => {}, baseDelayMs: 100, maxWaitMs: 4000 },
+        onTry: ({ error }) => heard.push(error?.code ?? null)
+      }
+    ),
+    { code: 'HTTP_429' }
+  )
+  assert.deepEqual(heard, ['HTTP_429', 'HTTP_429', 'HTTP_429'])
+})
