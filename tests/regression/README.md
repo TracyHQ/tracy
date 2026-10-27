@@ -16,7 +16,7 @@ back without anyone noticing. This folder keeps the steps; the `Regression` gate
 
 ## Format — why JSON, why one file per case
 
-- **JSON, not YAML**: the `Regression` gate runs with bare `node` on the `tracy-light` runner and installs nothing
+- **JSON, not YAML**: the `Regression` gate runs with bare `node` on a GitHub-hosted runner and installs nothing
   (like `changelog`, `description`); YAML needs a library. For readers: each file is short, and
   `node tests/regression/run.mjs --dry-run` prints a table with one line per case.
 - **One file per case**: the lesson of the journal folder — with one shared file, two parallel PRs always edit the same lines.

@@ -6,20 +6,20 @@
 # `pnpm build:official` over ~300 packages plus Playwright and Chromium. A host that cannot build
 # its own image is a host that silently keeps running last month's agent.
 #
-# So the build moves off the fleet entirely: one self-hosted runner (`tracy-build`, 8 cores /
-# 23 GB / 290 GB, x86_64 like the fleet) builds the image and pushes it to GHCR, and every host
-# does `docker pull` — a step DO can afford. Nothing here touches a customer's machine.
+# So the build moves off the fleet entirely: one runner builds the image and pushes it to GHCR, and
+# every host does `docker pull` — a step DO can afford. Nothing here touches a customer's machine.
+# Since 27/10/2026 that runner is GitHub-hosted `ubuntu-latest` (x86_64, a fresh VM per job), with
+# the preinstalled toolchains removed first (`.github/actions/free-disk`) to make room for the build.
 #
-# ARCHITECTURE IS NOT A DETAIL. The runner must be x86_64. An arm64 build (a laptop, a Mac runner)
-# produces an image the fleet cannot run, and the failure surfaces at `docker run` on the host,
-# far from the build that caused it. `runs-on` names the label, and the label is on one machine.
+# ARCHITECTURE IS NOT A DETAIL. The runner must be x86_64. An arm64 build (a laptop, a Mac runner,
+# `ubuntu-24.04-arm`) produces an image the fleet cannot run, and the failure surfaces at
+# `docker run` on the host, far from the build that caused it.
 #
-# THE SUBMODULE IS THE PART THAT BREAKS QUIETLY. `vendor/tracy/deepseek-harness` is a private repository,
-# and `GITHUB_TOKEN` cannot read another private repo. Without credentials `git submodule update`
-# fails — but if it were merely skipped, the Dockerfile's `COPY vendor/tracy/deepseek-harness/ ./` would
-# copy an EMPTY directory and the build would die several minutes later inside `pnpm build:official`
-# with an error that says nothing about a missing submodule. Hence the explicit checkout step below,
-# a read-only deploy key, and a guard that counts the files before handing anything to Docker.
+# THE SUBMODULE IS THE PART THAT BREAKS QUIETLY. If `git submodule update` were merely skipped, the
+# Dockerfile's `COPY vendor/tracy/deepseek-harness/ ./` would copy an EMPTY directory and the build
+# would die several minutes later inside `pnpm build:official` with an error that says nothing
+# about a missing submodule. Hence the explicit fetch step below (the public `TracyHQ/tracy-dsh`,
+# anonymously) and a guard that counts the files before handing anything to Docker.
 
 name: build-dsh-image
 
@@ -136,12 +136,9 @@ jobs:
   # dev dsh under everyone's sessions, and held the next merge's build in this workflow's
   # concurrency group for 24 more minutes.
   decide:
-    # `tracy-check`, not `tracy-build` — changed 2026-09-21. This job asks the REGISTRY whether a
-    # tag exists; `docker manifest inspect` is a registry client and needs no daemon. Measured on
-    # j-static: `docker run -e DOCKER_HOST=unix:///nonexistent docker:cli manifest inspect
-    # alpine:latest` exits 0 with the full manifest. So a 20-second decision does not have to
-    # occupy one of the few machines that hold the docker socket.
-    runs-on: [self-hosted, linux, tracy-check, "${{ ((github.base_ref || github.ref_name) == 'main' || (github.base_ref || github.ref_name) == 'staging') && 'tracy-lane-prod' || 'tracy-lane-dev' }}"]
+    # This job only asks the REGISTRY whether a tag exists (`docker manifest inspect`, a registry
+    # client): a 20-second decision on a GitHub-hosted runner.
+    runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
       contents: read
@@ -194,9 +191,10 @@ jobs:
   build:
     needs: decide
     if: needs.decide.outputs.skip != 'true'
-    # The one x86_64 build box. NOT `ubuntu-latest`: a GitHub-hosted runner has ~14 GB of disk and
-    # this build needs several times that between the pnpm store, Chromium and the two image stages.
-    runs-on: [self-hosted, linux, x64, tracy-build, "${{ ((github.base_ref || github.ref_name) == 'main' || (github.base_ref || github.ref_name) == 'staging') && 'tracy-lane-prod' || 'tracy-lane-dev' }}"]
+    # GitHub-hosted since 27/10/2026. The default free disk of a hosted runner is smaller than this
+    # build needs (the pnpm store, Chromium and the two image stages), so `free-disk` runs first and
+    # prints the space before and after.
+    runs-on: ubuntu-latest
     timeout-minutes: 90
 
     permissions:
@@ -213,32 +211,12 @@ jobs:
         with:
           submodules: false
 
-      # Separate from checkout because the submodule lives in a DIFFERENT private repository, which
-      # `GITHUB_TOKEN` has no access to. The deploy key is read-only and scoped to that one repo.
+      # Separate from checkout so the guard below can count what arrived before Docker sees it.
       - name: Fetch the vendored dsh submodule
-        env:
-          DEPLOY_KEY: ${{ secrets.TRACY_VENDOR_DEPLOY_KEY }}
         run: |
           set -euo pipefail
-          # An HTTPS submodule URL is the public repository's, fetched without a key.
-          # With a key set, an HTTPS URL is fetched over SSH: a private repository refuses anonymous HTTPS.
-          if [ -z "${DEPLOY_KEY:-}" ] && [[ "$(git config -f .gitmodules --get submodule.vendor/tracy/deepseek-harness.url)" != https://* ]]; then
-            echo "::error::secret TRACY_VENDOR_DEPLOY_KEY is missing — vendor/tracy/deepseek-harness cannot be fetched"
-            exit 1
-          fi
-          KEY_FILE="$RUNNER_TEMP/vendor_deploy"
-          # 🔒 THE umask IS IN A SUBSHELL, AND THAT IS THE WHOLE POINT. A bare `umask 077` here
-          # applies to the REST of this step — including the checkout below — so every file and
-          # directory git writes lands 600/700. Those modes ride into the build context, `/opt/dsh`
-          # becomes root-only, and the runtime stage (`USER www-data`, uid 33) cannot traverse it.
-          # Node then reports `Cannot find module '/opt/dsh/apps/cli/lib/bin.js'` — a message about
-          # a file that is present and readable by root, twelve layers after the cause.
-          ( umask 077; printf '%s\n' "$DEPLOY_KEY" > "$KEY_FILE" )
-          mkdir -p ~/.ssh && chmod 700 ~/.ssh
-          ssh-keyscan -t ed25519 github.com >> ~/.ssh/known_hosts 2>/dev/null
-          # No --depth: the submodule is pinned to an exact commit, which a shallow fetch may not carry.
-          GIT_SSH_COMMAND="ssh -i $KEY_FILE -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes" \
-            git ${DEPLOY_KEY:+-c url.git@github.com:.insteadOf=https://github.com/} submodule update --init vendor/tracy/deepseek-harness
+          # The public `TracyHQ/tracy-dsh`, anonymously over HTTPS, at its pinned commit.
+          git submodule update --init vendor/tracy/deepseek-harness
 
       # The guard the comment at the top of this file is about: prove the directory has contents
       # BEFORE Docker copies it, so an empty submodule fails here, by name, in seconds.
@@ -265,6 +243,12 @@ jobs:
             exit 1
           fi
           echo "submodule permissions: readable by every uid"
+
+      - name: Make room for the image build
+        uses: ./.github/actions/free-disk
+
+      - name: Set up Node and pnpm
+        uses: ./.github/actions/node-pnpm
 
       - name: Resolve tags
         id: meta
@@ -461,10 +445,6 @@ jobs:
             echo "Pull on a fleet host: \`docker pull $IMAGE:${{ steps.meta.outputs.tag }}\`"
           } >> "$GITHUB_STEP_SUMMARY"
 
-      # The key is a credential on a machine that persists between jobs — it does not get to stay.
-      - name: Remove the deploy key
-        if: always()
-        run: rm -f "$RUNNER_TEMP/vendor_deploy"
 
   # ── Mirror to AWS ECR (plan docs/sre/2026-10-20-chuyen-ghcr-sang-ecr-plan.md, P1) ─────────────
   #
@@ -489,7 +469,7 @@ jobs:
       && (needs.build.result == 'success' || needs.build.result == 'skipped')
       && (github.event_name == 'push' || inputs.push)
       && (github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/staging') }}
-    runs-on: [self-hosted, linux, x64, tracy-build, "${{ ((github.base_ref || github.ref_name) == 'main' || (github.base_ref || github.ref_name) == 'staging') && 'tracy-lane-prod' || 'tracy-lane-dev' }}"]
+    runs-on: ubuntu-latest
     environment:
       name: ecr-push
     timeout-minutes: 45

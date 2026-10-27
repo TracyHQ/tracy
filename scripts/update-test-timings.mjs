@@ -334,7 +334,8 @@ export function refusal(run, { pulls, jobs }, shardCount, repo) {
     if (found.length !== 1) return `${String(found.length)} job(s) named "${name}"`
     if (found[0].conclusion !== 'success') return `"${name}" is ${String(found[0].conclusion)}`
     const labels = Array.isArray(found[0].labels) ? found[0].labels : []
-    if (!labels.includes('linux'))
+    // `linux` on a team runner; `ubuntu-*` names the image of a GitHub-hosted one.
+    if (!labels.some((l) => l === 'linux' || String(l).startsWith('ubuntu-')))
       return `"${name}" did not run on a linux runner (${labels.join(', ') || 'no labels'})`
   }
   return null

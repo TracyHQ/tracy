@@ -1,0 +1,24 @@
+# Room for an image build on a GitHub-hosted runner (since 27/10/2026).
+#
+# The standard Ubuntu runner ships toolchains no Tracy build uses (.NET, Android SDK, GHC, CodeQL,
+# the cached Pythons/Gos/Rubies…) on the same disk docker writes to. An image build here holds the
+# workspace install, the pnpm store and the builder's layers at once, which is more than what is
+# free by default. Removing those trees is safe on a VM thrown away after the job; the step prints
+# the free space before and after, so a build that still runs out says so in its own log.
+name: Free disk space
+description: Remove preinstalled toolchains no Tracy build uses from a GitHub-hosted Ubuntu runner.
+
+runs:
+  using: composite
+  steps:
+    - name: Remove unused toolchains
+      shell: bash
+      run: |
+        set -euo pipefail
+        df -h / | tail -1 | awk '{print "before: " $4 " free of " $2}'
+        sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /usr/local/.ghcup \
+          /opt/hostedtoolcache/CodeQL /opt/hostedtoolcache/Python /opt/hostedtoolcache/go \
+          /opt/hostedtoolcache/Ruby /opt/hostedtoolcache/PyPy /usr/local/share/powershell \
+          /usr/share/swift /usr/local/julia*
+        sudo docker image prune --all --force > /dev/null
+        df -h / | tail -1 | awk '{print "after: " $4 " free of " $2}'

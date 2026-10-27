@@ -116,8 +116,6 @@ test('the proof job starts only for a non-draft fix pull request whose plan and 
       '!cancelled()',
       "github.event_name == 'pull_request'",
       'github.event.pull_request.draft == false',
-      // Team runners take only branches of this repository (docs/references/public-repo-ci.md).
-      'github.event.pull_request.head.repo.full_name == github.repository',
       "needs.plan.result == 'success'",
       "needs.plan.outputs.new_test_proof == 'true'",
       "needs.dsh-lib.result == 'success'"
@@ -128,22 +126,19 @@ test('the proof job starts only for a non-draft fix pull request whose plan and 
   for (const [name, job] of Object.entries(jobs))
     for (const needed of [job.needs ?? []].flat())
       assert.ok(!['new-test-proof', 'test-growth'].includes(needed), `${name} must not wait for ${needed}`)
-  assert.ok(proof['runs-on'].includes('tracy-check'))
+  // A fork's pull request runs it too: it reads no secret (docs/references/public-repo-ci.md).
+  assert.equal(proof['runs-on'], 'ubuntu-latest')
 })
 
 test('every non-draft pull request gets the growth line, with or without a planned suite', () => {
   assert.deepEqual(
     conjunction(growth.if),
-    [
-      "github.event_name == 'pull_request'",
-      'github.event.pull_request.draft == false',
-      'github.event.pull_request.head.repo.full_name == github.repository'
-    ].sort()
+    ["github.event_name == 'pull_request'", 'github.event.pull_request.draft == false'].sort()
   )
   // No `needs`: it reports when green-tree skipped every row, and a failure of plan cannot hide it.
   assert.equal(growth.needs, undefined)
-  assert.ok(growth['runs-on'].includes('tracy-light'))
-  assert.equal(growth.steps.length, 2, 'checkout and the report: no install, no test run')
+  assert.equal(growth['runs-on'], 'ubuntu-latest')
+  assert.equal(growth.steps.length, 3, 'checkout, Node and the report: no install, no test run')
   assert.match(step(growth, GROW).run, /--growth-only --base HEAD\^1 --head HEAD/)
 })
 

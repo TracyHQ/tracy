@@ -1124,7 +1124,6 @@ test('Tracy CI runs it on the one row the planner marks with clock, and on the f
     prPlan.matrix.include.find((r) => r.group === 'tests related'),
     {
       group: 'tests related',
-      label: 'tracy-check',
       args: '--only tests --tests-part related',
       clock: true
     }
@@ -1134,7 +1133,6 @@ test('Tracy CI runs it on the one row the planner marks with clock, and on the f
     nightlyPlan.matrix.include.find((r) => r.group === 'tests 2/2'),
     {
       group: 'tests 2/2',
-      label: 'tracy-check',
       args: '--only tests --tests-part workers:2/2,rest',
       clock: true
     }

@@ -15,13 +15,14 @@ on:
     types: [closed]
 
 jobs:
-  # A branch of this repository: the team's light runner, the CI read App token. The checkout is the
-  # base branch as it is now (the merge is already on it), not the pull request's merge ref, and no
-  # credential stays in it; pull-request code never runs on the production lane (public-repo-ci.md).
+  # One job on a GitHub-hosted runner (since 27/10/2026). The checkout is the base branch as it is now
+  # (the merge is already on it), not the pull request's merge ref, and no credential stays in it.
+  # Only a branch of this repository gets the CI read App token and a verdict: a fork's pull request
+  # never ran under this repository's checks token, and its token cannot comment, so it gets a warning.
   merged-ci:
     name: merged with green Tracy CI
-    if: github.event.pull_request.merged == true && github.event.pull_request.head.repo.full_name == github.repository
-    runs-on: [self-hosted, linux, tracy-light, tracy-lane-dev]
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
       - name: Check out the base branch
@@ -29,8 +30,15 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.base.ref }}
           persist-credentials: false
+
+      - name: Set up Node
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .node-version
+
       - name: Create repository-scoped CI read token
         id: ci-app
+        if: github.event.pull_request.head.repo.full_name == github.repository
         uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
         with:
           client-id: ${{ vars.TRACY_CI_MERGE_APP_CLIENT_ID }}
@@ -43,23 +51,15 @@ jobs:
           permission-checks: read
 
       - name: Did Tracy CI pass on the merged commit
+        if: github.event.pull_request.head.repo.full_name == github.repository
         env:
           GH_TOKEN: ${{ github.token }}
           TRACY_CI_READ_APP_TOKEN: ${{ steps.ci-app.outputs.token }}
         run: node scripts/check-merged-ci.mjs
 
-  # A fork's pull request never ran Tracy CI on the team's runners (only `fork pull request checks`),
-  # so there is no verdict to read and its token cannot comment: say so in the run, nothing else.
-  merged-ci-fork:
-    name: merged with green Tracy CI (fork)
-    if: github.event.pull_request.merged == true && github.event.pull_request.head.repo.full_name != github.repository
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    permissions:
-      contents: read
-    steps:
       - name: Report a fork merge
+        if: github.event.pull_request.head.repo.full_name != github.repository
         env:
           BASE: ${{ github.event.pull_request.base.ref }}
         run: |
-          echo "::warning::Merged from a fork: Tracy CI never ran its full rows on this code. Run Tracy CI on $BASE (Actions → Tracy CI → Run workflow) and fix forward if it is red."
+          echo "::warning::Merged from a fork: this check reads Tracy CI with the CI App, which a fork's run never gets. Check the Tracy CI run of this pull request by hand, or run Tracy CI on $BASE (Actions → Tracy CI → Run workflow) and fix forward if it is red."

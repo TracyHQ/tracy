@@ -1,14 +1,13 @@
 /**
- * Which jobs may land on an arm64 runner — pinned since 11/10/2026.
+ * Which jobs still run on the team's self-hosted runners — pinned since 27/10/2026.
  *
- * The check and light pools mix the AWS amd64 runners with two arm64 Mac runners (Linux
- * containers running natively, `TracyHQ/tracy-runners` hosts.tsv). So a job carrying
- * `tracy-check` or `tracy-light` must NOT ask for `x64` — or the Macs never get it and the pool
- * is three runners smaller than the fleet says — while every build, deploy and image job MUST keep
- * `x64`: those produce or run amd64 images on amd64 hosts.
+ * Every check, light and image-build job moved to GitHub-hosted runners when the repository went
+ * public (docs/references/gates-ci-runners.md, Runners). What stays self-hosted is a job that must
+ * run ON a deploy host (`tracy-dev`, `tracy-staging`, `tracy-prod`): deploys and that host's own
+ * dispatch jobs. Those run amd64 images on amd64 hosts, so they keep `x64`.
  *
  * A `runs-on` label nobody carries does not go red, it queues silently; this is the cheapest place
- * to catch a new job that copies the wrong line.
+ * to catch a new job that copies an old line asking for a retired pool.
  */
 import assert from 'node:assert/strict'
 import { readdirSync, readFileSync } from 'node:fs'
@@ -32,29 +31,26 @@ const jobs = readdirSync(DIR)
   )
   .filter((j) => j.labels.includes('self-hosted'))
 
-// `build-check` asks for `${{ matrix.label }}`, and `scripts/ci/plan-ci.mjs` fills it with `tracy-check`.
-const POOLED = /tracy-check|tracy-light|matrix\.label/
-const PINNED = /tracy-build|tracy-dev\b|tracy-prod\b|tracy-staging|tracy-demo-/
+const DEPLOY_HOST = /^(tracy-dev|tracy-staging|tracy-prod)$/
+// Retired pools: no runner may be asked for them again.
+const RETIRED = /tracy-check|tracy-light|tracy-build|tracy-lane-|matrix\.label/
 
 test('the workflows were read', () => {
-  assert.ok(jobs.length > 10, `only ${jobs.length} self-hosted jobs found`)
-  assert.ok(jobs.some((j) => POOLED.test(j.labels.join(' '))))
-  assert.ok(jobs.some((j) => PINNED.test(j.labels.join(' '))))
+  assert.ok(jobs.length >= 5, `only ${jobs.length} self-hosted jobs found`)
 })
 
-test('check and light jobs do not ask for x64, so the arm64 Mac runners can take them', () => {
-  for (const { where, labels } of jobs.filter((j) => POOLED.test(j.labels.join(' ')))) {
-    assert.ok(!labels.includes('x64'), `${where}: [${labels.join(', ')}]`)
-    assert.deepEqual(labels.slice(0, 2), ['self-hosted', 'linux'], where)
+test('a self-hosted job runs on exactly one deploy host, on x64', () => {
+  for (const { where, labels } of jobs) {
+    assert.deepEqual(labels.slice(0, 3), ['self-hosted', 'linux', 'x64'], where)
+    assert.equal(labels.length, 4, `${where}: [${labels.join(', ')}]`)
+    // The host may be an expression that picks one of the three (`build-web-images`).
+    for (const host of labels[3].match(/tracy-[a-z]+/g) ?? [])
+      assert.match(host, DEPLOY_HOST, `${where}: [${labels.join(', ')}]`)
   }
 })
 
-test('build, deploy and image jobs keep x64', () => {
-  for (const { where, labels } of jobs.filter((j) => !POOLED.test(j.labels.join(' ')))) {
-    assert.ok(
-      PINNED.test(labels.join(' ')),
-      `${where}: a self-hosted job in neither group — classify it here`
-    )
-    assert.ok(labels.includes('x64'), `${where}: [${labels.join(', ')}]`)
-  }
+test('no job asks for a retired check, light, build or lane pool', () => {
+  for (const file of readdirSync(DIR).filter((f) => f.endsWith('.yml') || f.endsWith('.yaml')))
+    for (const [name, job] of Object.entries(load(readFileSync(join(DIR, file), 'utf8')).jobs ?? {}))
+      assert.doesNotMatch([job['runs-on']].flat().map(String).join(' '), RETIRED, `${file} › ${name}`)
 })

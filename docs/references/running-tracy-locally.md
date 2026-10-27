@@ -79,21 +79,8 @@ pnpm dsh:build
 pnpm install
 ```
 
-⚠ **The first step needs an SSH key, on purpose — do not edit `.gitmodules`.** `vendor/tracy/deepseek-harness`
-is a **second** private repo; CI's `GITHUB_TOKEN` cannot read it, so every workflow checks out
-with `submodules: false` and then fetches it with a **read-only deploy key over SSH** (`tracy-ci.yml`, step *Fetch the
-vendored dsh submodule*). Switching the URL to https turns every workflow red, at a step reporting an error about the
-`presets` gate that says nothing about the submodule.
-
-On a machine without an SSH key, **switch the protocol for this clone only**, one line, then re-run the commands above:
-
-```bash
-git config --local url."https://github.com/".insteadOf "git@github.com:"
-```
-
-Switch the **protocol**; do not pin `submodule.<path>.url`: the path has already moved once
-(`vendor/` → `vendor/tracy/`), and a pin under the old path stays behind in `.git/config` pointing at
-nothing. `pnpm dsh:build` prints this very command when it sees an empty submodule.
+The submodule `vendor/tracy/deepseek-harness` is the public `TracyHQ/tracy-dsh`, fetched over HTTPS without a key;
+CI does the same (`tracy-ci.yml`, step *Fetch the vendored dsh submodule*).
 
 **Then build the two SPAs — this step CANNOT be skipped, and skipping it breaks in two different ways.**
 

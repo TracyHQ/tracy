@@ -230,12 +230,10 @@ test('plan hashes the tree the rows hash: the dsh submodule is fetched before th
   const ask = step('plan', 'Ask Turbo which test tasks the cache already holds')
   assert.ok(fetch && ask)
   assert.ok(indexOf('plan', fetch.name) < indexOf('plan', ask.name))
-  assert.match(
-    fetch.run,
-    /git (\$\{DEPLOY_KEY:\+-c url\.git@github\.com:\.insteadOf=https:\/\/github\.com\/\} )?submodule update --init vendor\/tracy\/deepseek-harness/
-  )
-  // `GITHUB_TOKEN` cannot read the submodule's repository: the deploy key, as the rows.
-  assert.equal(fetch.env.DEPLOY_KEY, '${{ secrets.TRACY_VENDOR_DEPLOY_KEY }}')
+  assert.match(fetch.run, /git submodule update --init vendor\/tracy\/deepseek-harness/)
+  // The submodule is public: fetched anonymously, as the rows do, with no key and no secret.
+  assert.equal(fetch.env, undefined)
+  assert.doesNotMatch(JSON.stringify(stepsOf('plan')), /DEPLOY_KEY|vendor_deploy/)
   assert.equal(step('plan', 'Check out Git repository').with.submodules, false)
   for (const s of stepsOf('plan'))
     assert.doesNotMatch(
@@ -272,7 +270,7 @@ test('plan fails closed: every Turbo step may fail, and TURBO_DRY is published l
   assert.equal(ask.id, 'turbo')
 })
 
-test('plan keeps time for the fallback, and never leaves the deploy key behind', () => {
+test('plan keeps time for the fallback', () => {
   const fetch = step('plan', 'Fetch the dsh submodule the task hashes depend on')
   const ask = step('plan', 'Ask Turbo which test tasks the cache already holds')
   const limit = (run) => [...run.matchAll(/\btimeout (\d+) /g)].reduce((sum, m) => sum + Number(m[1]), 0)
@@ -293,11 +291,6 @@ test('plan keeps time for the fallback, and never leaves the deploy key behind',
     budget <= workflow.jobs.plan['timeout-minutes'] * 60 - 45,
     `${String(budget)} s of waiting leaves the fallback no time`
   )
-  const remove = stepsOf('plan').filter((s) => s.name === 'Remove the deploy key')
-  assert.equal(remove.length, 1)
-  assert.equal(remove[0].if, 'always()')
-  assert.ok(indexOf('plan', remove[0].name) > indexOf('plan', fetch.name))
-  assert.ok(indexOf('plan', remove[0].name) < indexOf('plan', ask.name))
 })
 
 test('a forced row runs every task: --force from matrix.force, and nothing else asks the cache to be skipped', () => {

@@ -14,30 +14,26 @@
 # half.
 #
 # ─────────────────────────────────────────────────────────────────────────────────────────────
-# WHY IT RUNS ON A SELF-HOSTED RUNNER AGAIN — changed 2026-09-08
+# WHERE IT RUNS — GitHub-hosted `ubuntu-latest` since 27/10/2026
 #
-# This block has now said three different things, and each was true when written. Until 02/09 the
-# runner had to be self-hosted because `.npmrc` pointed at `http://127.0.0.1:4873`, a verdaccio on
-# a team member's machine. On 02/09 the registry moved to `https://npm.tracy.ai` and the job moved to
-# `ubuntu-latest`, which bought three things: CI no longer waited on a desktop, a PR from another
-# machine still got reviewed, and nobody had to ask whether the runner was alive.
+# History, because each answer was true when written. Until 02/09 the job was self-hosted because
+# `.npmrc` pointed at a registry on a team member's machine; it then moved to `ubuntu-latest`. On
+# 07/09 every hosted job of the org failed in three seconds with zero steps: the org's shared
+# monthly quota of hosted minutes was spent by another repository, so from 08/09 Tracy CI ran on
+# the team's self-hosted runners. The repository is public now (`TracyHQ/tracy`): hosted minutes
+# are free and unmetered, and the quota that turned this gate red from outside no longer exists.
 #
-# It bought them for four days. Measured 07/09: EVERY GitHub-hosted job in this repo had been
-# failing in three seconds with zero steps executed and a 404 for its log — `Tracy CI` 0 green out
-# of 300 runs, `Changelog Check` green last at 05/09 13:12 and red 204 times after it. Not one of
-# those reds was about code. The org (`TracyHQ`, free plan) had burned 2042 of its 2000 included
-# Actions Linux minutes for September, mostly in `tracy-infra`, and a job over the limit with no
-# spending limit set does not queue or warn — it fails, instantly, in a shape indistinguishable
-# from a broken workflow file.
-#
-# So the deciding fact is not speed or convenience: A SHARED MONTHLY QUOTA IS A DEPENDENCY THIS
-# GATE CANNOT SEE AND CANNOT FIX. Another repo in the org can turn this one's CI red without ever
-# touching it. `tracy-build-01` — the container on contabo2 that `build-dsh-image.yml` already ran on — has no quota, and those two workflows stayed green
-# through the whole outage. That is the measurement, not a preference.
-#
-# The cost, stated plainly: this gate is now one machine again. If contabo2 is down, CI does not
-# run — it queues. That failure is loud (a job stuck in "Waiting for a runner") in a way the quota
-# failure never was, which is the trade being made.
+# What the move changed, and what it did not:
+#   - one job for a branch of this repository and for a fork's pull request (a fork needs a
+#     maintainer's approval to run, `docs/references/public-repo-ci.md`); a step that reads a secret
+#     runs only for a branch of this repository;
+#   - the vendored dsh submodule is the public `TracyHQ/tracy-dsh`, fetched anonymously over HTTPS;
+#   - Node comes from `.node-version` through `actions/setup-node`, the pnpm store and the dsh build
+#     from the Actions cache (`.github/actions/node-pnpm`, `.github/actions/dsh-lib`);
+#   - PostgreSQL for the workers tests is the throwaway container `check-tests.ts` starts with the
+#     VM's docker (source 3 there), Chromium is installed by the gate with `--with-deps`;
+#   - the Turbo remote cache needs the `TURBO_CACHE_S3_*` secrets; without them `plan` falls back to
+#     the two workers shards, exactly as before Turbo.
 #
 # ─────────────────────────────────────────────────────────────────────────────────────────────
 # WHERE THIS GATE DOES NOT REACH — said out loud so nobody reads the green wider than it is
@@ -115,9 +111,8 @@ on:
   # `develop` no longer pay for the browser/e2e suite and the three EmDash suites (each runs only
   # when its own package is touched, see `plan`); this run still exercises all of them against
   # `develop` every day. A `schedule` event runs the DEFAULT branch's copy of this file (`main`) and
-  # its `github.ref_name` is `main` — which would pick the PRODUCTION runner lane and check out
-  # `main`. So the nightly checks out `develop` explicitly, and the lane expression treats `schedule`
-  # as dev. ⚠ The trigger exists only once this file is on `main`.
+  # its `github.ref_name` is `main`, so a plain checkout would take `main`. The nightly therefore
+  # checks out `develop` explicitly. ⚠ The trigger exists only once this file is on `main`.
   #
   # 🔒 ONE COMMIT PER NIGHTLY, since 05/10/2026. Until then `dsh-lib`, `plan` and every `build-check`
   # row each checked out the MOVING `develop`, minutes apart, on a branch that takes 40-70 merges a
@@ -156,78 +151,38 @@ jobs:
   # just the build, and the eight jobs follow it. That rerun is the workaround until
   # `TracyHQ/tracy-runners` raises those caps; no new label is added to steer it, because a label no
   # runner carries does not fail — it queues, silently and forever.
-  # 🔒 NO `x64` ON CHECK AND LIGHT JOBS (since 11/10/2026). The check and light pools mix the AWS
-  # amd64 runners with two arm64 Mac runners (Linux containers running natively); build, deploy and
-  # image jobs keep `x64`. Witness: `scripts/test/ci-runner-arch.test.mjs`. Pools and measurements:
-  # `docs/references/gates-ci-runners.md` (Runners).
-  # 🔒 THE LANE LABEL (since 29/09/2026; pull requests always dev since 26/10/2026). Every
-  # tracy-check/tracy-build/tracy-light job also asks for `tracy-lane-prod` only for a manual run on
-  # `main`/`staging`, and `tracy-lane-dev` otherwise — a pull request into `main` included, because
-  # the production lane shares the machine that builds production images (public-repo-ci.md). The two lanes are two AWS machines (`TracyHQ/tracy-runners`
-  # hosts.tsv), so production images are built where no pull-request code ever ran as root. Both
-  # labels were on live runners BEFORE this expression landed — a label nobody carries queues.
-  #
-  # THE `ci:aws-only` PR LABEL (since 18/10/2026, anh David). The ARM64 machines (studio-check-*,
-  # macmini-light-01) carry the same tracy-check / tracy-light / lane labels as the AWS EC2 runners,
-  # so any job may land there. A pull request labelled `ci:aws-only` (set the label BEFORE the push
-  # or "Ready for review": label events do not start this workflow) also asks for `X64`, which only
-  # the EC2 runners carry. Without the label the extra element is `linux` again, already in the list,
-  # so every other run picks its runner exactly as before.
   dsh-lib:
     name: build dsh once for this run
-    runs-on: [self-hosted, linux, "${{ contains(github.event.pull_request.labels.*.name, 'ci:aws-only') && 'X64' || 'linux' }}", tracy-check, "${{ (github.event_name == 'workflow_dispatch' && (github.ref_name == 'main' || github.ref_name == 'staging')) && 'tracy-lane-prod' || 'tracy-lane-dev' }}"]
+    runs-on: ubuntu-latest
     timeout-minutes: 45
     # Pull requests and manual runs only. The nightly builds dsh in `dsh-lib-nightly` below, which
     # waits for `plan`'s pinned commit; this job must NOT wait for `plan`, or every pull request
     # would build dsh after planning instead of beside it.
-    if: github.event_name != 'schedule' && (github.event_name != 'pull_request' || (github.event.pull_request.draft == false && github.event.pull_request.head.repo.full_name == github.repository))
+    if: github.event_name != 'schedule' && (github.event_name != 'pull_request' || github.event.pull_request.draft == false)
     steps:
       # Same three steps as `build-check` below; the reasons are written there.
       - name: Check out Git repository
         uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
         with:
           submodules: false
+          persist-credentials: false
 
       - name: Fetch the vendored dsh submodule
-        env:
-          DEPLOY_KEY: ${{ secrets.TRACY_VENDOR_DEPLOY_KEY }}
         run: |
           set -euo pipefail
-          # An HTTPS submodule URL is the public repository's, fetched without a key.
-          # With a key set, an HTTPS URL is fetched over SSH: a private repository refuses anonymous HTTPS.
-          if [ -z "${DEPLOY_KEY:-}" ] && [[ "$(git config -f .gitmodules --get submodule.vendor/tracy/deepseek-harness.url)" != https://* ]]; then
-            echo "::error::secret TRACY_VENDOR_DEPLOY_KEY is missing. Set it with: gh secret set TRACY_VENDOR_DEPLOY_KEY --repo $GITHUB_REPOSITORY"
-            exit 1
-          fi
-          KEY_FILE="$RUNNER_TEMP/vendor_deploy"
-          ( umask 077; printf '%s\n' "$DEPLOY_KEY" > "$KEY_FILE" )
-          mkdir -p ~/.ssh && chmod 700 ~/.ssh
-          ssh-keyscan -t ed25519 github.com >> ~/.ssh/known_hosts 2>/dev/null
-          GIT_SSH_COMMAND="ssh -i $KEY_FILE -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes" \
-            git ${DEPLOY_KEY:+-c url.git@github.com:.insteadOf=https://github.com/} submodule update --init vendor/tracy/deepseek-harness
+          # The public `TracyHQ/tracy-dsh`, anonymously over HTTPS. No --depth: the submodule is
+          # pinned to an exact commit a shallow fetch may not carry.
+          git submodule update --init vendor/tracy/deepseek-harness
           git submodule status vendor/tracy/deepseek-harness
 
-      - name: Assert the runner's Node matches .node-version
-        run: |
-          set -euo pipefail
-          WANT="$(tr -d ' \t\r\n' < .node-version)"
-          HAVE="$(node -v | sed 's/^v//')"
-          echo "want $WANT, runner has $HAVE"
-          [ "$WANT" = "$HAVE" ] || {
-            echo "::error::runner Node is $HAVE but .node-version asks for $WANT — rebuild the tracy-runner image"
-            exit 1
-          }
-          corepack enable pnpm
+      - name: Set up Node and pnpm
+        uses: ./.github/actions/node-pnpm
 
       - name: Restore or build the vendored dsh
         uses: ./.github/actions/dsh-lib
         with:
           mode: ensure
           lookup-only: 'true'
-
-      - name: Remove the deploy key
-        if: always()
-        run: rm -f "$RUNNER_TEMP/vendor_deploy"
 
   # ─────────────────────────────────────────────────────────────────────────────────────────────
   # THE MATRIX IS PLANNED, NOT DECLARED — added 2026-09-29.
@@ -242,9 +197,9 @@ jobs:
   # is still ANNOUNCED (notice + job summary) from here.
   plan:
     name: plan the build-check rows
-    runs-on: [self-hosted, linux, "${{ contains(github.event.pull_request.labels.*.name, 'ci:aws-only') && 'X64' || 'linux' }}", tracy-light, "${{ (github.event_name == 'workflow_dispatch' && (github.ref_name == 'main' || github.ref_name == 'staging')) && 'tracy-lane-prod' || 'tracy-lane-dev' }}"]
+    runs-on: ubuntu-latest
     timeout-minutes: 5
-    if: github.event_name != 'pull_request' || (github.event.pull_request.draft == false && github.event.pull_request.head.repo.full_name == github.repository)
+    if: github.event_name != 'pull_request' || github.event.pull_request.draft == false
     # `actions: read` + `checks: read` for `green-tree.mjs` only: it reads earlier Tracy CI runs, their
     # jobs and their plan job's annotations. `pull-requests: read` for the step "Read this pull
     # request's labels" only (16/10/2026): the opt-in suites below are decided from the labels the
@@ -287,6 +242,13 @@ jobs:
           # 2, not 1: a pull request checks out its merge commit, and HEAD^1 (the base tip) is
           # what the plan diffs against.
           fetch-depth: 2
+          persist-credentials: false
+
+      # `plan` installs nothing; it needs only the Node of `.node-version` for its scripts.
+      - name: Set up Node
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .node-version
 
       # The summary is written BEFORE the output on purpose: a step that dies half way must not
       # leave a usable `checkout_sha` behind. 40 lowercase hex is the whole accepted shape — the
@@ -351,9 +313,8 @@ jobs:
       # row was ever skipped. Two things made the hashes differ, and both are handled where they arise:
       #   1. the root package.json depends on `@deepseek-ai/*` workspace packages that live in the
       #      submodule; without it Turbo's hash of the internal dependencies is empty, which changes
-      #      EVERY task. So `plan` fetches the submodule, exactly as the rows do (deploy key: the
-      #      submodule is another private repo `GITHUB_TOKEN` cannot read). Nothing is installed or
-      #      built here: what an install or a build adds is ignored by git and kept out of every hash.
+      #      EVERY task. So `plan` fetches the submodule, exactly as the rows do. Nothing is
+      #      installed or built here: what an install or a build adds is ignored by git and kept out of every hash.
       #   2. a build output git ignores inside a tree a task takes whole (`dsh-passwords/dist`) was
       #      hashed by the rows only. It is excluded in the generated inputs (`OUTPUTS` in
       #      `turbo-setup.mjs`), and the `turbo-config` gate names any new one.
@@ -384,6 +345,7 @@ jobs:
       # (~19 of a release's ~23-minute `checks`, run 38930622899). Any failure above still falls back
       # to the two workers shards, which audit in `checks` as before.
       - name: Start the Turbo remote cache
+        if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
         uses: ./.github/actions/turbo-cache
         with:
           endpoint: ${{ secrets.TURBO_CACHE_S3_ENDPOINT }}
@@ -398,35 +360,15 @@ jobs:
         id: turbo-dsh
         if: env.TURBO_API != ''
         continue-on-error: true
-        env:
-          DEPLOY_KEY: ${{ secrets.TRACY_VENDOR_DEPLOY_KEY }}
         run: |
           set -euo pipefail
-          # An HTTPS submodule URL is the public repository's, fetched without a key.
-          # With a key set, an HTTPS URL is fetched over SSH: a private repository refuses anonymous HTTPS.
-          if [ -z "${DEPLOY_KEY:-}" ] && [[ "$(git config -f .gitmodules --get submodule.vendor/tracy/deepseek-harness.url)" != https://* ]]; then
-            echo "::warning::plan: secret TRACY_VENDOR_DEPLOY_KEY is missing, so the dsh submodule cannot be fetched — planning the rows as before Turbo"
-            exit 1
-          fi
-          KEY_FILE="$RUNNER_TEMP/vendor_deploy"
-          # The umask stays in a subshell: a bare one would apply to everything git writes afterwards.
-          ( umask 077; printf '%s\n' "$DEPLOY_KEY" > "$KEY_FILE" )
-          mkdir -p ~/.ssh && chmod 700 ~/.ssh
-          ssh-keyscan -t ed25519 github.com >> ~/.ssh/known_hosts 2>/dev/null
           STARTED="$(date +%s)"
-          GIT_SSH_COMMAND="ssh -i $KEY_FILE -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes -o ConnectTimeout=15" \
-            timeout 100 git ${DEPLOY_KEY:+-c url.git@github.com:.insteadOf=https://github.com/} submodule update --init vendor/tracy/deepseek-harness || {
-              echo "::warning::plan: the dsh submodule was not fetched within 100 s — planning the rows as before Turbo"
-              exit 1
-            }
+          GIT_TERMINAL_PROMPT=0 timeout 100 git submodule update --init vendor/tracy/deepseek-harness || {
+            echo "::warning::plan: the dsh submodule was not fetched within 100 s — planning the rows as before Turbo"
+            exit 1
+          }
           git submodule status vendor/tracy/deepseek-harness
           echo "plan: dsh submodule ready in $(( $(date +%s) - STARTED )) s"
-
-      # The key is a credential on a machine that persists between jobs: removed whatever the fetch did,
-      # and before anything else runs.
-      - name: Remove the deploy key
-        if: always()
-        run: rm -f "$RUNNER_TEMP/vendor_deploy"
 
       - name: Ask Turbo which test tasks the cache already holds
         id: turbo
@@ -491,6 +433,7 @@ jobs:
 
       - name: Skip the full suite when this tree already passed one
         id: green
+        if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
         env:
           EVENT: ${{ github.event_name }}
           GH_TOKEN: ${{ github.token }}
@@ -517,7 +460,7 @@ jobs:
   # reads it, or the nightly would quietly judge production's tree and call it develop.
   dsh-lib-nightly:
     name: build dsh once for the nightly's commit
-    runs-on: [self-hosted, linux, "${{ contains(github.event.pull_request.labels.*.name, 'ci:aws-only') && 'X64' || 'linux' }}", tracy-check, tracy-lane-dev]
+    runs-on: ubuntu-latest
     timeout-minutes: 45
     needs: [plan]
     if: github.event_name == 'schedule'
@@ -538,6 +481,7 @@ jobs:
         with:
           submodules: false
           ref: ${{ needs.plan.outputs.checkout_sha }}
+          persist-credentials: false
 
       - name: Assert the nightly checkout is the pinned commit
         env:
@@ -552,45 +496,21 @@ jobs:
           fi
 
       - name: Fetch the vendored dsh submodule
-        env:
-          DEPLOY_KEY: ${{ secrets.TRACY_VENDOR_DEPLOY_KEY }}
         run: |
           set -euo pipefail
-          # An HTTPS submodule URL is the public repository's, fetched without a key.
-          # With a key set, an HTTPS URL is fetched over SSH: a private repository refuses anonymous HTTPS.
-          if [ -z "${DEPLOY_KEY:-}" ] && [[ "$(git config -f .gitmodules --get submodule.vendor/tracy/deepseek-harness.url)" != https://* ]]; then
-            echo "::error::secret TRACY_VENDOR_DEPLOY_KEY is missing. Set it with: gh secret set TRACY_VENDOR_DEPLOY_KEY --repo $GITHUB_REPOSITORY"
-            exit 1
-          fi
-          KEY_FILE="$RUNNER_TEMP/vendor_deploy"
-          ( umask 077; printf '%s\n' "$DEPLOY_KEY" > "$KEY_FILE" )
-          mkdir -p ~/.ssh && chmod 700 ~/.ssh
-          ssh-keyscan -t ed25519 github.com >> ~/.ssh/known_hosts 2>/dev/null
-          GIT_SSH_COMMAND="ssh -i $KEY_FILE -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes" \
-            git ${DEPLOY_KEY:+-c url.git@github.com:.insteadOf=https://github.com/} submodule update --init vendor/tracy/deepseek-harness
+          # The public `TracyHQ/tracy-dsh`, anonymously over HTTPS. No --depth: the submodule is
+          # pinned to an exact commit a shallow fetch may not carry.
+          git submodule update --init vendor/tracy/deepseek-harness
           git submodule status vendor/tracy/deepseek-harness
 
-      - name: Assert the runner's Node matches .node-version
-        run: |
-          set -euo pipefail
-          WANT="$(tr -d ' \t\r\n' < .node-version)"
-          HAVE="$(node -v | sed 's/^v//')"
-          echo "want $WANT, runner has $HAVE"
-          [ "$WANT" = "$HAVE" ] || {
-            echo "::error::runner Node is $HAVE but .node-version asks for $WANT — rebuild the tracy-runner image"
-            exit 1
-          }
-          corepack enable pnpm
+      - name: Set up Node and pnpm
+        uses: ./.github/actions/node-pnpm
 
       - name: Restore or build the vendored dsh
         uses: ./.github/actions/dsh-lib
         with:
           mode: ensure
           lookup-only: 'true'
-
-      - name: Remove the deploy key
-        if: always()
-        run: rm -f "$RUNNER_TEMP/vendor_deploy"
 
   # ─────────────────────────────────────────────────────────────────────────────────────────────
   # THREE PARALLEL JOBS, NOT ONE — changed 2026-09-15.
@@ -638,33 +558,10 @@ jobs:
   # — `e2e` and the three EmDash themes — remain conditional by path on develop PRs.
   build-check:
     name: build check (${{ matrix.group }})
-    # ─────────────────────────────────────────────────────────────────────────────────────────
-    # `tracy-check`, NOT `tracy-build` — changed 2026-09-21
-    #
-    # NOT `ubuntu-latest`: the org's shared monthly quota is a dependency this gate cannot see and
-    # cannot fix (the measurement at the top of this file). What changed is WHICH self-hosted
-    # label it asks for, and the reason is a boundary rather than a preference.
-    #
-    # 🔒 A `tracy-build` RUNNER HOLDS THE DOCKER SOCKET, WHICH IS ROOT ON ITS HOST. Only machines
-    # that run nothing a customer depends on carry it. Checks need no daemon at all — the one
-    # thing in `check-tests.ts` that wanted docker reads `TEST_DATABASE_URL` first, and the four
-    # gated test files that mention `docker` only assert on argv strings — so asking for
-    # `tracy-build` here meant the two production JoomlArt machines could never take a check, and
-    # their capacity sat idle while PRs queued.
-    #
-    # ⚠ THE ORDER OF THIS CHANGE MATTERED. A `runs-on:` label nobody carries does not go red, it
-    # QUEUES, silently and forever. `tracy-check` was added to the four existing `tracy-ci-*`
-    # runners through the API BEFORE this line changed, so there was never a moment where this
-    # workflow asked for something that did not exist.
-    #
-    # Every heavy runner carries BOTH labels, deliberately: a build-only runner would idle 90% of
-    # the time (image builds are 17 jobs and 89 runner-minutes a day against Tracy CI's 81 and
-    # 761), while one pull request asks for eight check slots at once.
-    # The label is per row so a row CAN ask for a different pool. Every row asks for `tracy-check`
-    # today: the one test that needed a docker daemon needed it only to reach a PHP interpreter,
-    # and the runner image carries `php-cli` since `tracy-runners@bf07c3a` — so the exception that
-    # briefly lived here was removed rather than kept warm.
-    runs-on: [self-hosted, linux, "${{ contains(github.event.pull_request.labels.*.name, 'ci:aws-only') && 'X64' || 'linux' }}", '${{ matrix.label }}', "${{ (github.event_name == 'workflow_dispatch' && (github.ref_name == 'main' || github.ref_name == 'staging')) && 'tracy-lane-prod' || 'tracy-lane-dev' }}"]
+    # GitHub-hosted since 27/10/2026 (the header of this file). A public repository's standard
+    # runner is 4 vCPU / 16 GB: dsh's host typecheck peaks at 4.5 GB RSS, and the database the
+    # workers tests need is the throwaway container `check-tests.ts` starts with the VM's docker.
+    runs-on: ubuntu-latest
     timeout-minutes: 45
     # dsh is built by `dsh-lib` above and restored here, never built eight times (see there).
     #
@@ -681,7 +578,7 @@ jobs:
     if: >-
       ${{
         !cancelled()
-        && (github.event_name != 'pull_request' || (github.event.pull_request.draft == false && github.event.pull_request.head.repo.full_name == github.repository))
+        && (github.event_name != 'pull_request' || github.event.pull_request.draft == false)
         && needs.plan.result == 'success'
         && needs.plan.outputs.green_run == ''
         && (
@@ -698,9 +595,8 @@ jobs:
       # inputs, on a PR into `main`, on manual runs and on the nightly. Rows are built by `plan`.
       matrix: ${{ fromJSON(needs.plan.outputs.matrix) }}
     steps:
-      # `submodules: false` here on purpose: the submodule lives in a DIFFERENT private repo
-      # (`TracyHQ/tch-vendor-deepseek-harness`) that `GITHUB_TOKEN` has no access to, so checkout
-      # would die on it. The next step fetches it with a read-only deploy key instead.
+      # `submodules: false` here on purpose: the step after the checkout fetches the submodule at
+      # its pinned commit with full history, which a shallow checkout of it may not carry.
       #
       # 🔒 THE NIGHTLY CHECKS OUT `plan`'s COMMIT, NOT `develop` (05/10/2026; reasons at
       # `dsh-lib-nightly`). The guard runs first because the `ref` expression below turns an empty
@@ -726,6 +622,7 @@ jobs:
           # 2, not 1, for the same reason as in `plan`: a pull request checks out its merge commit,
           # and the clock-shift step below diffs against HEAD^1 (the base tip).
           fetch-depth: 2
+          persist-credentials: false
 
       - name: Assert the nightly checkout is the pinned commit
         if: github.event_name == 'schedule'
@@ -749,42 +646,17 @@ jobs:
       #
       # Copied from `build-dsh-image.yml` on `develop`, which has been green on this runner.
       - name: Fetch the vendored dsh submodule
-        env:
-          DEPLOY_KEY: ${{ secrets.TRACY_VENDOR_DEPLOY_KEY }}
         run: |
           set -euo pipefail
-          # An HTTPS submodule URL is the public repository's, fetched without a key.
-          # With a key set, an HTTPS URL is fetched over SSH: a private repository refuses anonymous HTTPS.
-          if [ -z "${DEPLOY_KEY:-}" ] && [[ "$(git config -f .gitmodules --get submodule.vendor/tracy/deepseek-harness.url)" != https://* ]]; then
-            echo "::error::secret TRACY_VENDOR_DEPLOY_KEY is missing — the presets gate has no inputs. Set it with: gh secret set TRACY_VENDOR_DEPLOY_KEY --repo $GITHUB_REPOSITORY"
-            exit 1
-          fi
-          KEY_FILE="$RUNNER_TEMP/vendor_deploy"
-          # 🔒 THE umask IS IN A SUBSHELL, AND THAT IS THE WHOLE POINT. A bare `umask 077` applies
-          # to the REST of the step, so everything git writes afterwards lands 600/700.
-          ( umask 077; printf '%s\n' "$DEPLOY_KEY" > "$KEY_FILE" )
-          mkdir -p ~/.ssh && chmod 700 ~/.ssh
-          ssh-keyscan -t ed25519 github.com >> ~/.ssh/known_hosts 2>/dev/null
-          # No --depth: the submodule is pinned to an exact commit a shallow fetch may not carry.
-          GIT_SSH_COMMAND="ssh -i $KEY_FILE -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes" \
-            git ${DEPLOY_KEY:+-c url.git@github.com:.insteadOf=https://github.com/} submodule update --init vendor/tracy/deepseek-harness
+          # The public `TracyHQ/tracy-dsh`, anonymously over HTTPS. No --depth: the submodule is
+          # pinned to an exact commit a shallow fetch may not carry.
+          git submodule update --init vendor/tracy/deepseek-harness
           git submodule status vendor/tracy/deepseek-harness
 
-      # The runner image pins Node; `.node-version` pins what the repo expects. Nothing keeps the
-      # two in step, so compare them here rather than let a mismatch surface as some gate's odd
-      # failure twenty minutes in. No `actions/setup-node`: this is our box, not a fresh VM, and
-      # the two proven workflows on this runner do the same.
-      - name: Assert the runner's Node matches .node-version
-        run: |
-          set -euo pipefail
-          WANT="$(tr -d ' \t\r\n' < .node-version)"
-          HAVE="$(node -v | sed 's/^v//')"
-          echo "want $WANT, runner has $HAVE"
-          [ "$WANT" = "$HAVE" ] || {
-            echo "::error::runner Node is $HAVE but .node-version asks for $WANT — rebuild the tracy-runner image on contabo2 (/opt/tracy-runner)"
-            exit 1
-          }
-          corepack enable pnpm
+      # `.node-version` is the one Node of every job; the pnpm store comes back from the Actions cache.
+      - name: Set up Node and pnpm
+        id: node
+        uses: ./.github/actions/node-pnpm
 
       # dsh IS BUILT FROM SOURCE — there is no registry left to fetch it from (ADR 0014 §6, 06/09).
       # Without this step `lib/` of the 410 `@deepseek-ai/*` packages does not exist: the submodule's
@@ -837,8 +709,18 @@ jobs:
         id: install
         run: pnpm install --frozen-lockfile
 
+      # The whole workspace is installed now, so this store is complete: save it for the next runs
+      # when the cache did not hold this key (the rows of one run race; the first save wins).
+      - name: Save the pnpm store
+        if: steps.node.outputs.store-hit != 'true'
+        continue-on-error: true
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ${{ steps.node.outputs.store-path }}
+          key: ${{ steps.node.outputs.store-key }}
+
       - name: Start the Turbo remote cache
-        if: matrix.turbo
+        if: matrix.turbo && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository)
         uses: ./.github/actions/turbo-cache
         with:
           endpoint: ${{ secrets.TURBO_CACHE_S3_ENDPOINT }}
@@ -1007,13 +889,6 @@ jobs:
           echo "::error::Turbo task hashes of this row differ from the plan job's — see the step \"Compare every Turbo task hash with the plan job's\""
           exit 1
 
-      # The key is a credential on a machine that persists between jobs — it does not get to stay.
-      # Its own step with `if: always()`, the shape `build-dsh-image.yml` uses: an inline `rm -f` at
-      # the end of the fetch step never runs when `git submodule update` fails under `set -e`.
-      - name: Remove the deploy key
-        if: always()
-        run: rm -f "$RUNNER_TEMP/vendor_deploy"
-
   # A red nightly is ANNOUNCED, not left for someone to notice on the Actions page. Nobody is
   # looking at a 02:30 run, so the verdict goes to the run's summary (and an error annotation).
   #
@@ -1028,10 +903,10 @@ jobs:
   # in the job name itself. Its summary carries the same sentence.
   suite-skipped:
     name: "full suite skipped: tree ${{ needs.plan.outputs.tree }} already green in run ${{ needs.plan.outputs.green_run }}"
-    runs-on: [self-hosted, linux, "${{ contains(github.event.pull_request.labels.*.name, 'ci:aws-only') && 'X64' || 'linux' }}", tracy-light, "${{ (github.event_name == 'workflow_dispatch' && (github.ref_name == 'main' || github.ref_name == 'staging')) && 'tracy-lane-prod' || 'tracy-lane-dev' }}"]
+    runs-on: ubuntu-latest
     timeout-minutes: 2
     needs: [plan]
-    if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && needs.plan.result == 'success' && needs.plan.outputs.green_run != ''
+    if: github.event_name == 'pull_request' && needs.plan.result == 'success' && needs.plan.outputs.green_run != ''
     steps:
       - name: Say why no build-check row ran
         env:
@@ -1043,7 +918,7 @@ jobs:
 
   nightly-report:
     name: nightly verdict
-    runs-on: [self-hosted, linux, "${{ contains(github.event.pull_request.labels.*.name, 'ci:aws-only') && 'X64' || 'linux' }}", tracy-light, tracy-lane-dev]
+    runs-on: ubuntu-latest
     timeout-minutes: 5
     needs: [plan, dsh-lib-nightly, build-check]
     if: always() && github.event_name == 'schedule'
@@ -1079,9 +954,9 @@ jobs:
   # Seconds are NOT reported here (nothing ran); the proof job below reports the seconds it measured.
   test-growth:
     name: test growth (report-only)
-    runs-on: [self-hosted, linux, "${{ contains(github.event.pull_request.labels.*.name, 'ci:aws-only') && 'X64' || 'linux' }}", tracy-light, "${{ (github.event_name == 'workflow_dispatch' && (github.ref_name == 'main' || github.ref_name == 'staging')) && 'tracy-lane-prod' || 'tracy-lane-dev' }}"]
+    runs-on: ubuntu-latest
     timeout-minutes: 5
-    if: github.event_name == 'pull_request' && github.event.pull_request.draft == false && github.event.pull_request.head.repo.full_name == github.repository
+    if: github.event_name == 'pull_request' && github.event.pull_request.draft == false
     steps:
       - name: Check out Git repository
         uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
@@ -1089,6 +964,12 @@ jobs:
           submodules: false
           # The merge commit and its parents: HEAD^1 is the base tip, as in `plan`.
           fetch-depth: 2
+          persist-credentials: false
+
+      - name: Set up Node
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .node-version
 
       - name: Report what this pull request adds to and removes from the suite
         run: |
@@ -1118,7 +999,7 @@ jobs:
   # `always()` step below removes whatever copy is left, by its owner file.
   new-test-proof:
     name: new-test proof (report-only)
-    runs-on: [self-hosted, linux, "${{ contains(github.event.pull_request.labels.*.name, 'ci:aws-only') && 'X64' || 'linux' }}", tracy-check, "${{ (github.event_name == 'workflow_dispatch' && (github.ref_name == 'main' || github.ref_name == 'staging')) && 'tracy-lane-prod' || 'tracy-lane-dev' }}"]
+    runs-on: ubuntu-latest
     timeout-minutes: 30
     needs: [dsh-lib, plan]
     if: >-
@@ -1126,7 +1007,6 @@ jobs:
         !cancelled()
         && github.event_name == 'pull_request'
         && github.event.pull_request.draft == false
-        && github.event.pull_request.head.repo.full_name == github.repository
         && needs.plan.result == 'success'
         && needs.plan.outputs.new_test_proof == 'true'
         && needs.dsh-lib.result == 'success'
@@ -1139,37 +1019,18 @@ jobs:
           # The merge commit and its parents: the proof compares HEAD^1 (the base tip) with HEAD,
           # the same pair `plan` lists the changed files from.
           fetch-depth: 2
+          persist-credentials: false
 
       - name: Fetch the vendored dsh submodule
-        env:
-          DEPLOY_KEY: ${{ secrets.TRACY_VENDOR_DEPLOY_KEY }}
         run: |
           set -euo pipefail
-          # An HTTPS submodule URL is the public repository's, fetched without a key.
-          # With a key set, an HTTPS URL is fetched over SSH: a private repository refuses anonymous HTTPS.
-          if [ -z "${DEPLOY_KEY:-}" ] && [[ "$(git config -f .gitmodules --get submodule.vendor/tracy/deepseek-harness.url)" != https://* ]]; then
-            echo "::error::secret TRACY_VENDOR_DEPLOY_KEY is missing. Set it with: gh secret set TRACY_VENDOR_DEPLOY_KEY --repo $GITHUB_REPOSITORY"
-            exit 1
-          fi
-          KEY_FILE="$RUNNER_TEMP/vendor_deploy"
-          ( umask 077; printf '%s\n' "$DEPLOY_KEY" > "$KEY_FILE" )
-          mkdir -p ~/.ssh && chmod 700 ~/.ssh
-          ssh-keyscan -t ed25519 github.com >> ~/.ssh/known_hosts 2>/dev/null
-          GIT_SSH_COMMAND="ssh -i $KEY_FILE -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes" \
-            git ${DEPLOY_KEY:+-c url.git@github.com:.insteadOf=https://github.com/} submodule update --init vendor/tracy/deepseek-harness
+          # The public `TracyHQ/tracy-dsh`, anonymously over HTTPS. No --depth: the submodule is
+          # pinned to an exact commit a shallow fetch may not carry.
+          git submodule update --init vendor/tracy/deepseek-harness
           git submodule status vendor/tracy/deepseek-harness
 
-      - name: Assert the runner's Node matches .node-version
-        run: |
-          set -euo pipefail
-          WANT="$(tr -d ' \t\r\n' < .node-version)"
-          HAVE="$(node -v | sed 's/^v//')"
-          echo "want $WANT, runner has $HAVE"
-          [ "$WANT" = "$HAVE" ] || {
-            echo "::error::runner Node is $HAVE but .node-version asks for $WANT — rebuild the tracy-runner image"
-            exit 1
-          }
-          corepack enable pnpm
+      - name: Set up Node and pnpm
+        uses: ./.github/actions/node-pnpm
 
       # The same bootstrap as a `build-check` row, in the same pinned order (see there): the tests
       # are run with the checkout's installed dependencies, so the install must be the real one.
@@ -1202,62 +1063,3 @@ jobs:
       - name: Remove a scratch copy a cancelled run left behind
         if: always()
         run: node scripts/ci/new-test-proof.mjs --cleanup --scratch-root "$RUNNER_TEMP/new-test-proof-scratch"
-
-      - name: Remove the deploy key
-        if: always()
-        run: rm -f "$RUNNER_TEMP/vendor_deploy"
-
-  # ─────────────────────────────────────────────────────────────────────────────────────────────
-  # A FORK'S PULL REQUEST (26/10/2026, docs/references/public-repo-ci.md). Every job above runs only
-  # for branches of this repository: code from a fork never reaches the team's runners. This is its
-  # minimal equivalent on a GitHub-hosted runner, with no secret and a read-only token: the `checks`
-  # row (`check-all.ts --skip tests`). It needs the vendored dsh submodule, fetched anonymously over
-  # HTTPS; while that repository is private the fetch fails and the job says so and ends green — a
-  # maintainer then pushes the branch to this repository to run the full suite.
-  fork-checks:
-    name: fork pull request checks
-    runs-on: ubuntu-latest
-    timeout-minutes: 45
-    if: github.event_name == 'pull_request' && github.event.pull_request.draft == false && github.event.pull_request.head.repo.full_name != github.repository
-    permissions:
-      contents: read
-    steps:
-      - name: Check out Git repository
-        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
-        with:
-          submodules: false
-          persist-credentials: false
-
-      - name: Fetch the vendored dsh submodule anonymously
-        id: submodule
-        env:
-          GIT_TERMINAL_PROMPT: '0'
-        run: |
-          set -uo pipefail
-          if git -c url."https://github.com/".insteadOf="git@github.com:" \
-            submodule update --init --depth 1 vendor/tracy/deepseek-harness; then
-            echo "available=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "available=false" >> "$GITHUB_OUTPUT"
-            msg="The vendored dsh submodule is not public yet, so a fork's pull request cannot be built here. A maintainer runs the full suite by pushing this branch to the repository."
-            echo "::notice title=Fork checks skipped::$msg"
-            printf '### Fork checks skipped\n\n%s\n' "$msg" >> "$GITHUB_STEP_SUMMARY"
-          fi
-
-      - name: Set up Node
-        if: steps.submodule.outputs.available == 'true'
-        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
-        with:
-          node-version-file: .node-version
-
-      - name: Build the vendored dsh and install dependencies
-        if: steps.submodule.outputs.available == 'true'
-        run: |
-          set -euo pipefail
-          corepack enable pnpm
-          node scripts/build-dsh.mjs
-          pnpm install --frozen-lockfile
-
-      - name: Build check (checks row)
-        if: steps.submodule.outputs.available == 'true'
-        run: pnpm exec tsx scripts/check-all.ts --skip tests
