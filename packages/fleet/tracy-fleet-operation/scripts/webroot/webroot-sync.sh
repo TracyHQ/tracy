@@ -195,12 +195,8 @@ drop_scratch() {
 # database", 24/10/2026) or, worse, one half loaded: merged as if the live site had dropped the rest.
 load_schema() {
   tracy_db_exec mariadb -uroot -e "DROP DATABASE IF EXISTS \`$1\`; CREATE DATABASE \`$1\` CHARACTER SET $CHARSET COLLATE $COLLATION" || return 1
-  if [[ -s "${3:-}" ]]; then
-    gzip -dc "$2" | python3 "$LIB_DIR/dump_sections.py" cut --skip "$3" \
-      | tracy_db_exec mariadb -uroot --max-allowed-packet=256M --init-command="SET FOREIGN_KEY_CHECKS=0" "$1" || return 1
-  else
-    gzip -dc "$2" | tracy_db_exec mariadb -uroot --max-allowed-packet=256M --init-command="SET FOREIGN_KEY_CHECKS=0" "$1" || return 1
-  fi
+  # Two loads each (the base and the live read load side by side): four connections in all.
+  TRACY_LOAD_STREAMS="${TRACY_LOAD_STREAMS:-2}" tracy_db_load_dump "$1" "$2" "$DIR/load-$1" "${3:-}" || return 1
   tracy_db_drop_triggers "$1" >&2 || return 1
 }
 
@@ -1032,6 +1028,14 @@ remember_read() { # theirs_commit
   python3 -c 'import json,sys; json.dump(json.load(open(sys.argv[1])).get("idMap", {}), open(sys.argv[2], "w"))' \
     "$DIR/db.json" "$ID_MAP.tmp" && chmod 600 "$ID_MAP.tmp" && mv "$ID_MAP.tmp" "$ID_MAP"
   cp "$DIR/live/db.sql.gz" "$LIVE_BASE_DUMP.tmp" && chmod 600 "$LIVE_BASE_DUMP.tmp" && mv "$LIVE_BASE_DUMP.tmp" "$LIVE_BASE_DUMP"
+  # Where each table's gzip member lies in it (live-pull.mjs `writeDump`): the next read takes an
+  # unmoved table's bytes as they are. A read written without one leaves none behind.
+  if [[ -f "$DIR/live/db.sql.gz.index.json" ]]; then
+    cp "$DIR/live/db.sql.gz.index.json" "$LIVE_BASE_DUMP.index.json.tmp" && chmod 600 "$LIVE_BASE_DUMP.index.json.tmp" \
+      && mv "$LIVE_BASE_DUMP.index.json.tmp" "$LIVE_BASE_DUMP.index.json"
+  else
+    rm -f "$LIVE_BASE_DUMP.index.json"
+  fi
   # The read in place holds what a push wrote: the next base needs no word about it.
   rm -f "$PUSHED"
   remember_kept
@@ -1398,7 +1402,7 @@ copy_token() {
 }
 
 forget() {
-  rm -f "$LIVE_BASE_DUMP" "$SYNC_DIR/live-manifest.json" "$LIVE_FINGERPRINT" "$KEPT"
+  rm -f "$LIVE_BASE_DUMP" "$LIVE_BASE_DUMP.index.json" "$SYNC_DIR/live-manifest.json" "$LIVE_FINGERPRINT" "$KEPT"
   g update-ref -d "$LIVE_REF" 2>/dev/null || true
   # Every run's folder but this job's own; a sync that began meanwhile reads before it locks, and
   # its folder is newer than a day — the sweep's age (`sweep_runs`) is what leaves it.
@@ -1431,14 +1435,16 @@ read_live() {
     if [[ -z "$manifest" ]] && first_read_manifest; then manifest="$DIR/first-manifest.json"; fi
     # WordPress rewrites its transients, WP-Cron, sessions and auto-drafts on every visit: rows the
     # comparison of two reads leaves out (lib/live_sync_wordpress.py `volatile_rows`), with the
-    # column that names a row (`row-names`: a read that kept changing says which rows) and the plugin
-    # tables the merge never takes (`ignored-tables`, under the copy's own table prefix).
+    # column that names a row (`row-names`: a read that kept changing says which rows). On both
+    # platforms, the tables the merge never takes (lib/live_sync.py `never-taken`: Tracy's own, the
+    # ignored ones, under the copy's own table prefix): kept from the last read, never read again.
     local volatile_rows='{}' row_names='{}' ignored_tables='{}'
+    [[ -n "$DB" ]] || DB="$(tracy_backup_db_name)"
+    ignored_tables="$(python3 "$LIB_DIR/live_sync.py" never-taken --platform "$(tracy_backup_platform)" --prefix "$(site_prefix)")" \
+      || ignored_tables='{}'
     if [[ "$(tracy_backup_platform)" == wordpress ]]; then
       volatile_rows="$(python3 "$LIB_DIR/live_sync_wordpress.py" volatile-rows)"
       row_names="$(python3 "$LIB_DIR/live_sync_wordpress.py" row-names)"
-      [[ -n "$DB" ]] || DB="$(tracy_backup_db_name)"
-      ignored_tables="$(python3 "$LIB_DIR/live_sync_wordpress.py" ignored-tables --prefix "$(site_prefix)")" || ignored_tables='{}'
     fi
     pulled="$(TRACY_SYNC_MANIFEST_IN="$manifest" TRACY_SYNC_FINGERPRINT_IN="$fingerprint" TRACY_SYNC_DB_BASE="$base_dump" \
       TRACY_SYNC_VOLATILE_ROWS="$volatile_rows" TRACY_SYNC_ROW_NAMES="$row_names" TRACY_SYNC_IGNORED_TABLES="$ignored_tables" \
@@ -1530,7 +1536,7 @@ live_unchanged() {
 # What a finished sync leaves behind: the answers, not the site's bytes. The live read is the
 # customer's whole database (users, orders): once applied, its one kept copy is the next base;
 # otherwise none (a refused sync used to keep a 564 MB read with the database for a day, 20/10/2026).
-tidy() { rm -rf "$DIR/live" "$DIR/large" "$DIR/base" "$DIR/ours.sql.gz" "$DIR/ours-triggers.sql" "$DIR/ours-shares" "$DIR"/tree-* "$DIR"/index-* "$DIR/merged.sql.gz" "$DIR/held.json"; }
+tidy() { rm -rf "$DIR/live" "$DIR/large" "$DIR/base" "$DIR"/load-* "$DIR/ours.sql.gz" "$DIR/ours-triggers.sql" "$DIR/ours-shares" "$DIR"/tree-* "$DIR"/index-* "$DIR/merged.sql.gz" "$DIR/held.json"; }
 
 # The folders of syncs older than a day — failed, abandoned, or never applied — hold the same
 # reads; none is merged again after that long (the live site has moved on). Swept at every start.

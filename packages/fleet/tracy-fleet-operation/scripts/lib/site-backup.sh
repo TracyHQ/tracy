@@ -70,6 +70,39 @@ tracy_db_exec() {
   ( cd "$STACK" && docker compose exec -T -e MYSQL_PWD="$(_tracy_env_value DB_PASSWORD)" db "$@" )
 }
 
+# tracy_db_load_dump <schema> <dump.gz> <work dir> [skip file]: a live read (live-pull.mjs's dump) into
+# an empty <schema>, its tables shared out by size among TRACY_LOAD_STREAMS (4) loads side by side
+# (lib/dump_sections.py split, each table's part in a file of its own under <work dir>), the tables
+# named in <skip file> left out. One load as before for a dump that cannot load that way (views,
+# routines, LOCK TABLES). A WordPress live read took 9–10 s to load in one stream (dev, 27/10/2026).
+tracy_db_load_dump() {
+  local schema="$1" dump="$2" work="$3" skip="${4:-}" plan said=0 group failed=0 pid
+  local pids=()
+  rm -rf "$work"
+  mkdir -p "$work"
+  plan="$(gzip -dc "$dump" | python3 "$LIB_DIR/dump_sections.py" split --streams "${TRACY_LOAD_STREAMS:-4}"             --out "$work" ${skip:+--skip "$skip"})" || said=$?
+  if [[ "$said" == 0 ]]; then
+    while IFS= read -r group; do
+      [[ -n "$group" ]] || continue
+      # The paths are this function's own (digits under <work dir>): split on spaces on purpose.
+      # shellcheck disable=SC2086
+      ( cat $group | tracy_db_exec mariadb -uroot --max-allowed-packet=256M \
+          --init-command="SET FOREIGN_KEY_CHECKS=0" "$schema" ) & pids+=("$!")
+    done <<< "$plan"
+    for pid in ${pids[@]+"${pids[@]}"}; do wait "$pid" || failed=1; done
+    rm -rf "$work"
+    return "$failed"
+  fi
+  rm -rf "$work"
+  [[ "$said" == 3 ]] || return 1
+  if [[ -s "$skip" ]]; then
+    gzip -dc "$dump" | python3 "$LIB_DIR/dump_sections.py" cut --skip "$skip" \
+      | tracy_db_exec mariadb -uroot --max-allowed-packet=256M --init-command="SET FOREIGN_KEY_CHECKS=0" "$schema"
+  else
+    gzip -dc "$dump" | tracy_db_exec mariadb -uroot --max-allowed-packet=256M --init-command="SET FOREIGN_KEY_CHECKS=0" "$schema"
+  fi
+}
+
 # Base tables of a schema, one per line — the copies `db.snapshot` keeps (`_tracy_snap_*`) left out:
 # they are copies, and dumping them doubles the dump.
 tracy_db_tables() {

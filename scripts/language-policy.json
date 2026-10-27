@@ -16,8 +16,27 @@
     {
       "path": "packages/cms/tracy-joomla-quickstart/translations/*/*/*/*.json",
       "reason": "CMS content translations; explanatory README files are not translation data."
+    },
+    {
+      "path": "packages/locale/tracy-locales/*/*.json",
+      "reason": "Interface language packs (de, es, fr, it, nl, zh); values are localized text shown to users."
+    },
+    {
+      "path": "packages/locale/tracy-locale-vi/vi/*.json",
+      "reason": "Vietnamese interface language pack; values are localized text shown to users."
     }
   ],
   "lines": [],
-  "objects": []
+  "objects": [
+    {
+      "path": "packages/locale/tracy-locales/lib/client.js",
+      "oid": "fa10ebe2115baa953bd484df29ecb8626a265a88",
+      "reason": "Bundle built from the interface language packs above, including the website opportunities labels; reviewed build output."
+    },
+    {
+      "path": "packages/locale/tracy-locale-vi/lib/client.js",
+      "oid": "43f12e3a08ea82fab2ed491f3c41a6d28868b697",
+      "reason": "Bundle built from the Vietnamese interface language pack above, including the website opportunities labels; reviewed build output."
+    }
+  ]
 }

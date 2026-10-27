@@ -22,6 +22,8 @@ import { gzipSync } from 'node:zlib'
 
 const here = dirname(fileURLToPath(import.meta.url))
 const SYNC = readFileSync(join(here, '..', 'scripts', 'webroot', 'webroot-sync.sh'), 'utf8')
+const BACKUP = readFileSync(join(here, '..', 'scripts', 'lib', 'site-backup.sh'), 'utf8')
+const LIB = join(here, '..', 'scripts', 'lib')
 const PUSH = readFileSync(join(here, '..', 'scripts', 'webroot', 'webroot-live-push.sh'), 'utf8')
 const root = mkdtempSync(join(tmpdir(), 'live-sync-scratch-'))
 after(() => rmSync(root, { recursive: true, force: true }))
@@ -37,9 +39,9 @@ const fn = (source, name) => {
  * `load_schema` + `scratch_loaded` against a database that refuses `refuse` (a regular expression
  * over the statement), run as `sync_op` runs `merge`: inside `$(…)`.
  */
-function run(refuse) {
+function run(refuse, sql = 'CREATE TABLE jos_content (id INT);\n') {
   const dump = join(root, 'dump.sql.gz')
-  writeFileSync(dump, gzipSync('CREATE TABLE jos_content (id INT);\n'))
+  writeFileSync(dump, gzipSync(sql))
   const script = `set -euo pipefail
 CHARSET=utf8mb4 COLLATION=utf8mb4_unicode_ci
 made=" "
@@ -54,6 +56,9 @@ tracy_db_exec() {
   return 0
 }
 tracy_db_drop_triggers() { return 0; }
+LIB_DIR=${JSON.stringify(LIB)}
+DIR=${JSON.stringify(root)}
+${fn(BACKUP, 'tracy_db_load_dump')}
 ${fn(SYNC, 'load_schema')}
 ${fn(SYNC, 'scratch_loaded')}
 merge() {
@@ -83,6 +88,13 @@ test('a scratch schema the server refuses to make is seen, though `set -e` is of
 test('a load the server refuses half-way is seen too', () => {
   // The dump's statements reach the client on stdin: refused there, after the schema was made.
   assert.deepEqual(run('--init-command'), { ok: false, code: 'MERGE_FAILED' })
+  // A live read's tables, each on a load of its own: one load refused is the load refused.
+  const tables = ['a', 'b', 'c']
+    .map((t) => `-- table \`jos_${t}\`\nCREATE TABLE jos_${t} (id INT);\n`)
+    .join('')
+  assert.deepEqual(run('', tables), { ok: true })
+  assert.deepEqual(run('--init-command', tables), { ok: false, code: 'MERGE_FAILED' })
+  assert.deepEqual(run('jos_b', tables), { ok: false, code: 'MERGE_FAILED' })
 })
 
 test('both scripts check their scratch loads by hand and say why they stopped', () => {
