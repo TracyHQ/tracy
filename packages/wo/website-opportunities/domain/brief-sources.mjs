@@ -124,10 +124,12 @@ export function withAttemptedSources(brief, attempted, { supplied = null } = {})
  * own fetches keeps its count (`coverageOf`).
  */
 export function suppliedBySource({ googlePlace = null, media = [], posts = [] } = {}) {
-  const out = {}
+  // A Map keeps a source named like an Object.prototype key ('__proto__') an ordinary row.
+  const out = new Map()
   const add = (source, key, n) => {
     if (!nonEmpty(source) || !n) return
-    const o = (out[source] ??= { fetched: 0 })
+    if (!out.has(source)) out.set(source, { fetched: 0 })
+    const o = out.get(source)
     o.fetched += n
     if (key) o[key] = (o[key] ?? 0) + n
   }
@@ -141,7 +143,7 @@ export function suppliedBySource({ googlePlace = null, media = [], posts = [] } 
   }
   for (const m of Array.isArray(media) ? media : []) if (m?.kind === 'image') add(m.source, 'photos', 1)
   for (const p of Array.isArray(posts) ? posts : []) add(p?.source, null, 1)
-  return out
+  return Object.fromEntries(out)
 }
 
 /** How much a source gave, in the brief's Markdown: `14 (3 reviews, 10 photos)`, `12/40`, `0`. */

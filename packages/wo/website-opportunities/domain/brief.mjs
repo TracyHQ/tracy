@@ -1042,8 +1042,10 @@ export const SEO_DESCRIPTION_MAX = 155
  * ("Harbour Lane - Al Barsha - Dubai - United Arab Emirates" gives "Dubai"); null for an address of fewer parts.
  */
 export function cityOf(address) {
+  // Whitespace collapses first so the split pattern stays linear on long runs of spaces or tabs.
   const parts = String(address ?? '')
-    .split(/\s+-\s+|,\s*/)
+    .replace(/\s+/g, ' ')
+    .split(/ - |,/)
     .map((p) => p.trim())
     .filter(Boolean)
   if (parts.length < 3) return null

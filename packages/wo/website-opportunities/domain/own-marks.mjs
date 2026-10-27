@@ -22,7 +22,19 @@ export function logoNameText(logo) {
   if (logo?.showsName !== true) return ''
   let text = clean(logo.readsAs)
   for (const f of logoFactsOf({ readsAs: text })) text = text.replace(f.text, ' ')
-  return clean(text.replace(/^[\s\-|·,.]+|[\s\-|·,.]+$/g, ''))
+  return clean(trimEdgePunctuation(text))
+}
+
+const EDGE_PUNCTUATION = new Set([' ', '-', '|', '·', ',', '.'])
+
+/** `text` less the separators at either end, by index so a long run of them stays linear. */
+function trimEdgePunctuation(text) {
+  const t = clean(text)
+  let start = 0
+  let end = t.length
+  while (start < end && EDGE_PUNCTUATION.has(t[start])) start += 1
+  while (end > start && EDGE_PUNCTUATION.has(t[end - 1])) end -= 1
+  return t.slice(start, end)
 }
 
 /** Two keys of one name: the same, or one holding the other (a logo that adds the city). */
