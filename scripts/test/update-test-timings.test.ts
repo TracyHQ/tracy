@@ -417,6 +417,20 @@ test('only a green Linux pull-request run into develop is eligible', () => {
   }
 })
 
+test('a GitHub-hosted Ubuntu runner is a linux runner; a hosted macOS one is not', () => {
+  // Since 27/10/2026 the test rows run on `ubuntu-latest`, whose job labels name the image only.
+  assert.equal(
+    refusal(RUN, { pulls: PULLS as never, jobs: goodJobs({ labels: ['ubuntu-latest'] }) as never }, 2, REPO),
+    null
+  )
+  assert.match(
+    String(
+      refusal(RUN, { pulls: PULLS as never, jobs: goodJobs({ labels: ['macos-latest'] }) as never }, 2, REPO)
+    ),
+    /linux runner/
+  )
+})
+
 test('a sample is tied to one repository, workflow, pull request, commit, run and attempt', () => {
   const other = 'b'.repeat(40)
   const fork = { full_name: 'someone/tch' }

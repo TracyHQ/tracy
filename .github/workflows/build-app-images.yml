@@ -2,8 +2,8 @@
 #
 # WHY THIS IS A SEPARATE FILE FROM `build-dsh-image.yml`, said in one place so nobody has to guess:
 # the two builds have nothing in common but a registry. dsh is a 4.4 GB image whose build runs
-# `pnpm build:official` over ~300 packages plus Chromium, needs a read-only deploy key for a
-# private submodule, and is given a 90-minute timeout; these two are node:24-slim plus a `COPY`,
+# `pnpm build:official` over ~300 packages plus Chromium, needs the vendored dsh submodule,
+# and is given a 90-minute timeout; these two are node:24-slim plus a `COPY`,
 # and finish in single-digit minutes. Welding them together would make every one-line fix to
 # `apps/tracy-web` wait on — and be failed by — a build it does not touch, and would restart
 # `tracy-dsh` (every agent session on the host with it) on a push that changed neither.
@@ -141,10 +141,9 @@ env:
 
 jobs:
   build:
-    # The same x86_64 box the other two workflows use. NOT `ubuntu-latest`: the org's monthly
-    # Actions quota is shared with every repo in it, and when another one spends it these jobs die
-    # in three seconds with no steps run — measured 07/09, `Tracy CI` 0 green out of 300.
-    runs-on: [self-hosted, linux, x64, tracy-build, "${{ ((github.base_ref || github.ref_name) == 'main' || (github.base_ref || github.ref_name) == 'staging') && 'tracy-lane-prod' || 'tracy-lane-dev' }}"]
+    # GitHub-hosted since 27/10/2026: a fresh VM per job is a build host no pull-request code has
+    # touched, and a public repository's hosted minutes are free. Disk is made with `free-disk`.
+    runs-on: ubuntu-latest
     timeout-minutes: 45
 
     permissions:
@@ -178,53 +177,27 @@ jobs:
           submodules: false
           fetch-depth: 0
 
-      # The runner image pins Node; `.node-version` pins what the repo expects. Nothing keeps the
-      # two in step, so compare them here rather than let a mismatch surface as a Vite build that
-      # fails for a reason that does not mention Node. Copied from `tracy-ci.yml`, deliberately —
-      # this is our box, not a fresh VM, so no `actions/setup-node`.
-      - name: Assert the runner's Node matches .node-version
-        run: |
-          set -euo pipefail
-          WANT="$(tr -d ' \t\r\n' < .node-version)"
-          HAVE="$(node -v | sed 's/^v//')"
-          echo "want $WANT, runner has $HAVE"
-          [ "$WANT" = "$HAVE" ] || {
-            echo "::error::runner Node is $HAVE but .node-version asks for $WANT — rebuild the tracy-runner image on contabo2 (/opt/tracy-runner)"
-            exit 1
-          }
-          corepack enable pnpm
-
       # ⚠ THE SUBMODULE IS NEEDED EVEN THOUGH NEITHER DOCKERFILE COPIES IT. `pnpm-workspace.yaml`
       # declares ~300 members under `vendor/tracy/deepseek-harness`; with the directory empty the root
       # install does not fail at the submodule, it fails as a 404 from npmjs for
-      # `@deepseek-ai/*@…-tracy.1` in the middle of a resolve (CLAUDE.md §5). It lives in a
-      # DIFFERENT private repository, which `GITHUB_TOKEN` cannot read — hence the deploy key.
+      # `@deepseek-ai/*@…-tracy.1` in the middle of a resolve (CLAUDE.md §5).
       - name: Fetch the vendored dsh submodule
-        env:
-          DEPLOY_KEY: ${{ secrets.TRACY_VENDOR_DEPLOY_KEY }}
         run: |
           set -euo pipefail
-          # An HTTPS submodule URL is the public repository's, fetched without a key.
-          # With a key set, an HTTPS URL is fetched over SSH: a private repository refuses anonymous HTTPS.
-          if [ -z "${DEPLOY_KEY:-}" ] && [[ "$(git config -f .gitmodules --get submodule.vendor/tracy/deepseek-harness.url)" != https://* ]]; then
-            echo "::error::secret TRACY_VENDOR_DEPLOY_KEY is missing — vendor/tracy/deepseek-harness cannot be fetched"
-            exit 1
-          fi
-          KEY_FILE="$RUNNER_TEMP/vendor_deploy"
-          # The umask is in a SUBSHELL: a bare `umask 077` would apply to the rest of this step and
-          # every file git writes would land 600/700 — see build-dsh-image.yml for the twelve-layer
-          # failure that produced.
-          ( umask 077; printf '%s\n' "$DEPLOY_KEY" > "$KEY_FILE" )
-          mkdir -p ~/.ssh && chmod 700 ~/.ssh
-          ssh-keyscan -t ed25519 github.com >> ~/.ssh/known_hosts 2>/dev/null
-          GIT_SSH_COMMAND="ssh -i $KEY_FILE -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes" \
-            git ${DEPLOY_KEY:+-c url.git@github.com:.insteadOf=https://github.com/} submodule update --init vendor/tracy/deepseek-harness
+          # The public `TracyHQ/tracy-dsh`, anonymously over HTTPS, at its pinned commit.
+          git submodule update --init vendor/tracy/deepseek-harness
           COUNT=$(find vendor/tracy/deepseek-harness -mindepth 1 -maxdepth 1 | wc -l)
           echo "vendor/tracy/deepseek-harness holds $COUNT entries"
           [ "$COUNT" -ge 5 ] || {
             echo "::error::vendor/tracy/deepseek-harness looks empty — the install would fail as an npmjs 404 instead of here"
             exit 1
           }
+
+      - name: Make room for the image build
+        uses: ./.github/actions/free-disk
+
+      - name: Set up Node and pnpm
+        uses: ./.github/actions/node-pnpm
 
       - name: Resolve the tag
         id: meta
@@ -491,10 +464,6 @@ jobs:
         if: always()
         run: docker logout ghcr.io || true
 
-      # The key is a credential on a machine that persists between jobs — it does not get to stay.
-      - name: Remove the deploy key
-        if: always()
-        run: rm -f "$RUNNER_TEMP/vendor_deploy"
 
   # ── Mirror to AWS ECR (plan docs/sre/2026-10-20-chuyen-ghcr-sang-ecr-plan.md, P1) ─────────────
   #
@@ -518,7 +487,7 @@ jobs:
       ${{ needs.build.result == 'success'
       && (github.event_name == 'push' || inputs.push)
       && (github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/staging') }}
-    runs-on: [self-hosted, linux, x64, tracy-build, "${{ ((github.base_ref || github.ref_name) == 'main' || (github.base_ref || github.ref_name) == 'staging') && 'tracy-lane-prod' || 'tracy-lane-dev' }}"]
+    runs-on: ubuntu-latest
     environment:
       name: ecr-push
     timeout-minutes: 45

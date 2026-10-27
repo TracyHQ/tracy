@@ -1,9 +1,9 @@
 /**
  * The workflow rules that keep fork code off the team's runners (docs/references/public-repo-ci.md).
  *
- * A pull request from a branch of this repository runs on the self-hosted runners as before; one
- * from a fork runs only GitHub-hosted jobs with a read-only token and no secret; no pull-request job
- * asks for the production lane; every action from another repository is pinned to a commit.
+ * Every pull-request job runs on a GitHub-hosted runner (since 27/10/2026), the same job for a branch
+ * of this repository and for a fork; a step that reads a secret is guarded to this repository's
+ * branches; no checkout keeps a credential; every action from another repository is pinned to a commit.
  */
 import assert from 'node:assert/strict'
 import { readdirSync, readFileSync } from 'node:fs'
@@ -46,51 +46,81 @@ test('the pull-request workflows were read', () => {
     assert.ok(names.includes(file), file)
 })
 
-test('a self-hosted job of a pull-request workflow runs only for branches of this repository', () => {
+// GitHub-hosted runner images a job may ask for; never a team runner label.
+const HOSTED = /^(ubuntu-latest|ubuntu-24\.04|ubuntu-24\.04-arm)$/
+const steps = (job) => job.steps ?? []
+// The local actions that run `node` themselves.
+const NODE_ACTIONS = ['./.github/actions/dsh-lib', './.github/actions/turbo-cache']
+const usesNode = (step) =>
+  /(^|[\s;&|(])(node|pnpm|npx|corepack)\s/m.test(String(step.run ?? '')) ||
+  NODE_ACTIONS.includes(String(step.uses))
+const setsUpNode = (step) =>
+  String(step.uses ?? '').startsWith('actions/setup-node@') || step.uses === './.github/actions/node-pnpm'
+
+test('every job of a pull-request workflow runs on a GitHub-hosted runner', () => {
+  // Since 27/10/2026: the team's self-hosted runners take no pull-request code at all.
   for (const { file, doc } of prWorkflows)
     for (const [name, job] of Object.entries(doc.jobs)) {
-      if (!labelsOf(job).includes('self-hosted')) continue
-      const cond = String(job.if ?? '')
-      // The nightly-only jobs never see a pull request; every other one must name the guard itself.
+      const labels = labelsOf(job)
+      assert.equal(labels.length, 1, `${file} › ${name}: ${labels.join(', ')}`)
+      assert.match(labels[0], HOSTED, `${file} › ${name}`)
+    }
+})
+
+test('each gate is one job: a fork runs the same job, there is no fork twin', () => {
+  for (const { file, doc } of prWorkflows)
+    for (const [name, job] of Object.entries(doc.jobs)) {
+      assert.doesNotMatch(String(job.name ?? name), /\(fork\)$/, `${file} › ${name}`)
       assert.ok(
-        cond.includes(SAME_REPO) || /^(always\(\) && )?github\.event_name == 'schedule'$/.test(cond),
-        `${file} › ${name}: if must require ${SAME_REPO}`
+        !String(job.if ?? '').includes('full_name != github.repository'),
+        `${file} › ${name}: a fork-only job`
       )
     }
 })
 
-test('no pull-request job asks for the production lane', () => {
+test('a step that reads a secret never runs for a fork pull request', () => {
+  // GitHub hands a fork's `pull_request` run no secret anyway; the guard keeps that true by reading,
+  // not by trusting the platform, and keeps a step from failing on an empty value.
+  let guarded = 0
   for (const { file, doc } of prWorkflows)
-    for (const [name, job] of Object.entries(doc.jobs)) {
-      for (const label of labelsOf(job)) {
-        if (!label.includes('tracy-lane-prod')) continue
-        assert.ok(!label.includes('base_ref'), `${file} › ${name}: lane follows the PR base: ${label}`)
-        assert.match(
-          label,
-          /github\.event_name == '(push|workflow_dispatch)'/,
-          `${file} › ${name}: the production lane only for a push or a manual run`
-        )
+    for (const [name, job] of Object.entries(doc.jobs))
+      for (const step of steps(job)) {
+        const text = JSON.stringify(step).replaceAll('secrets.GITHUB_TOKEN', '')
+        if (!text.includes('secrets.')) continue
+        guarded++
+        const cond = `${String(job.if ?? '')} ${String(step.if ?? '')}`
+        assert.ok(cond.includes(SAME_REPO), `${file} › ${name} › ${step.name}: needs ${SAME_REPO}`)
       }
-    }
+  assert.ok(guarded >= 3, `only ${guarded} secret-reading steps found`)
 })
 
-test('every fork job is GitHub-hosted, read-only, keeps no credential and reads no secret', () => {
-  let forkJobs = 0
-  for (const { file, doc, text } of prWorkflows)
-    for (const [name, job] of Object.entries(doc.jobs)) {
-      const cond = String(job.if ?? '')
-      if (!cond.includes('github.event.pull_request.head.repo.full_name != github.repository')) continue
-      forkJobs++
-      assert.deepEqual(labelsOf(job), ['ubuntu-latest'], `${file} › ${name}`)
-      assert.deepEqual(job.permissions, { contents: 'read' }, `${file} › ${name}`)
-      for (const step of job.steps ?? []) {
+test('a checkout in a pull-request workflow keeps no credential', () => {
+  for (const { file, doc } of prWorkflows)
+    for (const [name, job] of Object.entries(doc.jobs))
+      for (const step of steps(job))
         if (String(step.uses ?? '').startsWith('actions/checkout@'))
-          assert.equal(step.with?.['persist-credentials'], false, `${file} › ${name}: checkout`)
-        assert.ok(!JSON.stringify(step).includes('secrets.'), `${file} › ${name}: ${step.name}`)
-      }
-      assert.ok(text.includes(`name: ${job.name}`), `${file} › ${name}`)
+          assert.equal(step.with?.['persist-credentials'], false, `${file} › ${name} › ${step.name}`)
+})
+
+test('a GitHub-hosted job sets up the Node of .node-version before it runs node or pnpm', () => {
+  let checked = 0
+  for (const { file, doc } of workflows)
+    for (const [name, job] of Object.entries(doc.jobs)) {
+      if (labelsOf(job).includes('self-hosted')) continue
+      const first = steps(job).findIndex(usesNode)
+      if (first === -1) continue
+      checked++
+      const setup = steps(job).findIndex(setsUpNode)
+      assert.ok(setup !== -1 && setup < first, `${file} › ${name}: node runs before it is set up`)
+      const step = steps(job)[setup]
+      if (step.uses !== './.github/actions/node-pnpm')
+        assert.match(String(step.with?.['node-version-file']), /(^|\/)\.node-version$/, `${file} › ${name}`)
     }
-  assert.ok(forkJobs >= 6, `only ${forkJobs} fork jobs found`)
+  assert.ok(checked >= 15, `only ${checked} GitHub-hosted node jobs found`)
+})
+
+test('no job of a pull-request workflow names a runner lane', () => {
+  for (const { file, text } of prWorkflows) assert.doesNotMatch(text, /tracy-lane-(dev|prod)/, file)
 })
 
 test('every action from another repository is pinned to a full commit id', () => {

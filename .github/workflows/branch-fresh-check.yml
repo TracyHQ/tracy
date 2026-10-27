@@ -20,8 +20,8 @@ permissions:
 on:
   pull_request:
     branches: [main, staging, develop]
-    # `edited` (26/10/2026): retargeting a pull request fires it, and every pull-request job now runs on
-    # the dev lane, so a fresh run is the only record of which base this verdict was made against.
+    # `edited` (26/10/2026): retargeting a pull request fires it, and a fresh run is the only record of
+    # which base this verdict was made against.
     types: [opened, edited, synchronize, reopened, ready_for_review]
 
 concurrency:
@@ -31,30 +31,14 @@ concurrency:
 jobs:
   branch-fresh:
     name: branch-fresh
-    # Pull-request code never runs on the production lane, whatever the base (public-repo-ci.md).
-    runs-on: [self-hosted, linux, tracy-light, tracy-lane-dev]
-    timeout-minutes: 10
-    # Team runners take only branches of this repository; a fork gets `branch-fresh (fork)` below.
-    if: github.event.pull_request.draft == false && github.event.pull_request.head.repo.full_name == github.repository
-    steps:
-      # 🔒 `fetch-depth: 0`: the gate walks the base's history back to the fork point; one commit is not enough.
-      - name: Check out Git repository
-        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
-        with:
-          fetch-depth: 0
-
-      - name: Check branch freshness
-        run: node scripts/check-branch-fresh.mjs --ci
-
-  # A fork's pull request: the same script on a GitHub-hosted runner, no secret, read-only token.
-  branch-fresh-fork:
-    name: branch-fresh (fork)
+    # GitHub-hosted since 27/10/2026 (the repository is public: hosted minutes are free, and no other
+    # repository's quota can stop this gate). One job for a branch of this repository and for a fork:
+    # it reads the payload and git with a read-only token and no secret (public-repo-ci.md).
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    if: github.event.pull_request.draft == false && github.event.pull_request.head.repo.full_name != github.repository
-    permissions:
-      contents: read
+    if: github.event.pull_request.draft == false
     steps:
+      # 🔒 `fetch-depth: 0`: the gate walks the base's history back to the fork point; one commit is not enough.
       - name: Check out Git repository
         uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
         with:

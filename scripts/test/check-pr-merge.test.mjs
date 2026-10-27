@@ -1149,6 +1149,20 @@ test('a pull-request job that ran on the production lane is refused, whatever th
   }
 })
 
+test('a job on a GitHub-hosted runner carries no lane and passes; a self-hosted one still needs the dev lane', async () => {
+  // Since 27/10/2026 every pull-request job runs on GitHub-hosted runners (docs/references/public-repo-ci.md).
+  const w = world()
+  for (const file of FILES) for (const j of jobsOf(w, file).jobs) j.labels = ['ubuntu-latest']
+  const { v } = await verdictOf(w)
+  assert.equal(v.verdict, 'PASS', v.reason)
+  for (const labels of [['self-hosted', 'linux'], ['ubuntu-latest', 'tracy-lane-prod'], []]) {
+    const bad = world()
+    jobsOf(bad, 'branch-fresh-check.yml').jobs[0].labels = labels
+    const { v: verdict } = await verdictOf(bad)
+    assert.equal(verdict.verdict, 'FAIL', `${labels.join(',')}: ${verdict.reason}`)
+  }
+})
+
 test('job rows that contradict the run they were asked for are UNKNOWN', async () => {
   const cases = {
     'another run': (j) => (j.run_id += 1),

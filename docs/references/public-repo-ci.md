@@ -1,11 +1,14 @@
 ---
-description: How GitHub Actions stays safe in a public repository with self-hosted runners — fork pull requests on GitHub-hosted runners only, pull requests off the production lane, pinned actions, and the settings the owner flips at cutover.
+description: How GitHub Actions stays safe in a public repository — every pull-request job on GitHub-hosted runners, secrets only for this repository's branches, the team's runners only on deploy hosts, pinned actions, and the settings the owner flips.
 sources:
   - .github/workflows
   - .github/CODEOWNERS
   - scripts/check-pr-merge.mjs
   - scripts/auto-merge-develop.mjs
   - scripts/test/ci-public-repo.test.mjs
+  - scripts/test/ci-runner-arch.test.mjs
+  - .github/actions/node-pnpm/action.yml
+  - .github/actions/free-disk/action.yml
   - scripts/ci/ci-repository.mjs
   - scripts/check-language-policy.mjs
   - scripts/lib/english-policy.mjs
@@ -16,42 +19,40 @@ sources:
 
 # CI for a public repository
 
-How GitHub Actions stays safe once this repository is public while the team keeps its own
-self-hosted runners (owner decision, 26/10/2026). Enforced by `scripts/test/ci-public-repo.test.mjs`.
+How GitHub Actions stays safe now that this repository is public. Since 27/10/2026 every
+pull-request job runs on GitHub-hosted runners (free and unmetered for a public repository), and the
+team's self-hosted runners only run jobs that must run on a deploy host. Enforced by
+`scripts/test/ci-public-repo.test.mjs` and `scripts/test/ci-runner-arch.test.mjs`.
 
 ## The model
 
 | Code | Where it runs | Credentials |
 |---|---|---|
-| A push to `main`/`staging`/`develop`, a manual run, the nightly | the team's self-hosted runners, as before | the secrets each workflow already uses |
-| A pull request from a **branch of this repository** | the team's self-hosted runners, **always the dev lane** (`tracy-lane-dev`), whatever the base | as before (the CI read App token in `plan` and `CI Before Merge`, the vendor deploy key, the Turbo cache keys) |
-| A pull request from a **fork** | **GitHub-hosted** `ubuntu-latest` only | none: `permissions: { contents: read }`, `actions/checkout` with `persist-credentials: false`, no `secrets.*` |
+| A pull request, from a branch of this repository or from a fork | GitHub-hosted `ubuntu-latest`, the **same job** either way | a branch of this repository: the steps that need one get a secret (the CI read App token in `plan` and `CI Before Merge`; the Turbo cache keys when set), each guarded by `github.event.pull_request.head.repo.full_name == github.repository`. A fork: none — GitHub hands a fork's `pull_request` run no secret and a read-only `GITHUB_TOKEN`, and the guards skip those steps |
+| A push to `main`/`staging`/`develop`, a manual run, the nightly, `auto-merge-develop` | GitHub-hosted `ubuntu-latest` (`changelog`, Tracy CI, image builds, the merge job) | the secrets each workflow uses |
+| A deploy (`deploy-dev`/`-staging`/`-prod`) and the dev host's dispatch jobs | the team's runner **on that host** (`tracy-dev`, `tracy-staging`, `tracy-prod`) | the environment's secrets |
 
-Each self-hosted job of a pull-request workflow carries
-`github.event.pull_request.head.repo.full_name == github.repository` in its `if`. Each such
-workflow has a fork twin named `<job> (fork)` that runs the same repo script on `ubuntu-latest`:
+Rules every pull-request workflow follows (`ci-public-repo.test.mjs`):
 
-| Workflow | Fork job |
-|---|---|
-| `tracy-ci.yml` | `fork pull request checks`: the `checks` row (`check-all.ts --skip tests`). It fetches `vendor/tracy/deepseek-harness` anonymously over HTTPS; while that repository is private the fetch fails, the job prints a notice and ends green. A maintainer runs the full suite by pushing the branch to this repository |
-| `changelog-check.yml` | `changelog (fork)` |
-| `pr-description-check.yml` | `description (fork)` |
-| `regression-check.yml` | `Regression (fork)` |
-| `branch-fresh-check.yml` | `branch-fresh (fork)` |
-| `ci-before-merge.yml` | `merged with green Tracy CI (fork)`: a warning only — a fork's code never ran the full rows, and its token cannot comment |
+- every job is GitHub-hosted, and there is no fork twin: one job per gate, whoever opened the pull request;
+- a step that reads a secret carries the same-repository guard in its own `if` or its job's;
+- every `actions/checkout` sets `persist-credentials: false`;
+- a hosted job sets up the Node of `.node-version` before it runs `node` or `pnpm`;
+- no job names a runner lane (`tracy-lane-dev`/`tracy-lane-prod`).
 
+A fork's pull request therefore runs the **full** Tracy CI (the vendored dsh submodule is the public
+`TracyHQ/tracy-dsh`), minus what needs a secret: no read of earlier runs (`green-tree`, so it never
+skips the suite), no Turbo remote cache (the rows fall back to the two workers shards).
 `check-pr-merge.mjs` and auto-merge refuse a fork's pull request, so a fork is merged only by a
-person, after reading it.
+person, after reading it; `CI Before Merge` only warns on a fork merge.
 
-### The production lane
+### No production lane any more
 
-`tracy-lane-prod` runners share the machine that builds production images. Since 26/10/2026 no
-pull-request job asks for it, a release pull request into `main` included; only a push to
-`main`/`staging` (image builds, deploys, `changelog`) and a manual Tracy CI run on `main`/`staging`
-do. `check-pr-merge.mjs` therefore requires the dev lane on every job of every pull request, and the
-lane no longer records which base a run was made for. A pull request retargeted after a green run is
-still caught: into `staging`/`main` every row is required (the forced Turbo rows only with the plan's
-`full run` mark), and `branch-fresh` now re-runs on `edited`, which retargeting fires.
+Until 27/10/2026 pull-request jobs ran on the team's dev-lane runners and only merged code reached the
+production lane's build runner. Both lanes are gone from every workflow: a GitHub-hosted job is a
+fresh VM that no other job, pull request or not, has touched, and production images are built that
+way too. `check-pr-merge.mjs` still refuses a job that ran on the production lane, and accepts a
+GitHub-hosted job (no `self-hosted` label, no lane) or a dev-lane one.
 
 ### Privileged workflows
 
@@ -159,30 +160,34 @@ must be clean before publication, use a private preparation repository and a rev
 ## Residual risk
 
 - **An approved fork pull request can edit the workflow files.** A `pull_request` run uses the
-  workflow YAML of the pull request's merge commit, so a fork that changes a job's `if` or `runs-on`
-  can ask for a self-hosted label once a maintainer lets its workflows run. YAML guards keep honest
-  forks off the team's runners; they do not stop a hostile one. Reviewers must read every change to
-  `.github/**` and `scripts/ci/**` (both owned in `.github/CODEOWNERS`) **before** approving a fork's
-  workflow run. GitHub recommends self-hosted runners only for private repositories; the real fence
-  is runner-group access (below), which is outside YAML.
-- Fork pull requests get no full test run until the submodule is public, and even then only the
-  `checks` row.
-- A release pull request now queues on the dev lane with every other pull request.
+  workflow YAML of the pull request's merge commit, so a fork can change what its own run does once
+  a maintainer lets its workflows run. It still gets no secret and a read-only token, and it can no
+  longer reach a team runner: the deploy-host labels are refused to it by runner-group access, not by
+  YAML (below). Reviewers must still read every change to `.github/**` and `scripts/ci/**` (both
+  owned in `.github/CODEOWNERS`) **before** approving a fork's workflow run.
+- A fork's run writes to the Actions cache of its own pull request only; it cannot replace an entry
+  that a run on `develop` or `main` saved, which is what other pull requests read.
+- A same-repository pull request's code runs in a job that may mint the CI read App token (`plan`).
+  That is read-only, scoped to this repository, and was the case on the team's runners too.
 
 ## Cutover settings (owner)
 
 1. Repository → Settings → Actions → General → **Fork pull request workflows from outside
    collaborators: "Require approval for all external contributors"**.
-2. In `TracyHQ/tracy-runners`, remove `tracy-lane-dev` from `aws-prod-check-01` and
-   `aws-prod-check-02` (`hosts.tsv`, the `tracy-lane-dev@1-2` entry on the `aws-prod-check` row,
-   then `bin/deploy`), so no pull-request job lands on the production box.
-3. Restrict the self-hosted runner group to this repository and, if possible, to the workflows above;
-   then prove it with a fork pull request that asks for a self-hosted label and record that no runner
-   took it.
-4. Optional: turn on `REQUIRE_APPROVAL_FOR_AUTO_MERGE=true` (repository variable) when the team is
+2. Restrict the self-hosted runner group to this repository and to the two image workflows (the
+   only ones with deploy-host jobs); then prove it with a fork pull request that asks for a
+   self-hosted label and record that no runner took it.
+3. In `TracyHQ/tracy-runners`, retire the check, light and build pools (`tracy-check`,
+   `tracy-light`, `tracy-build`, `tracy-lane-dev`, `tracy-lane-prod`): no job asks for them now.
+   Keep the `tracy-dev` / `tracy-staging` / `tracy-prod` runners.
+4. Before enabling the image workflows: grant `TracyHQ/tracy` write access to the
+   `ghcr.io/tracyhq/tracy-web`, `tracy-host` and `tracy-dsh` packages (Package settings → Manage
+   Actions access), or the hosted build cannot push with `GITHUB_TOKEN`; then watch the first push
+   build (the free disk `free-disk` prints, the push, the deploy).
+5. Optional: turn on `REQUIRE_APPROVAL_FOR_AUTO_MERGE=true` (repository variable) when the team is
    ready to approve before auto-merge.
-5. Once `TracyHQ/tch-vendor-deepseek-harness` is public: `.gitmodules` to `https://`, and drop
-   `TRACY_VENDOR_DEPLOY_KEY`.
+6. Optional: set `TURBO_CACHE_S3_*` (endpoint, bucket, keys of an R2 bucket) to bring back the
+   Turbo test cache; without them the rows run the two workers shards.
 
 ## Cutover: source repository name
 

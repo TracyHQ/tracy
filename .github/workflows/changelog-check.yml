@@ -8,13 +8,10 @@
 # nothing that is alive; `develop` (where everyone works) and `main-v3` (production for the
 # tracy-web architecture) had no changelog gate at all. See the same block in `tracy-ci.yml`.
 #
-# WHERE IT RUNS, AND WHY THAT CHANGED — 2026-09-08. This gate installs nothing: the event
-# payload, a `git diff` and a bare `node`. That made `ubuntu-latest` the obvious host, and it was
-# the right host until the org exhausted its included Actions minutes: from 06/09 every
-# GitHub-hosted job here died in three seconds with zero steps executed, this gate 204 times in a
-# row. Those reds were indistinguishable from a missing changelog entry, which is the worst thing
-# a gate can be — wrong in the same colour as right. It now runs on `tracy-build-01`, the
-# contabo2 runner, with `tracy-ci.yml`; the measurement is at the top of that file.
+# WHERE IT RUNS — `ubuntu-latest` again since 27/10/2026. From 08/09 it ran on the team's runners:
+# the org's shared quota of hosted minutes ran out on 06/09 and this gate died in three seconds 204
+# times in a row, reds indistinguishable from a missing entry. A public repository's hosted minutes
+# are free and unmetered, so that reason is gone.
 #
 # 🔒 `fetch-depth: 0`, NOT THE DEFAULT. `actions/checkout` takes exactly one commit by default; this
 # gate needs both `payload.before` and `payload.after` present in the tree before `git diff` has a
@@ -47,38 +44,17 @@ concurrency:
 jobs:
   check-changelog:
     name: changelog
-    # `tracy-light` (15/09): four 1-cpu runners on the CI box that take only these nine-second
-    # checks, so they never queue behind a Tracy CI or an image build on the `tracy-build` four.
-    # A push to `main`/`staging` is merged code and keeps the production lane; pull-request code never
-    # runs there, whatever the base (public-repo-ci.md).
-    runs-on: [self-hosted, linux, tracy-light, "${{ (github.event_name == 'push' && (github.ref_name == 'main' || github.ref_name == 'staging')) && 'tracy-lane-prod' || 'tracy-lane-dev' }}"]
+    # GitHub-hosted since 27/10/2026 (the repository is public: hosted minutes are free, and no other
+    # repository's quota can stop this gate). One job for a branch of this repository and for a fork:
+    # it reads the payload and git with a read-only token and no secret (public-repo-ci.md).
+    runs-on: ubuntu-latest
     timeout-minutes: 10
-    # Team runners take pushes and branches of this repository; a fork gets `changelog (fork)` below.
-    if: github.event_name == 'push' || (github.event.pull_request.draft == false && github.event.pull_request.head.repo.full_name == github.repository)
+    if: github.event_name == 'push' || github.event.pull_request.draft == false
     steps:
       - name: Check out Git repository
         uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
         with:
           # The gate diffs two arbitrary commits of the push, so it needs history, not a snapshot.
-          fetch-depth: 0
-
-      # `$GITHUB_EVENT_PATH` is the event payload the runner already wrote to disk — no token, no
-      # API call, so nothing in this step can fail except the logic under test.
-      - name: Check changelog entry
-        run: node scripts/check-changelog.mjs
-
-  # A fork's pull request: the same script on a GitHub-hosted runner, no secret, read-only token.
-  check-changelog-fork:
-    name: changelog (fork)
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    if: github.event_name == 'pull_request' && github.event.pull_request.draft == false && github.event.pull_request.head.repo.full_name != github.repository
-    permissions:
-      contents: read
-    steps:
-      - name: Check out Git repository
-        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
-        with:
           fetch-depth: 0
           persist-credentials: false
 
@@ -87,5 +63,7 @@ jobs:
         with:
           node-version-file: .node-version
 
+      # `$GITHUB_EVENT_PATH` is the event payload the runner already wrote to disk — no token, no
+      # API call, so nothing in this step can fail except the logic under test.
       - name: Check changelog entry
         run: node scripts/check-changelog.mjs

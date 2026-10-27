@@ -1,4 +1,4 @@
-# Tracy Cowork for Windows and Linux — installers built on our self-hosted build runner, unsigned.
+# Tracy Cowork for Windows and Linux — installers built on a GitHub-hosted Linux runner, unsigned.
 #
 # The Windows + Linux half of a release (tasks/todo-desktop-windows.md, rule R: one release = Mac +
 # Windows + Linux, one sha, one version). `packages/desktop/tracy-desktop/build/release.mjs prepare`, run
@@ -20,7 +20,7 @@
 # 🔒 A RELEASE BUILD IS THE SHA IT WAS GIVEN. The job checks out `inputs.sha` (never the branch head) and
 # refuses it unless it is in the history of origin/main (stable) or origin/develop (dev) — the same rule
 # the release preflight holds the Mac half to. Stable is dispatched on `main` only, dev on `develop` only,
-# so the lane below follows: stable builds on the production lane's runner.
+# so a stable build only ever comes from a sha on `main`.
 #
 # A PUSH to a `feat/desktop-windows*` branch builds that branch's head as a dev candidate
 # (`<package version>-dev.<run number>`, a build id from the time and sha) — to try packaging, and the way
@@ -28,26 +28,21 @@
 # dispatches only workflows it finds there): `prepare --win-linux-run <run id>`. Its record says
 # `trigger: push`, and prepare takes such a run for a test target only.
 #
-# 🔒 SELF-HOSTED, LIKE EVERY OTHER WORKFLOW HERE (docs/references/gates-ci-runners.md § Runners).
-# It was written for GitHub-hosted `windows-2025`/`ubuntu-24.04` first and never ran: GitHub refuses
-# hosted jobs for the TracyHQ org ("recent account payments have failed", runs 38046151128 and
-# 38050098735). Since 10/10/2026: build on our runners. One Linux x64 job makes all six files — the
-# NSIS installers through wine (electron-builder runs rcedit and the installer itself under wine to
-# write the exe's icon/version info and the uninstaller), AppImage and .deb cross-built for arm64.
+# 🔒 GITHUB-HOSTED `ubuntu-latest` SINCE 27/10/2026 (docs/references/gates-ci-runners.md § Runners).
+# From 10/10/2026 it ran on the team's self-hosted build runners, because GitHub then refused hosted
+# jobs for the org (runs 38046151128 and 38050098735); the public repository runs them, free. A fresh
+# VM per job is also a build host no pull-request code has touched. One Linux x64 job makes all six
+# files — the NSIS installers through wine (electron-builder runs rcedit and the installer itself
+# under wine to write the exe's icon/version info and the uninstaller), AppImage and .deb
+# cross-built for arm64.
 #
-# 🔒 THE LANE. The same expression as the image builds: `main` (or `staging`) → `tracy-lane-prod`,
-# anything else → `tracy-lane-dev`. A release build comes from a sha on `main` and is built on the
-# production lane's build runner, a machine no pull-request code runs on; a push to a
-# `feat/desktop-windows*` branch can only ever reach the dev lane.
-#
-# 🔒 THE CONTAINER GETS NO MOUNT AT ALL. The runner is itself a container talking to the HOST daemon
-# (tracy-runners `docker-socket.yml`), and its `_work` is a named volume inside it — so a
-# `-v $GITHUB_WORKSPACE:…` would be resolved on the host's disk, where that path does not exist (and
-# the daemon would create it, as root). Instead the job `docker cp`s the staged app and the build
+# 🔒 THE CONTAINER GETS NO MOUNT AT ALL. Written for a runner that was itself a container talking to
+# the host daemon, where a `-v $GITHUB_WORKSPACE:…` resolved on the host's disk; kept on the hosted
+# VM because it needs no path agreement at all: the job `docker cp`s the staged app and the build
 # scripts in and the installers out. No `--privileged`, no host path, no socket inside; the container
 # is created, used and removed by its id, also when the job fails or is cancelled.
 #
-# ⚠ WHY NOT A SOCKET-LESS `tracy-check` RUNNER — probed 10/10/2026, runs 38054926794 and 38055677273.
+# ⚠ WHY IT NEEDS DOCKER (a socket-less runner was probed 10/10/2026, runs 38054926794 and 38055677273).
 # The Linux half works there unchanged (same four files, sizes within 100 bytes). The Windows half
 # does not: the exe's icon and version info are written in JavaScript (electron-builder 26 `resedit`,
 # no rcedit, no wine), but NSIS makes the uninstaller by RUNNING the installer under wine
@@ -112,7 +107,9 @@ jobs:
     # Write: the draft release this run hands its installers over in, and the sweep of old drafts.
     permissions:
       contents: write
-    runs-on: [self-hosted, linux, x64, tracy-build, "${{ ((github.base_ref || github.ref_name) == 'main' || (github.base_ref || github.ref_name) == 'staging') && 'tracy-lane-prod' || 'tracy-lane-dev' }}"]
+    # GitHub-hosted since 27/10/2026: a fresh VM per job is a build host no pull-request code has
+    # touched, and a public repository's hosted minutes are free. Disk is made with `free-disk`.
+    runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
       # Full history: the on-origin check below needs the release branch's ancestry.
@@ -126,6 +123,12 @@ jobs:
       # Drafts of earlier runs that no publish deleted (rehearsals, abandoned candidates), aged by their
       # newest upload. Never fails the build: an old draft left over is clutter, not a broken release.
       # The runner has no `gh`: build/draft-release.mjs talks to the REST API with the job's token.
+      - name: Make room for the packaging
+        uses: ./.github/actions/free-disk
+
+      - name: Set up Node and pnpm
+        uses: ./.github/actions/node-pnpm
+
       - name: Sweep old draft releases
         env:
           GH_TOKEN: ${{ github.token }}
@@ -157,7 +160,7 @@ jobs:
               dev) BRANCH=develop ;;
               *) echo "::error::variant must be stable or dev, got: $VARIANT"; exit 1 ;;
             esac
-            # Stable on main only (the production lane), dev on develop only: the lane follows the variant.
+            # Stable on main only, dev on develop only: the branch follows the variant.
             [ "$REF_NAME" = "$BRANCH" ] || { echo "::error::a $VARIANT build is dispatched on $BRANCH, this run is on $REF_NAME"; exit 1; }
             git fetch --no-tags origin "+refs/heads/$BRANCH:refs/remotes/origin/$BRANCH"
             git merge-base --is-ancestor "$SHA" "origin/$BRANCH" \
@@ -191,27 +194,12 @@ jobs:
 
       # Same step as the image builds: the submodule is another private repo, GITHUB_TOKEN cannot read it.
       - name: Fetch the vendored dsh submodule
-        env:
-          DEPLOY_KEY: ${{ secrets.TRACY_VENDOR_DEPLOY_KEY }}
         run: |
           set -euo pipefail
-          # An HTTPS submodule URL is the public repository's, fetched without a key.
-          # With a key set, an HTTPS URL is fetched over SSH: a private repository refuses anonymous HTTPS.
-          if [ -z "${DEPLOY_KEY:-}" ] && [[ "$(git config -f .gitmodules --get submodule.vendor/tracy/deepseek-harness.url)" != https://* ]]; then
-            echo "::error::secret TRACY_VENDOR_DEPLOY_KEY is missing — vendor/tracy/deepseek-harness cannot be fetched"
-            exit 1
-          fi
-          KEY_FILE="$RUNNER_TEMP/vendor_deploy"
-          ( umask 077; printf '%s\n' "$DEPLOY_KEY" > "$KEY_FILE" )
-          mkdir -p ~/.ssh && chmod 700 ~/.ssh
-          ssh-keyscan -t ed25519 github.com >> ~/.ssh/known_hosts 2>/dev/null
-          GIT_SSH_COMMAND="ssh -i $KEY_FILE -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes" \
-            git ${DEPLOY_KEY:+-c url.git@github.com:.insteadOf=https://github.com/} submodule update --init vendor/tracy/deepseek-harness
+          # The public `TracyHQ/tracy-dsh`, anonymously over HTTPS, at its pinned commit.
+          git submodule update --init vendor/tracy/deepseek-harness
           git submodule status vendor/tracy/deepseek-harness
 
-      - name: Remove the deploy key
-        if: always()
-        run: rm -f "$RUNNER_TEMP/vendor_deploy"
 
       # 🔒 The build runner keeps ONE checkout that the two image workflows also bootstrap in (see
       # build-dsh-image.yml, "START FROM NO node_modules"). Start clean here, and they start clean too.

@@ -1,0 +1,56 @@
+# Node of `.node-version`, pnpm through corepack, and the pnpm store restored from the Actions cache.
+#
+# For the GitHub-hosted jobs that install the workspace (since 27/10/2026). A fresh VM has no store,
+# so without the cache every `pnpm install` downloads every package again. The key covers both
+# lockfiles (the root and the vendored dsh's, which `build-dsh.mjs` installs into the same store),
+# so run this AFTER the submodule is fetched. A miss restores the newest store of the same platform.
+#
+# 🔒 RESTORE ONLY. A store is saved by the job that installed the whole workspace, after its install
+# succeeded (`build-check`, step "Save the pnpm store", with this action's outputs) — never at the end
+# of any job: a job that installed part of it would save a partial store under the full key, and
+# every later job would restore that one until the lockfile changed.
+name: Node and pnpm
+description: Set up the Node of .node-version, enable pnpm, and cache the pnpm store.
+
+outputs:
+  store-path:
+    description: The pnpm store directory
+    value: ${{ steps.store.outputs.path }}
+  store-key:
+    description: The cache key of this store
+    value: ${{ steps.store.outputs.key }}
+  store-hit:
+    description: Whether the cache held exactly this key
+    value: ${{ steps.restore.outputs.cache-hit }}
+
+runs:
+  using: composite
+  steps:
+    - name: Set up Node
+      uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+      with:
+        node-version-file: .node-version
+
+    - name: Enable pnpm and find its store
+      id: store
+      shell: bash
+      env:
+        COREPACK_ENABLE_DOWNLOAD_PROMPT: '0'
+      run: |
+        set -euo pipefail
+        # The corepack bundled with Node fails to verify newer pnpm releases ("Cannot find matching
+        # keyid"); the team's runner image installs the released one for the same reason.
+        npm install --global --no-audit --no-fund --loglevel=error corepack@0.36.0
+        corepack enable pnpm
+        corepack --version
+        echo "path=$(pnpm store path --silent)" >> "$GITHUB_OUTPUT"
+        echo "key=pnpm-store-${RUNNER_OS}-${RUNNER_ARCH}-${{ hashFiles('pnpm-lock.yaml', 'vendor/tracy/deepseek-harness/pnpm-lock.yaml') }}" >> "$GITHUB_OUTPUT"
+        df -h / | tail -1 | awk '{print "disk: " $4 " free of " $2}'
+
+    - name: Restore the pnpm store
+      id: restore
+      uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      with:
+        path: ${{ steps.store.outputs.path }}
+        key: ${{ steps.store.outputs.key }}
+        restore-keys: pnpm-store-${{ runner.os }}-${{ runner.arch }}-

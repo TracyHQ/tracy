@@ -4,13 +4,9 @@
 # works) or `main-v3` (production) had no description gate at all; measured on PR #71. See the
 # same block in `tracy-ci.yml`.
 #
-# WHERE IT RUNS, AND WHY THAT CHANGED — 2026-09-08. This gate installs nothing: it reads the
-# event payload and runs one repo script under a bare `node`, so `ubuntu-latest` was plenty. It
-# was plenty right up until the org ran out of included Actions minutes, at which point every
-# GitHub-hosted job in this repo — this one included — began failing in three seconds with zero
-# steps and a 404 for its log. A gate whose green depends on a quota another repo spends is a
-# gate that can be turned off by people who never look at it. It now runs on `tracy-build-01`,
-# the contabo2 runner, alongside `tracy-ci.yml`. The full measurement is at the top of that file.
+# WHERE IT RUNS — `ubuntu-latest` again since 27/10/2026. From 08/09 it ran on the team's runners
+# because the org's shared monthly quota of hosted minutes ran out and every hosted job failed in
+# three seconds. A public repository's hosted minutes are free and unmetered, so that reason is gone.
 #
 # IT DOES NOT JUDGE CODE. It judges whether the description exists. A well-described PR with wrong
 # code still passes this gate; that is the job of the other gates and of the reviewer.
@@ -48,18 +44,23 @@ concurrency:
 jobs:
   check-description:
     name: description
-    # `tracy-light` (15/09): four 1-cpu runners on the CI box that take only these nine-second
-    # checks, so they never queue behind a Tracy CI or an image build on the `tracy-build` four.
-    # Pull-request code never runs on the production lane, whatever the base (public-repo-ci.md).
-    runs-on: [self-hosted, linux, tracy-light, tracy-lane-dev]
+    # GitHub-hosted since 27/10/2026 (the repository is public: hosted minutes are free, and no other
+    # repository's quota can stop this gate). One job for a branch of this repository and for a fork:
+    # it reads the payload and git with a read-only token and no secret (public-repo-ci.md).
+    runs-on: ubuntu-latest
     timeout-minutes: 10
-    # Team runners take only branches of this repository; a fork gets `description (fork)` below.
-    if: github.event.pull_request.head.repo.full_name == github.repository
     # Runs on drafts too (06/10/2026): a draft runs no Tracy CI, so without this a body missing a
-    # section was found only after the flip to ready. The check costs seconds on a `tracy-light` runner.
+    # section was found only after the flip to ready. The check costs seconds.
     steps:
       - name: Check out Git repository
         uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          persist-credentials: false
+
+      - name: Set up Node
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .node-version
 
       # `$GITHUB_EVENT_PATH` is the event payload the runner already wrote to disk — no token, no
       # API call, so nothing in this step can fail except the logic under test.
@@ -72,25 +73,3 @@ jobs:
         run: |
           echo "::notice::Still pushing? Convert this pull request to a draft (gh pr ready --undo) — drafts run no Tracy CI. Mark it Ready for review when it is final; that runs Tracy CI once."
           printf '### 💡 Draft while you are still pushing\n\nA ready pull request runs Tracy CI (nine jobs) on every push. Keep it a **draft** until it is final (`gh pr ready --undo`), then **Ready for review** runs it once. Merge only on green: a merge without a green run on the final commit is flagged by CI Before Merge.\n' >> "$GITHUB_STEP_SUMMARY"
-
-  # A fork's pull request: the same script on a GitHub-hosted runner, no secret, read-only token.
-  check-description-fork:
-    name: description (fork)
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    if: github.event.pull_request.head.repo.full_name != github.repository
-    permissions:
-      contents: read
-    steps:
-      - name: Check out Git repository
-        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
-        with:
-          persist-credentials: false
-
-      - name: Set up Node
-        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
-        with:
-          node-version-file: .node-version
-
-      - name: Check PR description
-        run: node scripts/check-pr-description.mjs

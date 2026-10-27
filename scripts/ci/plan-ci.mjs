@@ -186,7 +186,6 @@ export function turboRows(dry, { force = false } = {}) {
     const filter = r.group.startsWith('tests web') ? ' --filter=@tracy/web' : ''
     out.push({
       group: r.group,
-      label: 'tracy-check',
       args: '',
       turbo: `${names.join(' ')}${filter}`,
       ...(force ? { force: true } : {})
@@ -239,22 +238,20 @@ export function planMatrix({
   const conditional = [
     ...EMDASH.map((r) => ({
       group: r.group,
-      label: 'tracy-check',
       args: r.args,
       paths: `^(${r.own}|${EMDASH_INPUTS}|${SHARED})`
     })),
     {
       group: 'tests e2e',
-      label: 'tracy-check',
       args: '--only tests --tests-part e2e',
       paths: e2ePaths(allFiles)
     }
   ]
   const fullRows = [
-    { group: 'tests 1/2', label: 'tracy-check', args: '--only tests --tests-part workers:1/2' },
-    { group: 'tests 2/2', label: 'tracy-check', args: '--only tests --tests-part workers:2/2,rest' }
+    { group: 'tests 1/2', args: '--only tests --tests-part workers:1/2' },
+    { group: 'tests 2/2', args: '--only tests --tests-part workers:2/2,rest' }
   ]
-  let checks = { group: 'checks', label: 'tracy-check', args: '--skip tests' }
+  let checks = { group: 'checks', args: '--skip tests' }
 
   let runsAll = true
   let why = ''
@@ -341,7 +338,7 @@ export function planMatrix({
     : !related || related.full
       ? (fullTurbo?.rows ?? fullRows)
       : relatedRun.length > 0 || related.interop
-        ? [{ group: 'tests related', label: 'tracy-check', args: '--only tests --tests-part related' }]
+        ? [{ group: 'tests related', args: '--only tests --tests-part related' }]
         : []
   // The tests with the clock moved forward run on exactly one row: the last full shard, the related
   // row, or — when Turbo plans the tests and may start none — `checks`, which always runs.

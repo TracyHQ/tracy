@@ -198,7 +198,7 @@ function contextOf({ event, draft = false, baseRef = 'develop', cancelled = fals
       event: pr ? { pull_request: { draft } } : {}
     },
     needs,
-    matrix: { label: 'tracy-check', group: 'checks' },
+    matrix: { group: 'checks' },
     functions: {
       always: () => true,
       cancelled: () => cancelled,
@@ -515,8 +515,7 @@ test('nightly: exactly one dsh job runs per event, and the nightly one is dsh-li
   }
 
   // Same machine class, same budget, same steps — only the two guards and the pinned ref differ.
-  const labels = (job) => job['runs-on'].map((l) => template(l, contextOf({ event: 'schedule' })))
-  assert.deepEqual(labels(nightly), labels(jobs['dsh-lib']))
+  assert.equal(nightly['runs-on'], jobs['dsh-lib']['runs-on'])
   assert.equal(nightly['timeout-minutes'], jobs['dsh-lib']['timeout-minutes'])
   const shared = nightly.steps
     .filter((s) => s.name !== REFUSE && s.name !== ASSERT)
@@ -591,15 +590,8 @@ test('pull requests and manual runs check out the event ref and skip the nightly
     }
     assert.equal(runs(jobs['nightly-report'], context), false)
   }
-  // The lane: production runners only for a manual run on main; pull requests (into main too) and
-  // the nightly take the dev lane (docs/references/public-repo-ci.md).
-  const lane = (context) => template(jobs['build-check']['runs-on'].at(-1), context)
-  assert.equal(lane(contextOf({ event: 'pull_request', baseRef: 'main' })), 'tracy-lane-dev')
-  const dispatchOnMain = contextOf({ event: 'workflow_dispatch' })
-  dispatchOnMain.github.ref_name = 'main'
-  assert.equal(lane(dispatchOnMain), 'tracy-lane-prod')
-  assert.equal(lane(contextOf({ event: 'pull_request', baseRef: 'develop' })), 'tracy-lane-dev')
-  assert.equal(lane(contextOf({ event: 'schedule' })), 'tracy-lane-dev')
+  // No runner lane any more: every job is GitHub-hosted, whatever the event (since 27/10/2026).
+  for (const [name, job] of Object.entries(jobs)) assert.equal(job['runs-on'], 'ubuntu-latest', name)
   assert.equal(workflow.concurrency['cancel-in-progress'], "${{ github.event_name == 'pull_request' }}")
 })
 

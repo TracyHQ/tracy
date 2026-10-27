@@ -32,7 +32,8 @@ concurrency:
 jobs:
   merge:
     if: vars.TRACY_AUTO_MERGE_DEVELOP == 'true' || (github.event_name == 'workflow_dispatch' && inputs.dry_run == true)
-    runs-on: [self-hosted, linux, tracy-light, tracy-lane-dev]
+    # GitHub-hosted since 27/10/2026: trusted default-branch code, the merge App token only here.
+    runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
       - name: Check out trusted default-branch code
@@ -40,6 +41,11 @@ jobs:
         with:
           ref: ${{ github.event.repository.default_branch }}
           persist-credentials: false
+
+      - name: Set up Node
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .node-version
 
       - name: Prepare GitHub CLI
         shell: bash

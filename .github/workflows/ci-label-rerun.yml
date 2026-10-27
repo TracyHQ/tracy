@@ -20,8 +20,8 @@
 # PERMISSIONS: `actions: write` to cancel and re-run, `pull-requests: read` for the labels and the head
 # commit, `contents: read` for the checkout. Nothing else.
 #
-# 🔒 WHY `pull_request_target`, AND WHY THAT IS SAFE HERE. This job holds `actions: write` on a
-# self-hosted runner, so it must not run code the pull request brings. A `pull_request` run checks out
+# 🔒 WHY `pull_request_target`, AND WHY THAT IS SAFE HERE. This job holds `actions: write`, so it
+# must not run code the pull request brings. A `pull_request` run checks out
 # the merge commit (the author's `scripts/ci/label-rerun.mjs` and this very file would run with that
 # token). `pull_request_target` runs the workflow file of the BASE branch and, below, checks out the
 # base commit only, with no credential left in the checkout: nothing of the pull request is executed.
@@ -61,7 +61,8 @@ concurrency:
 jobs:
   rerun:
     name: re-run Tracy CI for ${{ github.event.label.name }}
-    runs-on: [self-hosted, linux, tracy-light, tracy-lane-dev]
+    # GitHub-hosted since 27/10/2026, like every pull-request job (public-repo-ci.md).
+    runs-on: ubuntu-latest
     timeout-minutes: 15
     # Only the two labels, never a draft, never a fork (a fork's token is read-only and cannot re-run).
     if: >-
@@ -78,6 +79,12 @@ jobs:
           ref: ${{ github.event.pull_request.base.sha }}
           submodules: false
           persist-credentials: false
+
+      # The base commit's `.node-version`, like its script.
+      - name: Set up Node
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .node-version
 
       # The label and the pull request number go in as data from the environment, never into the command.
       - name: Re-run the latest Tracy CI run of this pull request
