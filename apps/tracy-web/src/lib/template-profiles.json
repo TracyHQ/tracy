@@ -76,6 +76,21 @@
           "proof": "the footer band is rgb(31,30,30) in both light and dark mode, and module 170 shows the white wordmark item-1.png there"
         },
         "note": "Same logos as 1.0.4; no logo file, logo layout or logo rule changed: one stylesheet rule hides a footer column that holds no module (ja-products #52)."
+      },
+      "1.0.6": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default"],
+        "footerSlot": "module-170.1",
+        "frame": { "width": 195, "height": 56 },
+        "unverified": ["brandReady", "faviconReady"],
+        "darkSpots": {
+          "footer": true,
+          "proof": "the footer band is rgb(31,30,30) in both light and dark mode, and module 170 shows the white wordmark item-1.png there"
+        },
+        "note": "Same logos as 1.0.5; no logo file, logo layout or logo rule changed: phone and tablet rules only (ja-products #55: the hero shows its boxer picture under the text on phones, larger phone headings, footer link menus side by side)."
       }
     },
     "quickstart/ja-diner/j6": {

@@ -1,4 +1,4 @@
-// JA Boxing 1.0.2 to 1.0.5 (contract joomla-ja-boxing-modes): the rules that make every must-fix design
+// JA Boxing 1.0.2 to 1.0.6 (contract joomla-ja-boxing-modes): the rules that make every must-fix design
 // system rule pass on the 18 contract pages (24/10/2026). Each test reads the sheet a worn system gets.
 import assert from 'node:assert/strict'
 import { createHash } from 'node:crypto'
@@ -115,4 +115,10 @@ test('link and outline-info buttons read the readable accent shade and shift on 
 test('BAND-1: the two kept photo-card scopes say why they stay whole', () => {
   for (const scope of ['.features-item .title', '.features-item .media-lead'])
     assert.match(modes.keepWhole[scope], /photograph/)
+})
+
+test('EMPTY-1 / BORDER-1: the decorative grid lines and the link underline read border roles, not the text colour', () => {
+  assert.match(blockOf('.vertical-lines .container-inner'), /border-color:var\(--ds-c-border-soft/)
+  assert.match(blockOf('.vertical-lines .col:not(:first-child)'), /border-color:var\(--ds-c-border-soft/)
+  assert.match(blockOf('.link-underline'), /border-bottom-color:var\(--ds-c-border\b/)
 })
