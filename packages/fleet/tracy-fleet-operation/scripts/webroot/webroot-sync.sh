@@ -1056,13 +1056,17 @@ remember_read() { # theirs_commit
     "$DIR/db.json" "$ID_MAP.tmp" && chmod 600 "$ID_MAP.tmp" && mv "$ID_MAP.tmp" "$ID_MAP"
   cp "$DIR/live/db.sql.gz" "$LIVE_BASE_DUMP.tmp" && chmod 600 "$LIVE_BASE_DUMP.tmp" && mv "$LIVE_BASE_DUMP.tmp" "$LIVE_BASE_DUMP"
   # Where each table's gzip member lies in it (live-pull.mjs `writeDump`): the next read takes an
-  # unmoved table's bytes as they are. A read written without one leaves none behind.
-  if [[ -f "$DIR/live/db.sql.gz.index.json" ]]; then
-    cp "$DIR/live/db.sql.gz.index.json" "$LIVE_BASE_DUMP.index.json.tmp" && chmod 600 "$LIVE_BASE_DUMP.index.json.tmp" \
-      && mv "$LIVE_BASE_DUMP.index.json.tmp" "$LIVE_BASE_DUMP.index.json"
-  else
-    rm -f "$LIVE_BASE_DUMP.index.json"
-  fi
+  # unmoved table's bytes as they are. And each big table's range checksums (`writeRanges`): the next
+  # read of a moved one asks only for the ranges that moved. A read written without one leaves none.
+  local beside
+  for beside in index.json ranges.json; do
+    if [[ -f "$DIR/live/db.sql.gz.$beside" ]]; then
+      cp "$DIR/live/db.sql.gz.$beside" "$LIVE_BASE_DUMP.$beside.tmp" && chmod 600 "$LIVE_BASE_DUMP.$beside.tmp" \
+        && mv "$LIVE_BASE_DUMP.$beside.tmp" "$LIVE_BASE_DUMP.$beside"
+    else
+      rm -f "$LIVE_BASE_DUMP.$beside"
+    fi
+  done
   # The read in place holds what a push wrote: the next base needs no word about it.
   rm -f "$PUSHED"
   remember_kept
@@ -1429,7 +1433,7 @@ copy_token() {
 }
 
 forget() {
-  rm -f "$LIVE_BASE_DUMP" "$LIVE_BASE_DUMP.index.json" "$SYNC_DIR/live-manifest.json" "$LIVE_FINGERPRINT" "$KEPT"
+  rm -f "$LIVE_BASE_DUMP" "$LIVE_BASE_DUMP.index.json" "$LIVE_BASE_DUMP.ranges.json" "$SYNC_DIR/live-manifest.json" "$LIVE_FINGERPRINT" "$KEPT"
   g update-ref -d "$LIVE_REF" 2>/dev/null || true
   # Every run's folder but this job's own; a sync that began meanwhile reads before it locks, and
   # its folder is newer than a day — the sweep's age (`sweep_runs`) is what leaves it.
