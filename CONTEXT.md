@@ -166,6 +166,23 @@ contract folder; /ops reads the file, no machine pushes results up.
 _Avoid_: measuring machine, ingest door, measurement queue, runner, test machine, ingest endpoint
 (relics of the design before 13/10)
 
+## 10. Content contract vocabulary
+
+**Content slot**:
+One place in a quickstart's content map that holds a piece of demo text, a picture or a link the customer can
+change. Not the design system **Slot** above.
+_Avoid_: field, placeholder
+
+**Slot role**:
+What fact or editorial part a content slot holds (a price, a heading, a decorative picture), and the card it belongs
+to ([ADR 0038](docs/adr/0038-slot-roles-live-in-content-map.md)).
+
+**Slot fit**:
+What the content put in a slot must look like so the layout holds: a picture's kind, box per screen width and
+whether it needs a transparent ground; a text's characters and lines per screen width. Measured from the rendered demo
+when the contract is captured, never written by hand ([ADR 0039](docs/adr/0039-slot-fit-lives-in-content-map.md)).
+_Avoid_: slot size, frame spec
+
 ---
 
 **Read next:** [`SYSTEM.md`](SYSTEM.md) (how the system runs) · [`CLAUDE.md`](CLAUDE.md) (boundary

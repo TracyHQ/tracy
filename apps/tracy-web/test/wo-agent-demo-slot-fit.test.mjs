@@ -334,3 +334,45 @@ test('the prompt and the plan guide put photos only where they fit, and keep the
   assert.match(prompt, /avatar/)
   assert.match(prompt, /keeps the template's picture/)
 })
+
+// Wave 2 (ADR 0039): the frame and the kind a content map's Slot fit declares come before the guesses.
+test('a declared Slot fit gives the frame when the baseline did not measure that page, and its kind decides what is kept', async () => {
+  const { pictureFrame, protectedOf } = await import('../src/opportunities-build/agent-demo-slot-fit.js')
+  const fit = {
+    measured: true,
+    kind: 'photo',
+    replace: 'photo',
+    transparent: false,
+    source: { width: 1408, height: 604, format: 'png' },
+    boxes: { desktop: { width: 704, height: 302 }, phone: { width: 358, height: 154 } },
+    aspect: 2.3311,
+    tolerance: 0.02,
+    minWidth: 1056,
+    crop: 'cover'
+  }
+  const slot = {
+    key: 'article-7.0',
+    type: 'image',
+    label: 'Morning class / feature_img',
+    current: 'images/demo/classes/morning.png',
+    fit
+  }
+  const baseline = {
+    imageFrames: [{ path: 'images/demo/classes/morning.png', width: 344, height: 459, route: '/other' }]
+  }
+  assert.deepEqual(pictureFrame({ slot, page: '/classes' }, baseline), {
+    file: 'images/demo/classes/morning.png',
+    width: 704,
+    height: 302,
+    from: 'fit'
+  })
+  assert.equal(pictureFrame({ slot, page: '/other' }, baseline).from, 'rendered')
+  // An opaque class photo saved as PNG: wave 1 guessed a cut-out, the declared fit says photo.
+  assert.equal(protectedOf(slot, 'images/demo/classes/morning.png'), null)
+  const hero = {
+    ...slot,
+    customize: 'keep',
+    fit: { ...fit, kind: 'cutout', replace: 'keep', transparent: true, crop: 'none' }
+  }
+  assert.equal(protectedOf(hero, 'images/demo/classes/morning.png').kind, 'cutout')
+})

@@ -9,6 +9,10 @@
  * - An EmDash theme whose `seed/field-map.json` declares roles must pass `checkFieldMapRoles` (a known role on every copy
  *   field and repeater sub-field, a group kind on every fact role, whole cards): the reader takes roles from the field
  *   map first, so a sidecar beside it, cut from an older seed, is superseded and not judged.
+ * - A content map that declares Slot fit (ADR 0039: `slotFitVersion`, or a `fit` on any slot) must pass
+ *   `checkContentMapFit` (WO domain, `content-map-fit.mjs`): the current version, a well-formed fit on every text and
+ *   image slot, and each picture's `customize: "keep"` in step with its kind. A map without Slot fit is not judged;
+ *   the check counts its text and image slots without a fit (`fit` in the result, and one line on stdout).
  * - A committed `slot-roles.json` sidecar (ADR 0037; three remain until their template's next release) must validate,
  *   match its contract's `baseHash`, have `status: "checked"` and leave zero `requiresEvidence` slots without a fact role.
  *
@@ -19,7 +23,7 @@
 import { existsSync, readdirSync, readFileSync } from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { checkContentMapRoles } from 'website-opportunities/domain'
+import { checkContentMapFit, checkContentMapRoles } from 'website-opportunities/domain'
 import { fieldMapRolesOf } from '../../apps/tracy-web/src/lib/emdash-field-map-roles.js'
 import {
   SLOT_ROLES_FILE,
@@ -70,7 +74,21 @@ function contentMapErrors(dir) {
     return [`${CONTENT_MAP_FILE} is not JSON: ${error instanceof Error ? error.message : error}`]
   }
   const res = checkContentMapRoles(contentMap)
-  return res.declared ? res.errors : null
+  const fit = checkContentMapFit(contentMap)
+  if (!res.declared && !fit.declared) return null
+  return [...(res.declared ? res.errors : []), ...(fit.declared ? fit.errors : [])]
+}
+
+/** The Slot fit of one contract's content map: declared or not, and how many text and image slots lack a fit. */
+function fitOf(dir) {
+  const file = path.join(dir, CONTENT_MAP_FILE)
+  if (!existsSync(file)) return null
+  try {
+    const { declared, missing } = checkContentMapFit(JSON.parse(readFileSync(file, 'utf8')))
+    return { dir, declared, missing }
+  } catch {
+    return null
+  }
 }
 
 /** The errors of the roles an EmDash theme declares in its field map, or null when the contract has none declared. */
@@ -101,8 +119,10 @@ function sidecarErrors(dir) {
 /**
  * @param {string} [rootDir]
  * @param {string[] | null} [explicitDirs]
- * @returns {{ok: boolean, checkedCount: number, dirs: string[], errors: string[]}}
+ * @returns {{ok: boolean, checkedCount: number, dirs: string[], errors: string[],
+ *   fit: Array<{dir: string, declared: boolean, missing: {image: number, text: number}}>}}
  *   `dirs`: the contracts that declare roles (in a content map or a sidecar), each checked
+ *   `fit`: the Slot fit of every contract with a content map
  */
 export function checkAllSlotRoles(rootDir = DEFAULT_ROOT, explicitDirs = null) {
   const candidates =
@@ -112,6 +132,7 @@ export function checkAllSlotRoles(rootDir = DEFAULT_ROOT, explicitDirs = null) {
 
   const errors = []
   const dirs = []
+  const fit = candidates.map(fitOf).filter((f) => f !== null)
   for (const dir of candidates) {
     const rel = path.relative(rootDir, dir) || dir
     const fieldMap = fieldMapResult(dir)
@@ -127,7 +148,7 @@ export function checkAllSlotRoles(rootDir = DEFAULT_ROOT, explicitDirs = null) {
   if (dirs.length === 0) {
     errors.push('no slot roles found: no content map declares roles and no slot-roles.json sidecar exists')
   }
-  return { ok: errors.length === 0, checkedCount: dirs.length, dirs, errors }
+  return { ok: errors.length === 0, checkedCount: dirs.length, dirs, errors, fit }
 }
 
 const isMain =
@@ -143,4 +164,9 @@ if (isMain) {
     process.exit(1)
   }
   process.stdout.write(`slot-roles check passed (${res.checkedCount} contract(s) verified).\n`)
+  const without = res.fit.filter((f) => !f.declared)
+  const lacking = without.reduce((n, f) => n + f.missing.image + f.missing.text, 0)
+  process.stdout.write(
+    `slot fit: ${res.fit.length - without.length} content map(s) declare it; ${without.length} do not (${lacking} text and image slots without a fit).\n`
+  )
 }

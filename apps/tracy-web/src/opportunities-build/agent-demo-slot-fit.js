@@ -14,6 +14,7 @@
  */
 import { declaredSize, fileOf, protectedPicture } from 'website-opportunities/domain/pictures/slot-map.mjs'
 import { fitCrop, shapeFit } from 'website-opportunities/domain/pictures/placement.mjs'
+import { slotFitOf } from 'website-opportunities/domain/content-map-fit.mjs'
 import { aspectOf } from './agent-demo-image.js'
 
 /** How far a recipe's shape may be from its frame's, relative (a sealed site refuses past 0.02). */
@@ -38,19 +39,24 @@ export function slotFile(slot) {
 }
 
 /**
- * The frame a template picture is drawn in: the box the baseline measured for that file (on `page` first), else the size
- * the contract declares for it. Null when neither is known.
+ * The frame a template picture is drawn in: the box the baseline measured for that file on `page`, else the desktop box
+ * the content map's Slot fit measured at capture (ADR 0039), else any box the baseline measured, else the size the
+ * contract declares for the file. Null when none is known.
  * @param {{slot?: any, file?: string | null, page?: string}} place
  * @param {{imageFrames?: Array<{path: string, width: number, height: number, route?: string}>} | null} [baseline]
- * @returns {{file: string, width: number, height: number, from: 'rendered' | 'declared'} | null}
+ * @returns {{file: string, width: number, height: number, from: 'rendered' | 'fit' | 'declared'} | null}
  */
 export function pictureFrame({ slot = null, file = slotFile(slot), page } = {}, baseline = null) {
   if (!file) return null
   const boxes = (baseline?.imageFrames ?? []).filter(
     (f) => f.width >= 16 && f.height >= 16 && sameFile(plainFile(f.path), file)
   )
-  const box =
-    (page !== undefined && boxes.find((f) => pageKey(f.route) === pageKey(page))) || boxes[0] || null
+  const onPage = (page !== undefined && boxes.find((f) => pageKey(f.route) === pageKey(page))) || null
+  if (onPage) return { file, width: onPage.width, height: onPage.height, from: 'rendered' }
+  const fit = slotFitOf({ type: 'image', ...slot })
+  const fitBox = fit?.measured ? (fit.boxes.desktop ?? Object.values(fit.boxes)[0]) : null
+  if (fitBox) return { file, width: fitBox.width, height: fitBox.height, from: 'fit' }
+  const box = boxes[0] ?? null
   if (box) return { file, width: box.width, height: box.height, from: 'rendered' }
   const declared = declaredSize(slot?.current) ?? declaredSize(slot?.sample)
   return declared ? { file, ...declared, from: 'declared' } : null

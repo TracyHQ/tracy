@@ -33,11 +33,14 @@ export function mergeViewports(byViewport, siteUrl) {
       }
       const v = (m.viewports[vp] ??= { visible: false, count: 0, rect: null, selector: it.selector })
       v.count++
+      // What the page measured of the picture's own file (Slot fit), the same on every viewport.
+      if (it.kind === 'image' && !m.file && data.pictures?.[it.value]) m.file = data.pictures[it.value]
       // Keep the rectangle of the first VISIBLE instance; fall back to the first one.
       if (it.visible && !v.visible) {
         v.visible = true
         v.rect = it.rect
         v.selector = it.selector
+        if (it.look) v.look = it.look
       }
       if (!v.rect && it.rect) v.rect = it.rect
     }

@@ -111,6 +111,46 @@ export function extractPage() {
     if (/\b(btn|button)\b/i.test(el.className || '') || el.tagName === 'BUTTON') return 'button'
     return 'content'
   }
+  // Slot fit (ADR 0039): how a picture is drawn in its box, and how many characters a text box holds.
+  const canvas = document.createElement('canvas').getContext('2d')
+  const px = (v) => parseFloat(v) || 0
+  const pictureLook = (el) => {
+    const s = cs(el)
+    return el.tagName === 'IMG'
+      ? { objectFit: s.objectFit, objectPosition: s.objectPosition }
+      : { backgroundSize: s.backgroundSize, backgroundPosition: s.backgroundPosition }
+  }
+  const CASE = { uppercase: (t) => t.toUpperCase(), lowercase: (t) => t.toLowerCase() }
+  const textLook = (el, value) => {
+    const s = cs(el)
+    const size = px(s.fontSize)
+    const lineHeight = px(s.lineHeight) || size * 1.2
+    const shown = (CASE[s.textTransform] ?? ((t) => t))(value)
+    canvas.font = s.font || `${s.fontWeight} ${s.fontSize} ${s.fontFamily}`
+    const charWidth = shown.length ? canvas.measureText(shown).width / shown.length + px(s.letterSpacing) : 0
+    const inner = (n) => {
+      const ns = cs(n)
+      return n.clientWidth - px(ns.paddingLeft) - px(ns.paddingRight)
+    }
+    // A label shrunk to its words (inline, or a flex or grid item) may grow to its parent's width.
+    const parent = el.parentElement
+    const shrunk = /^inline/.test(s.display) || (parent && /flex|grid/.test(cs(parent).display))
+    const width = Math.round(shrunk && parent ? inner(parent) : inner(el))
+    const height = el.clientHeight - px(s.paddingTop) - px(s.paddingBottom)
+    return {
+      width,
+      lines: Math.max(1, Math.round(height / lineHeight)),
+      charWidth: Math.round(charWidth * 100) / 100,
+      textTransform: s.textTransform
+    }
+  }
+  const lookOf = (kind, el, extra) => {
+    try {
+      if (kind === 'image') return pictureLook(el)
+      if (kind === 'text') return textLook(el, extra.value)
+    } catch {}
+    return undefined
+  }
   const add = (kind, el, extra) => {
     items.push({
       kind,
@@ -119,6 +159,7 @@ export function extractPage() {
       rect: el ? rectOf(el) : null,
       visible: el ? visibleOf(el) : true,
       role: el ? roleOf(el) : 'head',
+      look: el && (kind === 'image' || kind === 'text') ? lookOf(kind, el, extra) : undefined,
       ...extra
     })
   }
@@ -255,4 +296,57 @@ export function extractPage() {
     docWidth: document.documentElement.scrollWidth,
     items
   }
+}
+
+// Runs INSIDE the page after `extractPage`: each same-origin raster picture's own size and the share of its pixels
+// under 250 alpha (`clear`); its ground is transparent when that share is at least 5%. A corner test alone (Tracy's
+// `demoTransparency`) calls a photo with softened corners a cut-out: JA Boxing's 736x982 class thumbnails have 0.2%
+// clear pixels, all in the corners. Slot fit (ADR 0039) declares a cut-out from this, never from the file extension.
+// Self-contained, read-only.
+export async function measurePictures(urls) {
+  const out = {}
+  const canvas = document.createElement('canvas')
+  const ctx = canvas.getContext('2d', { willReadFrequently: true })
+  const load = (src) =>
+    new Promise((ok) => {
+      const img = new Image()
+      const timer = setTimeout(() => ok(null), 5000)
+      img.onload = () => {
+        clearTimeout(timer)
+        ok(img)
+      }
+      img.onerror = () => {
+        clearTimeout(timer)
+        ok(null)
+      }
+      img.src = src
+    })
+  for (const url of urls) {
+    let abs
+    try {
+      abs = new URL(url, location.href)
+    } catch {
+      continue
+    }
+    if (abs.origin !== location.origin) continue
+    const img = await load(abs.href)
+    if (!img || !img.naturalWidth || !img.naturalHeight) continue
+    const scale = Math.min(1, 512 / Math.max(img.naturalWidth, img.naturalHeight))
+    canvas.width = Math.max(1, Math.round(img.naturalWidth * scale))
+    canvas.height = Math.max(1, Math.round(img.naturalHeight * scale))
+    ctx.clearRect(0, 0, canvas.width, canvas.height)
+    ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
+    let alpha = null
+    let clear = null
+    try {
+      const px = ctx.getImageData(0, 0, canvas.width, canvas.height).data
+      let n = 0
+      for (let i = 3; i < px.length; i += 4) if (px[i] < 250) n++
+      clear = Math.round((n / (px.length / 4)) * 1000) / 1000
+      // A soft or rounded corner on a photo is not a cut-out: the ground is transparent when a twentieth of it is.
+      alpha = clear >= 0.05
+    } catch {}
+    out[url] = { width: img.naturalWidth, height: img.naturalHeight, alpha, clear }
+  }
+  return out
 }
