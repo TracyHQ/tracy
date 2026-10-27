@@ -1,0 +1,31 @@
+{
+  "id": "REG-PR-6-ja-boxing-decorative-lines-border-roles",
+  "kind": "fix",
+  "title": "JA Boxing slot contract: the decorative vertical grid and the link underline read the border roles under a worn design system",
+  "pr": 6,
+  "area": "design-system/joomla-ja-boxing-modes",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Build the sheet a worn system gets from packages/design/tracy-ds-slot/templates/joomla-ja-boxing-modes.json (as ja-boxing-modes-contract.test.mjs does) and read the blocks of .vertical-lines .container-inner, .vertical-lines .col:not(:first-child) and .link-underline."
+  ],
+  "expect": [
+    "S1: both .vertical-lines blocks set border-color to var(--ds-c-border-soft…) and .link-underline sets border-bottom-color to var(--ds-c-border…), so EMPTY-1 and BORDER-1 find no hollow box or hard light line taken from the text colour."
+  ],
+  "selectors": {
+    "files": "packages/design/tracy-ds-slot/templates/joomla-ja-boxing-modes.json",
+    "tool": "packages/design/tracy-ds-slot/test/ja-boxing-modes-contract.test.mjs"
+  },
+  "evidence": "Before this change the 1.0.5 design-system measurement reported EMPTY-1 and BORDER-1 for JA Boxing; after it the 1.0.5 and 1.0.6 measurements have no EMPTY-1 or BORDER-1 hit",
+  "fence": "Static read of the generated slot sheet; the design-system measurement on a stand shows the pixels",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-name-pattern",
+      "EMPTY-1",
+      "packages/design/tracy-ds-slot/test/ja-boxing-modes-contract.test.mjs"
+    ]
+  }
+}
