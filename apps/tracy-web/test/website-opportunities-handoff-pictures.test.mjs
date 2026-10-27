@@ -12,6 +12,8 @@ import {
   videoFrameIds
 } from '../src/opportunities-build/handoff.js'
 
+const vision = (labels) => ({ vision: { model: 'v', key: visionKey({ model: 'v' }), labels } })
+
 test('placed photographs and drawn pictures are named with their origin; a place that holds a placeholder is listed apart', () => {
   const held = {
     plan: {
@@ -90,7 +92,7 @@ test('the pictures left for the agent: no poster, menu board, logo or words on i
 
 test("a video's frame ranks below every photograph, never out: a video post's cover, or an image of a video page", () => {
   const post = 'https://www.facebook.com/lr/posts/1'
-  const food = { vision: { labels: { subject: 'food', quality: 'good', textPresence: 'absent' } } }
+  const food = vision({ subject: 'food', quality: 'good', textPresence: 'absent' })
   const media = [
     { id: 'cover', kind: 'image', width: 1600, height: 900, sourceUrl: post, labels: food },
     { id: 'clip', kind: 'video', sourceUrl: post },
@@ -119,11 +121,8 @@ test("a video's frame ranks below every photograph, never out: a video post's co
   )
   assert.equal(pictureWorth({ labels: null, videoFrame: true }), 0)
   assert.equal(poorPicture({ videoFrame: true }), true)
-  assert.equal(
-    poorPicture({ labels: { vision: { labels: { subject: 'interior', quality: 'blurry' } } } }),
-    true
-  )
-  assert.equal(poorPicture({ labels: { vision: { labels: { subject: 'people', quality: 'good' } } } }), true)
+  assert.equal(poorPicture({ labels: vision({ subject: 'interior', quality: 'blurry' }) }), true)
+  assert.equal(poorPicture({ labels: vision({ subject: 'people', quality: 'good' }) }), true)
   assert.equal(poorPicture({ labels: food }), false)
   assert.equal(poorPicture({ labels: null }), false)
 })
