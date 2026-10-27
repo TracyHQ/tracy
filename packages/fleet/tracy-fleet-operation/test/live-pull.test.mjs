@@ -849,6 +849,88 @@ test('only the tables that moved since the last applied read are read; the other
     assert.match(sqlText, /-- table `jos_session`/)
     assert.match(sqlText, /'login'/)
     assert.equal((sqlText.match(/^-- table `/gm) ?? []).length, 3, 'every table once')
+    // The dump is a gzip member a table, with its index: the next read takes an unmoved table's
+    // member byte for byte from this one, nothing unpacked or packed again.
+    const index = JSON.parse(readFileSync(join(dir, 'live', 'db.sql.gz.index.json'), 'utf8'))
+    assert.deepEqual(index.parts.map((p) => p.table).sort(), [
+      'jos_action_logs',
+      'jos_content',
+      'jos_session'
+    ])
+    site.db.jos_content[3][1] = 'Shop, again'
+    site.seen.many.length = 0
+    const third = join(root, 'reuse-3')
+    const again = await pull(third, site.url, {
+      TRACY_SYNC_FINGERPRINT_IN: join(dir, 'live', 'fingerprint.json'),
+      TRACY_SYNC_MANIFEST_IN: join(dir, 'live', 'manifest.json'),
+      TRACY_SYNC_DB_BASE: join(dir, 'live', 'db.sql.gz')
+    })
+    assert.equal(again.answer.ok, true, JSON.stringify(again.answer))
+    assert.deepEqual(site.seen.many, [['jos_content']])
+    const member = (file, idx, table) => {
+      const at = idx.parts.find((p) => p.table === table)
+      return readFileSync(file).subarray(at.offset, at.offset + at.length)
+    }
+    const index3 = JSON.parse(readFileSync(join(third, 'live', 'db.sql.gz.index.json'), 'utf8'))
+    assert.ok(
+      member(join(third, 'live', 'db.sql.gz'), index3, 'jos_action_logs').equals(
+        member(join(dir, 'live', 'db.sql.gz'), index, 'jos_action_logs')
+      ),
+      'the unmoved table is the last read’s member as it was'
+    )
+    const sql3 = dump(third)
+    assert.match(sql3, /'Shop, again'/)
+    assert.match(sql3, /'login'/)
+    assert.equal((sql3.match(/^-- table `/gm) ?? []).length, 3)
+  } finally {
+    site.server.close()
+  }
+})
+
+test('a table the merge never takes (the engine’s undo log) is the last read’s: never read again, and alone it is no change', async () => {
+  const site = await engine({ modern: true, fpVersion: 2 })
+  site.db.jos_claudecowork_apply_log = [[1, 'push one']]
+  const never = {
+    TRACY_SYNC_IGNORED_TABLES: execFileSync(
+      'python3',
+      [
+        join(here, '..', 'scripts', 'lib', 'live_sync.py'),
+        'never-taken',
+        '--platform',
+        'joomla',
+        '--prefix',
+        'jos_'
+      ],
+      { encoding: 'utf8' }
+    ).trim()
+  }
+  try {
+    const first = join(root, 'never-1')
+    assert.equal((await pull(first, site.url, never)).answer.ok, true)
+    const since = (dir) => ({
+      ...never,
+      TRACY_SYNC_FINGERPRINT_IN: join(dir, 'live', 'fingerprint.json'),
+      TRACY_SYNC_MANIFEST_IN: join(dir, 'live', 'manifest.json'),
+      TRACY_SYNC_DB_BASE: join(dir, 'live', 'db.sql.gz')
+    })
+    // A Sync to live wrote on the live site: the engine logged its undo, and nothing else moved.
+    site.db.jos_claudecowork_apply_log.push([2, 'push two'])
+    site.seen.many.length = 0
+    const quiet = await pull(join(root, 'never-2'), site.url, since(first))
+    assert.equal(quiet.answer.unchanged, 'fingerprint', JSON.stringify(quiet.answer))
+    assert.deepEqual(site.seen.many, [], 'nothing read')
+    // The customer edits an article beside another logged write: only the article's table is read,
+    // the undo log is the first read's.
+    site.db.jos_claudecowork_apply_log.push([3, 'push three'])
+    site.db.jos_content[3][1] = 'Shop!'
+    const dir = join(root, 'never-3')
+    const { answer } = await pull(dir, site.url, since(first))
+    assert.equal(answer.ok, true, JSON.stringify(answer))
+    assert.deepEqual(site.seen.many, [['jos_content']])
+    const sqlText = dump(dir)
+    assert.match(sqlText, /'Shop!'/)
+    assert.match(sqlText, /'push one'/)
+    assert.doesNotMatch(sqlText, /'push three'/, 'the undo log as the first read held it')
   } finally {
     site.server.close()
   }
@@ -1486,9 +1568,14 @@ test('a WordPress site whose only moves since the last read are its own housekee
     // A post edited: its table has a rule too (auto-drafts), and the post differs row by row.
     site.db.wp_options[0][2] = 'Shop'
     site.db.wp_posts[0][5] = 'Hello again'
+    const asked = site.seen.many.length
     const post = await pull(join(root, 'wp-rows-post'), site.url, since())
     assert.equal(post.answer.unchanged, undefined, JSON.stringify(post.answer))
     assert.match(post.err, /wp_posts.*a row of substance differs/)
+    // The rows the comparison read are the read's own: each table asked for once, not again.
+    const tablesAsked = site.seen.many.slice(asked).flat()
+    assert.equal(tablesAsked.filter((t) => t === 'wp_posts').length, 1, JSON.stringify(tablesAsked))
+    assert.match(dump(join(root, 'wp-rows-post')), /'Hello again'/)
     // A table with no such rules moved: nothing to compare row by row, the site is read.
     site.db.wp_posts[0][5] = 'Hello'
     site.db.wp_terms[0][1] = 'News'

@@ -19,6 +19,11 @@ view's, or the routines'/events'/tail's.
                     no table may be left out of (a view in either dump: none)
   cut --skip F      stdin → stdout without the tables named in F
   cut --only F      stdin → stdout with only the tables named in F (the head and tail kept)
+  split --streams N --out D [--skip F]
+                    stdin → each table's part in a file of its own under D, shared out by size among
+                    N loads (one line of paths per load on stdout, largest first); exit 3 — nothing to
+                    load side by side — for a dump with views, routines, a tail, LOCK TABLES or no
+                    `-- table` line at all
 
 A table's digest does not depend on how its rows were cut into INSERTs: live-pull.mjs reads a table
 in pages cut by bytes and time, so two reads of the same rows rarely group them alike. The lines of
@@ -128,6 +133,61 @@ def cut(src, out, names: set[str], only: bool) -> None:
             out.write(line)
 
 
+class NotSplittable(Exception):
+    """A dump whose tables cannot load each on a connection of its own: one holding views, routines,
+    events, mariadb-dump's tail, or LOCK TABLES (a table locked on one connection is not on the next:
+    ERROR 1100, dev 26/10/2026)."""
+
+
+def split(src, out_dir: str, streams: int, skip: set[str]) -> list[list[str]]:
+    """Each table's part (the head's lines in front of every part) in `<out_dir>/<n>.sql`; the parts
+    shared out among `streams` loads, the largest part first to the load holding the fewest bytes."""
+    import os
+    head: list[bytes] = []
+    parts: list[tuple[str, int]] = []
+    out = None
+    size = 0
+    seen_table = False
+
+    def close():
+        nonlocal out
+        if out is not None:
+            out.close()
+            parts.append((out.name, size))
+            out = None
+
+    for line in src:
+        if line.startswith(VIEW) or line.startswith(END) or line.startswith(b"LOCK TABLES"):
+            close()
+            raise NotSplittable(line[:60].decode("utf-8", "replace"))
+        name = _name(line)
+        if name is not None:
+            close()
+            seen_table = True
+            if name not in skip:
+                out = open(os.path.join(out_dir, f"{len(parts)}.sql"), "wb")
+                out.writelines(head)
+                out.write(line)
+                size = len(line)
+            continue
+        if out is not None:
+            out.write(line)
+            size += len(line)
+        elif not seen_table:
+            # Before the first table: the session settings every load needs.
+            head.append(line)
+    close()
+    # No `-- table` line at all: not a dump of tables this cuts (statements loaded as they are, in
+    # one load), never "nothing to load".
+    if not seen_table:
+        raise NotSplittable("no table")
+    loads: list[tuple[int, list[str]]] = [(0, []) for _ in range(max(1, streams))]
+    for path, bytes_ in sorted(parts, key=lambda part: -part[1]):
+        at = min(range(len(loads)), key=lambda i: loads[i][0])
+        loads[at] = (loads[at][0] + bytes_, loads[at][1] + [path])
+    return [paths for _, paths in loads if paths]
+
+
 def _names(path: str) -> set[str]:
     with open(path, encoding="utf-8", errors="surrogateescape") as f:
         return {line.rstrip("\n") for line in f if line.strip()}
@@ -145,6 +205,10 @@ def main(argv: list[str]) -> int:
     which = c.add_mutually_exclusive_group(required=True)
     which.add_argument("--skip")
     which.add_argument("--only")
+    sp = sub.add_parser("split")
+    sp.add_argument("--streams", type=int, required=True)
+    sp.add_argument("--out", required=True)
+    sp.add_argument("--skip")
     args = parser.parse_args(argv)
     if args.op == "digest":
         json.dump(digest(sys.stdin.buffer), sys.stdout)
@@ -153,6 +217,12 @@ def main(argv: list[str]) -> int:
         with open(args.a) as fa, open(args.b) as fb:
             names = same(json.load(fa), json.load(fb), _names(args.keep))
         sys.stdout.write("".join(n + "\n" for n in names))
+    elif args.op == "split":
+        try:
+            loads = split(sys.stdin.buffer, args.out, args.streams, _names(args.skip) if args.skip else set())
+        except NotSplittable:
+            return 3
+        sys.stdout.write("".join(" ".join(paths) + "\n" for paths in loads))
     else:
         cut(sys.stdin.buffer, sys.stdout.buffer, _names(args.skip or args.only), only=bool(args.only))
         sys.stdout.buffer.flush()

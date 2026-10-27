@@ -621,14 +621,18 @@ Only for `origin='migrated'` sites on Joomla (WordPress waits for its own adapte
   from the copy's `token`. The real site's token only travels to the host in the job body, then into the script through an environment variable.
   Copies imported earlier (still holding the real token) get their token changed before their first Sync (`webroot-sync.sh --op copy-token`).
 - **Host:** the `webroot-sync` job runs `webroot/webroot-sync.sh`: reads the real site with `lib/live-pull.mjs` (the
-  Import protocol, inline tar part, straight to the host disk, **outside** the heavy lock) → normalizes the read the way provision did for the copy
+  Import protocol, inline tar part, straight to the host disk, **outside** the heavy lock; the tables the merge never takes —
+  `live_sync.py never-taken`, Tracy's own and the ignored ones — keep the last read's part and are not read again; the dump is
+  one gzip member per table with `<dump>.index.json`, so an unmoved table is copied as it is, 2026-10-27) → normalizes the read the way provision did for the copy
   → three-way merge with `lib/live_sync.py` (base = the previous read at `refs/tracy/live` + `sync/live-base.sql.gz`,
   otherwise the import archive, otherwise `tracy-baseline` + v1) → the result becomes a backup point
   (`webroot-backup.sh --op create-from`, trailer `Tracy-Backup: sync`) → **Restore everything** to that point (the
   "Before restore" point is the way back) → rebuild the nested set, assign content identity, clear cache, copy files > 50 MB.
   The sync's restore runs `--only-tables` (23/10/2026): it only loads and swaps tables whose `CHECKSUM TABLE` differs between the point and the
   copy (cutting the dump with `lib/dump_tables.py`, loading in parallel with the "Before restore" copy); other tables, their triggers and
-  the session table stay as they are. The Restore button in the Backups tab still swaps the whole DB.
+  the session table stay as they are. The Restore button in the Backups tab still swaps the whole DB. Live reads load into
+  scratch schemas over several connections (`tracy_db_load_dump`, `dump_sections.py split`: 2 + 2 in the merge, 4 for the
+  preview's base; 2026-10-27).
 - **Conflicts: Tracy's version wins** (20/10/2026). Where both sites edited the same thing differently, the copy's version is kept —
   files with `git merge-file --ours` (colliding hunks take Tracy's, the rest of the live file still comes over), DB with
   the copy's value/row — and listed in `kept` with the live-side value; the Export dialog shows that list once
