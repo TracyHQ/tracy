@@ -644,7 +644,7 @@ test('no desktop shot anywhere: the placeholder, never the phone shot', async ()
   assert.doesNotMatch(page, /<div class="hero-shot"><img/)
 })
 
-test('the header is the tracy.ai bar with the new menu: Free Templates, Help Center, Download app and Get Started', async () => {
+test('the header is the tracy.ai bar with the new menu: Free Templates, Help Center and Get Started', async () => {
   for (const path of ['/templates/', '/templates/ja-fresco/']) {
     const html = await (await get(app([FRESCO, BOXING]), path)).text()
     const nav = html.match(/<nav class="top"[\s\S]*?<\/nav>/)[0].replace(/<svg[\s\S]*?<\/svg>/g, '')
@@ -654,14 +654,12 @@ test('the header is the tracy.ai bar with the new menu: Free Templates, Help Cen
       [
         ['/templates/', 'Free Templates'],
         ['https://tracy.ai/help/', 'Help Center'],
-        ['https://tracy.ai/download/', 'Download app'],
         [`${ORIGIN}/`, 'Get Started'],
-        ['https://tracy.ai/download/', 'Download app'],
         [`${ORIGIN}/`, 'Get Started']
       ],
       'menu, then the call to action in the phone panel and in the bar'
     )
-    assert.doesNotMatch(nav, /Start free/)
+    assert.doesNotMatch(nav, /Start free|Download|nav-dl/)
     assert.match(nav, /<a class="here" href="\/templates\/">Free Templates<\/a>/)
     assert.ok(
       nav.includes('<a class="brand" href="https://tracy.ai/"><img src="https://tracy.ai/assets/logo.png"')
@@ -678,21 +676,56 @@ test('the footer carries the tracy.ai columns; library links stay here, the rest
   assert.deepEqual(hrefs, [
     'https://tracy.ai/',
     '/templates/',
-    'https://tracy.ai/how-it-works/',
-    'https://tracy.ai/why-tracy/',
-    'https://tracy.ai/help/',
     'https://tracy.ai/download/',
-    'https://tracy.ai/privacy/',
-    'https://tracy.ai/terms/',
-    'https://www.youtube.com/@tracydotai',
+    'https://cowork.tracy.ai/',
+    'https://tracy.ai/help/',
+    'https://github.com/TracyHQ/tracy',
     'https://discord.gg/BM9TMRcEBb',
-    'https://x.com/tracydotai'
+    'https://www.youtube.com/@tracydotai',
+    'https://x.com/tracydotai',
+    'https://tracy.ai/privacy/',
+    'https://tracy.ai/terms/'
   ])
-  for (const heading of ['Product', 'Resources', 'Legal']) assert.ok(foot.includes(`<h3>${heading}</h3>`))
-  assert.match(foot, /Free Template Library<\/a>/)
+  for (const heading of ['Product', 'Community', 'Legal']) assert.ok(foot.includes(`<h3>${heading}</h3>`))
+  assert.match(foot, /Free Templates<\/a>/)
   assert.match(foot, /Claude Design, but for CMS\./)
   assert.match(foot, /© \d{4} Tracy/)
-  assert.doesNotMatch(foot, /langtoggle/, 'no language switcher on these pages yet')
+  assert.doesNotMatch(
+    foot,
+    /foot-socials|how-it-works|why-tracy|Resources/,
+    'no social icon row, no retired pages'
+  )
+  assert.equal(
+    [...foot.matchAll(/target="_blank" rel="noopener"/g)].length,
+    4,
+    'community links open a new tab'
+  )
+  const brand = foot.match(/<div class="foot-brand">[\s\S]*?<\/div>/)[0]
+  assert.doesNotMatch(brand, /themetoggle|langpick/, 'toggle and picker moved to the bottom row')
+  const bottom = foot.match(/<div class="wrap foot-bottom">[\s\S]*<\/footer>/)[0]
+  assert.ok(bottom.includes('id="themetoggle"') && bottom.includes('id="langpick"'))
+  assert.ok(
+    bottom.indexOf('Tracy</span>') < bottom.indexOf('id="themetoggle"'),
+    'copyright left, tools right'
+  )
+})
+
+test('Help, Privacy and Terms follow the page language where the landing site has pages for it', async () => {
+  const a = app([FRESCO])
+  for (const lang of ['de', 'fr', 'es', 'it', 'nl']) {
+    const html = await (await getAs(a, '/templates/', { cookie: `tracy_lang=${lang}` })).text()
+    const nav = html.match(/<nav class="top"[\s\S]*?<\/nav>/)[0]
+    const foot = html.match(/<footer>[\s\S]*<\/footer>/)[0]
+    assert.ok(nav.includes(`href="https://tracy.ai/${lang}/help/"`), `${lang} nav help`)
+    for (const page of ['help', 'privacy', 'terms'])
+      assert.ok(foot.includes(`href="https://tracy.ai/${lang}/${page}/"`), `${lang} footer ${page}`)
+    assert.doesNotMatch(foot, /href="https:\/\/tracy\.ai\/(help|privacy|terms)\/"/)
+  }
+  for (const lang of ['vi', 'zh']) {
+    const html = await (await getAs(a, '/templates/', { cookie: `tracy_lang=${lang}` })).text()
+    for (const page of ['help', 'privacy', 'terms'])
+      assert.ok(html.includes(`href="https://tracy.ai/${page}/"`), `${lang} uses the English ${page}`)
+  }
 })
 
 test('the footer theme toggle is present, wired to data-theme and tracy-theme, with a no-flash boot', async () => {

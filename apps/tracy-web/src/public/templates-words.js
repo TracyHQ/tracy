@@ -24,21 +24,26 @@ const DEFAULT_LANDING_ORIGIN = 'https://tracy.ai'
 /** Pages on the landing site and elsewhere that the header and footer link to. */
 export const LINKS = Object.freeze({
   home: `${DEFAULT_LANDING_ORIGIN}/`,
-  help: `${DEFAULT_LANDING_ORIGIN}/help/`,
-  // The page is built on the landing site later: the link may answer 404 until then.
-  howItWorks: `${DEFAULT_LANDING_ORIGIN}/how-it-works/`,
-  whyTracy: `${DEFAULT_LANDING_ORIGIN}/why-tracy/`,
+  github: 'https://github.com/TracyHQ/tracy',
   youtube: 'https://www.youtube.com/@tracydotai',
   x: 'https://x.com/tracydotai',
+  webApp: 'https://cowork.tracy.ai/',
   logo: `${DEFAULT_LANDING_ORIGIN}/assets/logo.png`,
   download: `${DEFAULT_LANDING_ORIGIN}/download/`,
   discord: 'https://discord.gg/BM9TMRcEBb',
-  privacy: `${DEFAULT_LANDING_ORIGIN}/privacy/`,
-  terms: `${DEFAULT_LANDING_ORIGIN}/terms/`,
   // The landing site's own backdrop, so the section reads as part of tracy.ai (approved mockup).
   backdropLight: `${DEFAULT_LANDING_ORIGIN}/assets/bg.jpg`,
   backdropDark: `${DEFAULT_LANDING_ORIGIN}/assets/bg-dark.jpg`
 })
+
+/** The languages the landing site has its own pages for, under `/<lang>/`; every other language reads the English root pages. */
+const LANDING_LANGUAGES = Object.freeze(['de', 'fr', 'es', 'it', 'nl'])
+
+/** Address of a landing page (`help`, `privacy`, `terms`) in the visitor's language, falling back to English. */
+export function landingPage(lang, page) {
+  const prefix = LANDING_LANGUAGES.includes(lang) ? `${lang}/` : ''
+  return `${DEFAULT_LANDING_ORIGIN}/${prefix}${page}/`
+}
 
 import { translator } from '../lib/i18n/index.js'
 
@@ -63,7 +68,6 @@ export function wordsFor(lang = 'en') {
       templates: t('tpl.nav.templates'),
       help: t('tpl.nav.help'),
       getStarted: t('tpl.nav.getStarted'),
-      downloadApp: t('tpl.nav.downloadApp'),
       openMenu: t('tpl.nav.openMenu'),
       closeMenu: t('tpl.nav.closeMenu')
     },
@@ -129,16 +133,12 @@ export function wordsFor(lang = 'en') {
     footer: {
       blurb: t('tpl.footer.blurb'),
       product: t('tpl.footer.product'),
-      resources: t('tpl.footer.resources'),
+      community: t('tpl.footer.community'),
+      webApp: t('tpl.footer.webApp'),
+      freeTemplates: t('tpl.nav.templates'),
       legal: t('tpl.footer.legal'),
-      templateLibrary: t('tpl.footer.templateLibrary'),
-      howItWorks: t('tpl.footer.howItWorks'),
-      whyTracy: t('tpl.footer.whyTracy'),
       helpCenter: t('tpl.footer.helpCenter'),
       download: t('tpl.footer.download'),
-      youtube: t('tpl.footer.youtube'),
-      discord: t('tpl.footer.discord'),
-      x: t('tpl.footer.x'),
       language: t('tpl.footer.language'),
       theme: {
         toDark: t('tpl.footer.theme.toDark'),
