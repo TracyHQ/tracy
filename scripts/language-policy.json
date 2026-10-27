@@ -30,12 +30,12 @@
   "objects": [
     {
       "path": "packages/locale/tracy-locales/lib/client.js",
-      "oid": "fa10ebe2115baa953bd484df29ecb8626a265a88",
+      "oid": "d053d8de625a3470c9b5d052dfff0c2d22889fc5",
       "reason": "Bundle built from the interface language packs above, including the website opportunities labels; reviewed build output."
     },
     {
       "path": "packages/locale/tracy-locale-vi/lib/client.js",
-      "oid": "43f12e3a08ea82fab2ed491f3c41a6d28868b697",
+      "oid": "b13e82900f2ee22b6334a916a6c6c05c42304f40",
       "reason": "Bundle built from the Vietnamese interface language pack above, including the website opportunities labels; reviewed build output."
     },
     {
