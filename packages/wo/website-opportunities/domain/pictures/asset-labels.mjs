@@ -24,6 +24,29 @@ export const ASSET_ORIENTATIONS = Object.freeze(['landscape', 'portrait', 'squar
 /** high = sharp enough for a full-width hero; medium = a gallery or card picture; low = a thumbnail at most. */
 export const ASSET_QUALITIES = Object.freeze(['high', 'medium', 'low', 'unknown'])
 export const ASSET_CAPTION_MAX = 124
+/** The broad category of an asset: a source's word (Google's menu tab, a caption's keywords) or what a model saw. */
+export const ASSET_CATEGORIES = Object.freeze(['food', 'space', 'event', 'people', 'menu', 'other'])
+/**
+ * Why an asset carries no vision label: never shown to a model (a video, the logo or a profile picture, too small, past
+ * the cap, its bytes unreadable, no model assigned) or shown and not answered (the call's failure, per picture).
+ */
+export const ASSET_UNLABELLED_REASONS = Object.freeze([
+  'video',
+  'not_a_photograph',
+  'too_small',
+  'over_cap',
+  'no_bytes',
+  'no_vision_model',
+  'decode_failed',
+  'http_error',
+  'timeout',
+  'answer_unparseable',
+  'image_code_mismatch',
+  'not_in_answer',
+  'vision_failed'
+])
+/** Why an asset's size is unknown: nothing measured it when it was collected (a video before sizes were read). */
+export const ASSET_SIZE_UNKNOWN_REASONS = Object.freeze(['not_measured'])
 
 /** Long and short edge (px) a hero needs, and the long edge a gallery picture needs. */
 const HERO_LONG = 1600
@@ -49,6 +72,15 @@ const CONTENT_OF_SUBJECT = {
   poster: 'text-graphic',
   logo: 'logo',
   other: 'other'
+}
+
+/** The broad category a vision content kind implies; a kind with none keeps the source's category. */
+const CATEGORY_OF_CONTENT = {
+  'people-in-action': 'people',
+  team: 'people',
+  'venue-interior': 'space',
+  'venue-exterior': 'space',
+  food: 'food'
 }
 
 const size = (n) => (Number.isFinite(Number(n)) && Number(n) > 0 ? Math.round(Number(n)) : 0)
@@ -109,8 +141,21 @@ export function assetLabelsOf(m) {
     orientation: orientationOf(width, height),
     quality: resolutionGradeOf(width, height),
     content,
-    ...(caption ? { caption } : {})
+    ...(caption ? { caption } : {}),
+    // 🔒 An unknown size says why, so "unknown" orientation and quality are never read as a property of the file.
+    ...(width && height ? {} : { sizeUnknownReason: 'not_measured' })
   }
+}
+
+/**
+ * The broad category of an asset (pure): a source's menu photo stays one (Google files it under the menu); otherwise what
+ * a vision model saw (people, space, food) wins over the caption keywords the category was guessed from at collection.
+ * @param {{category?: string|null, vision?: any, labels?: any}} m a brief's media entry
+ */
+export function assetCategoryOf(m) {
+  const source = ASSET_CATEGORIES.includes(m?.category) ? m.category : 'other'
+  if (source === 'menu') return source
+  return CATEGORY_OF_CONTENT[assetLabelsOf(m).content] ?? source
 }
 
 /** Content that never opens a site: words and marks, not a photograph of the business. */

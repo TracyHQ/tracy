@@ -20,9 +20,13 @@ import { brandWithoutName } from './held-name.mjs'
 import { candidateAsRead } from './candidate-as-read.mjs'
 import { heroCandidates, photographsOnly } from './pictures/brief-media.mjs'
 import {
+  ASSET_CATEGORIES,
   ASSET_CONTENT,
   ASSET_ORIENTATIONS,
   ASSET_QUALITIES,
+  ASSET_SIZE_UNKNOWN_REASONS,
+  ASSET_UNLABELLED_REASONS,
+  assetCategoryOf,
   assetLabelsOf
 } from './pictures/asset-labels.mjs'
 import { researchWhatsappOf } from './business-phones.mjs'
@@ -65,7 +69,7 @@ export const BRIEF_REQUIRED = Object.freeze([
 ])
 const SOURCE_ORDER = ['website', 'facebook', 'instagram', 'tiktok', 'youtube']
 const SOURCE_STATUS = ['complete', 'partial', 'blocked', 'failed']
-const CATEGORIES = ['food', 'space', 'event', 'people', 'other']
+const CATEGORIES = ASSET_CATEGORIES
 const CTA_KINDS = ['booking', 'phone', 'social', 'link']
 const STALE_AFTER_MS = 365 * 24 * 3600 * 1000
 const GALLERY_MIN_IMAGES = 4
@@ -419,7 +423,8 @@ export function buildBrief({
     .map((m) => ({
       id: m.id,
       kind: m.kind,
-      category: m.category ?? 'other',
+      // What a vision model saw, when one looked; else the source's word (`assetCategoryOf`).
+      category: assetCategoryOf(m),
       sha256: m.sha256,
       ...assetLabelsOf(m)
     }))
@@ -1303,7 +1308,9 @@ export function validateBrief(brief) {
         for (const [field, allowed] of [
           ['orientation', ASSET_ORIENTATIONS],
           ['quality', ASSET_QUALITIES],
-          ['content', ASSET_CONTENT]
+          ['content', ASSET_CONTENT],
+          ['unlabelledReason', ASSET_UNLABELLED_REASONS],
+          ['sizeUnknownReason', ASSET_SIZE_UNKNOWN_REASONS]
         ])
           if (field in a && !allowed.includes(a[field]))
             err(`assets[${i}].${field}`, `must be one of ${allowed.join(', ')}`)
@@ -1670,8 +1677,11 @@ function logoLines(br, words = tradeWords('food')) {
 /** An asset's line in the markdown: what it shows, its shape and grade, its caption (F08); the category of a brief before. */
 /** How the pictures were labelled when the brief was made (`assetLabelling`, F08), in one line. */
 function assetLabellingLine(n) {
-  const counts = `${n.labelled ?? 0} of ${n.asked ?? 0} asked, ${n.cached ?? 0} cached${n.max ? `, at most ${n.max}` : ''}`
+  const failed = n.failed ? `, ${n.failed} failed (${n.reason ?? 'unknown'})` : ''
+  const counts = `${n.labelled ?? 0} of ${n.asked ?? 0} asked${failed}, ${n.cached ?? 0} cached${n.max ? `, at most ${n.max}` : ''}`
   if (n.status === 'labelled') return `labelled by a vision model (${counts})`
+  if (n.status === 'partial')
+    return `labelled in part by a vision model (${counts}); each unlabelled asset says why`
   if (n.status === 'cached') return `labels a vision model gave before (${counts})`
   if (n.status === 'off') return 'no vision model is assigned; pictures are unlabelled'
   if (n.status === 'failed')
@@ -1681,8 +1691,12 @@ function assetLabellingLine(n) {
 
 function assetLine(a) {
   if (!('content' in a)) return `${a.kind}, ${a.category}`
-  const shape = a.width && a.height ? `${a.orientation} ${a.width}x${a.height}` : 'size unknown'
-  return `${a.kind}, ${a.content}, ${shape}, quality ${a.quality}${a.caption ? `, ${q(a.caption)}` : ''}`
+  const shape =
+    a.width && a.height
+      ? `${a.orientation} ${a.width}x${a.height}`
+      : `size unknown${a.sizeUnknownReason ? ` (${a.sizeUnknownReason})` : ''}`
+  const why = a.unlabelledReason ? ` (unlabelled: ${a.unlabelledReason})` : ''
+  return `${a.kind}, ${a.content}${why}, ${a.category}, ${shape}, quality ${a.quality}${a.caption ? `, ${q(a.caption)}` : ''}`
 }
 
 function dishPhotoValid(p, assetIds) {

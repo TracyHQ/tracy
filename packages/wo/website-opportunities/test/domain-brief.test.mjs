@@ -140,7 +140,8 @@ test('sections only reference assets listed in the brief', () => {
     height: null,
     orientation: 'unknown',
     quality: 'unknown',
-    content: 'unlabelled'
+    content: 'unlabelled',
+    sizeUnknownReason: 'not_measured'
   })
 })
 

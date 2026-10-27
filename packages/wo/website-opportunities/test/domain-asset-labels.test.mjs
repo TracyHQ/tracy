@@ -111,7 +111,8 @@ test("the brief's assets carry size, orientation, grade and content, and still v
   assert.deepEqual(byId.get('pool'), {
     id: 'pool',
     kind: 'image',
-    category: 'other',
+    // What the model saw sets the category (venue-exterior is a space).
+    category: 'space',
     sha256: byId.get('pool').sha256,
     width: 2000,
     height: 1200,
@@ -125,9 +126,9 @@ test("the brief's assets carry size, orientation, grade and content, and still v
   const md = domain.renderBriefMarkdown(brief)
   assert.match(
     md,
-    /- pool: image, venue-exterior, landscape 2000x1200, quality high, "The outdoor pool at dusk"/
+    /- pool: image, venue-exterior, space, landscape 2000x1200, quality high, "The outdoor pool at dusk"/
   )
-  assert.match(md, /- thumb: image, unlabelled, landscape 640x360, quality low/)
+  assert.match(md, /- thumb: image, unlabelled, other, landscape 640x360, quality low/)
 })
 
 test('validation refuses an asset label outside its vocabulary', () => {

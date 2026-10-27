@@ -118,7 +118,11 @@ test(
       model: 'model-x',
       labels: { subject: 'exterior', content: 'venue-exterior', caption: `Photo ${sent[0]}` }
     })
-    assert.deepEqual(first.note, { status: 'labelled', asked: 24, labelled: 24, cached: 0, max: 24 })
+    const { unlabelled, ...counts } = first.note
+    assert.deepEqual(counts, { status: 'labelled', asked: 24, labelled: 24, cached: 0, max: 24 })
+    // The pictures never shown say why: the logo, and the five past the cap.
+    assert.equal(unlabelled[media[0].id], 'not_a_photograph')
+    assert.equal(Object.values(unlabelled).filter((r) => r === 'over_cap').length, 5)
     const { rows } = await db.pool.query(
       `select count(*)::int as n from wo_media_analysis where model = 'model-x' and version = $1 and state = 'done'`,
       [VISION.key]
@@ -135,7 +139,10 @@ test(
     })({ media, brand, accountId: null, trade: 'fitness' })
     assert.equal(again.sent.length, 0)
     assert.equal(second.labels.size, 24)
-    assert.deepEqual(second.note, { status: 'cached', asked: 0, labelled: 0, cached: 24, max: 24 })
+    assert.deepEqual(
+      { ...second.note, unlabelled: undefined },
+      { status: 'cached', asked: 0, labelled: 0, cached: 24, max: 24, unlabelled: undefined }
+    )
   }
 )
 
@@ -201,7 +208,8 @@ test('a vision failure labels nothing, frees its claims for a later build, and s
     labelled: 0,
     cached: 0,
     max: 24,
-    reason: 'LLM_HTTP_503'
+    reason: 'LLM_HTTP_503',
+    unlabelled: Object.fromEntries(media.map((m) => [m.id, 'vision_failed']))
   })
   assert.equal(warned.length, 1)
   const { rows } = await db.pool.query(`select distinct state from wo_media_analysis`)
@@ -229,6 +237,7 @@ test('without a vision model nothing is asked and the brief says so', opts, asyn
     labelled: 0,
     cached: 0,
     max: 24,
-    reason: 'no_vision_model'
+    reason: 'no_vision_model',
+    unlabelled: { a: 'no_vision_model' }
   })
 })

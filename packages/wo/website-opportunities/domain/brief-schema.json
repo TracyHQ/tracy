@@ -567,11 +567,11 @@
           }
         },
         "heldReviews": {
-          "description": "Optional. Reviews the site may not quote: each names someone the brief holds off the site (a person named only in guest reviews), listed in namesHeld. Same fields as reviews.",
+          "description": "Optional. Reviews the site may not quote: each names someone the brief holds off the site (a person named only in guest reviews), listed in namesHeld. Named, never quoted: the fields of reviews less text (a brief made before kept the text).",
           "type": "array",
           "items": {
             "type": "object",
-            "required": ["author", "text", "namesHeld"],
+            "required": ["author", "namesHeld"],
             "properties": {
               "author": { "type": "string", "minLength": 1 },
               "text": { "type": "string", "minLength": 1 },
@@ -709,9 +709,17 @@
       "type": "object",
       "required": ["status"],
       "properties": {
-        "status": { "enum": ["labelled", "cached", "failed", "off", "none"] },
+        "status": {
+          "enum": ["labelled", "partial", "cached", "failed", "off", "none"],
+          "description": "labelled: every picture asked was labelled; partial: some were not, each such asset says why (unlabelledReason)."
+        },
         "asked": { "type": "integer", "minimum": 0 },
         "labelled": { "type": "integer", "minimum": 0 },
+        "failed": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Pictures asked that came back without a label."
+        },
         "cached": { "type": "integer", "minimum": 0 },
         "max": { "type": "integer", "minimum": 0 },
         "reason": { "type": "string" }
@@ -725,7 +733,10 @@
         "properties": {
           "id": { "type": "string", "minLength": 1 },
           "kind": { "enum": ["image", "video"] },
-          "category": { "enum": ["food", "space", "event", "people", "other"] },
+          "category": {
+            "enum": ["food", "space", "event", "people", "menu", "other"],
+            "description": "Broad category: a source menu photo stays menu; else what a vision model saw (people, space, food); else the caption keywords read at collection."
+          },
           "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
           "width": {
             "type": ["integer", "null"],
@@ -763,6 +774,28 @@
             "minLength": 1,
             "maxLength": 124,
             "description": "Short alt text from the vision model; absent when none."
+          },
+          "unlabelledReason": {
+            "enum": [
+              "video",
+              "not_a_photograph",
+              "too_small",
+              "over_cap",
+              "no_bytes",
+              "no_vision_model",
+              "decode_failed",
+              "http_error",
+              "timeout",
+              "answer_unparseable",
+              "image_code_mismatch",
+              "not_in_answer",
+              "vision_failed"
+            ],
+            "description": "Why content is unlabelled: never shown to a vision model, or shown and not answered. Absent when labelled or when the brief was made without a labelling step."
+          },
+          "sizeUnknownReason": {
+            "enum": ["not_measured"],
+            "description": "Why width and height are null (orientation and quality unknown): nothing measured the file when it was collected."
           }
         }
       }

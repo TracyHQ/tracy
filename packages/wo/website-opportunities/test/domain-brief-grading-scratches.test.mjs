@@ -195,9 +195,14 @@ test('3. a video without a known size says null, never 0 x 0, and still validate
     assert.equal(v.width, null)
     assert.equal(v.height, null)
     assert.equal(v.orientation, 'unknown')
+    // An unknown size says why (F08).
+    assert.equal(v.sizeUnknownReason, 'not_measured')
   }
   assert.deepEqual(validateBrief(brief), { ok: true, errors: [] })
-  assert.match(renderBriefMarkdown(brief), /video, unlabelled, size unknown, quality unknown/)
+  assert.match(
+    renderBriefMarkdown(brief),
+    /video, unlabelled, other, size unknown \(not_measured\), quality unknown/
+  )
   const zero = { ...brief, assets: [{ ...videos[0], width: 0, height: 0 }] }
   assert.ok(validateBrief(zero).errors.some((e) => e.startsWith('assets[0].width')))
 })
