@@ -72,8 +72,11 @@ const LANGUAGE_NAMES = Object.freeze({
 const languagePicker = (w) =>
   `<span class="langpick"><select id="langpick" hidden aria-label="${escapeHtml(w.footer.language)}">${WEB_LANGUAGES.map((id) => `<option value="${id}"${id === w.lang ? ' selected' : ''}>${LANGUAGE_NAMES[id]}</option>`).join('')}</select></span>`
 
-/** Same footer as tracy.ai: logo and blurb, three link columns, then the copyright with the theme toggle and language picker. */
-export function footer(year, w = WORDS) {
+/**
+ * Same footer as tracy.ai: logo and blurb, three link columns, then the copyright with the theme toggle and language picker.
+ * `appOrigin` is the app's own address, as for the header's Get Started.
+ */
+export function footer(year, w = WORDS, appOrigin = '') {
   const f = w.footer
   const link = (href, text) => `<a href="${href}">${escapeHtml(text)}</a>`
   const ext = (href, text) => `<a href="${href}" target="_blank" rel="noopener">${escapeHtml(text)}</a>`
@@ -81,7 +84,7 @@ export function footer(year, w = WORDS) {
   return `<footer><div class="wrap foot-top">
 <div class="foot-brand"><a class="brand" href="${LINKS.home}">${LOGO}</a><p class="foot-blurb">${escapeHtml(f.blurb)}</p></div>
 <div class="foot-cols">
-<div class="foot-col"><h3>${escapeHtml(f.product)}</h3>${link('/templates/', f.freeTemplates)}${link(LINKS.download, f.download)}${link(LINKS.webApp, f.webApp)}${link(landingPage(w.lang, 'help'), f.helpCenter)}</div>
+<div class="foot-col"><h3>${escapeHtml(f.product)}</h3>${link('/templates/', f.freeTemplates)}${link(LINKS.download, f.download)}${link(`${appOrigin}/`, f.webApp)}${link(landingPage(w.lang, 'help'), f.helpCenter)}</div>
 <div class="foot-col"><h3>${escapeHtml(f.community)}</h3>${ext(LINKS.github, 'GitHub')}${ext(LINKS.discord, 'Discord')}${ext(LINKS.youtube, 'YouTube')}${ext(LINKS.x, 'X')}</div>
 <div class="foot-col"><h3>${escapeHtml(f.legal)}</h3>${link(landingPage(w.lang, 'privacy'), f.privacy)}${link(landingPage(w.lang, 'terms'), f.terms)}</div>
 </div></div>

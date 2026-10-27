@@ -27,7 +27,6 @@ export const LINKS = Object.freeze({
   github: 'https://github.com/TracyHQ/tracy',
   youtube: 'https://www.youtube.com/@tracydotai',
   x: 'https://x.com/tracydotai',
-  webApp: 'https://cowork.tracy.ai/',
   logo: `${DEFAULT_LANDING_ORIGIN}/assets/logo.png`,
   download: `${DEFAULT_LANDING_ORIGIN}/download/`,
   discord: 'https://discord.gg/BM9TMRcEBb',
