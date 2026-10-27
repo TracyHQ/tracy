@@ -19,6 +19,8 @@
  * (`apps/tracy-web/src/assistant/`). The operator's switch is `ai-assistant`
  * (`@tracy/core/ui-switches`): off, `help` leaves the menu and `/help …` is an ordinary message.
  */
+import { tracyWebFetch } from '@tracy/core/web-path'
+import { draftActions, draftIsCurrent, latestDraftTurn } from './onboarding'
 import { inputActivity } from '@tracy/core/input-activity'
 import { ActivityPieces } from '@tracy/core/input-activity/react'
 import { uiSwitches } from '@tracy/core/ui-switches'
@@ -127,18 +129,43 @@ export function apply(
       document.querySelector('meta[name="tracy-chat-input-audience"]')?.getAttribute('content') ===
         'onboarding')
   // chat-input opens the matching tab (onboarding-start.ts); the question lets Create preselect a platform.
-  const startFrom = (action: StartAction | 'business', question: string, platform?: string) => {
+  const startFrom = (
+    action: StartAction | 'business',
+    question: string,
+    platform?: string,
+    draft?: Record<string, unknown>
+  ) => {
     window.dispatchEvent(
       new CustomEvent('tracy:onboarding-start', {
-        detail: { action, question, ...(platform ? { platform } : {}) }
+        detail: {
+          action,
+          question,
+          ...(platform ? { platform } : {}),
+          ...(draft ? { chatDraft: draft } : {})
+        }
       })
     )
   }
   // A start action pressed in an answer (`tracy-action:` link, HelpNode.tsx): the same event as a card.
+  const prepareAction = draftActions(tracyWebFetch)
   const onAction = onboarding
-    ? (href: string) => {
+    ? async (href: string, turn?: HelpData) => {
         const press = startPressOf(href)
-        if (press) startFrom(press.action, '', press.platform)
+        if (!press) return
+        // The wizard's design step keeps the chat draft while the customer chooses a template.
+        const intent = press.action === 'templates' ? { action: 'create' as const } : press
+        if (!turn) throw new Error('DRAFT_CHANGED')
+        const rows = () => ctx.chatLocal.for(turn.sessionId).nodes.getSnapshot()
+        const latest = latestDraftTurn(rows(), turn.sessionId)
+        if (!latest) throw new Error('DRAFT_CHANGED')
+        const current = () => draftIsCurrent(rows(), latest)
+        const draft = await prepareAction(latest, intent, current)
+        startFrom(
+          intent.action,
+          '',
+          typeof draft.platform === 'string' ? draft.platform : press.platform,
+          draft
+        )
       }
     : undefined
   const switches = uiSwitches()

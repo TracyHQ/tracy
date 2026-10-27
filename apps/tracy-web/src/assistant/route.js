@@ -66,6 +66,7 @@ import {
   UPLOADS_PER_HOUR
 } from './files.js'
 import { assistantModel, TURN_DEADLINE_MS } from './model.js'
+import { draftPrompt, DRAFT_CHARS, DRAFT_TURNS, parseDraft } from './onboarding-draft.js'
 import { navigationFor, systemPrompt } from './prompt.js'
 import { readUiHidden } from '../lib/ui-setting.js'
 import {
@@ -327,6 +328,92 @@ export function assistantRoutes({
     return json(c, { file: saved }, 201)
   })
 
+  app.post('/api/assistant/onboarding-draft', async (c) => {
+    const who = await signedIn(c)
+    if (who.error) return who.error
+    const b = await body(c)
+    if (
+      !b ||
+      !['create', 'import', 'business'].includes(b.intent) ||
+      !TURN_ID.test(b.sourceRevision ?? '') ||
+      !SESSION_ID.test(b.session ?? '')
+    )
+      return json(c, { code: 'BAD_DRAFT' }, 400)
+    if (b.platform != null && !['wordpress', 'joomla', 'emdash'].includes(b.platform))
+      return json(c, { code: 'BAD_DRAFT' }, 400)
+    const hidden = await readUiHidden(pool)
+    if (!navigationFor(null, { start: true, hidden }).some((l) => l.href === `tracy-action:${b.intent}`))
+      return json(c, { code: 'DRAFT_UNAVAILABLE' }, 409)
+    const accountId = who.account.id
+    const { rows: conversations } = await pool.query(
+      'select id from assistant_conversation where account_id = $1 and session_id = $2 and cleared_at is null',
+      [accountId, b.session]
+    )
+    const conversationId = conversations[0]?.id
+    if (!conversationId) return json(c, { code: 'DRAFT_CHANGED' }, 409)
+    const readRevision = async () => {
+      const { rows } = await pool.query(
+        `select max(t.id)::text as revision from assistant_turn t join assistant_conversation c on c.id = t.conversation_id
+         where t.account_id = $1 and t.conversation_id = $2 and t.role = 'user' and c.cleared_at is null`,
+        [accountId, conversationId]
+      )
+      return rows[0]?.revision
+    }
+    if ((await readRevision()) !== b.sourceRevision) return json(c, { code: 'DRAFT_CHANGED' }, 409)
+    const { rows: turns } = await pool.query(
+      `select role, content from assistant_turn where account_id = $1 and conversation_id = $2 order by id limit $3`,
+      [accountId, conversationId, DRAFT_TURNS + 1]
+    )
+    if (turns.length > DRAFT_TURNS || turns.reduce((n, t) => n + t.content.length, 0) > DRAFT_CHARS)
+      return json(c, { code: 'DRAFT_TOO_LONG' }, 413)
+    if ((streaming.get(accountId) ?? 0) >= MAX_STREAMS_PER_ACCOUNT)
+      return json(c, { code: 'RATE_LIMITED' }, 429)
+    if (await overLimitOrClosed(pool, `assistant:draft:${accountId}`, 12, now(), 60_000))
+      return json(c, { code: 'RATE_LIMITED' }, 429)
+    if (await overLimitOrClosed(pool, `assistant:draft-day:${accountId}`, TURNS_PER_DAY, now(), 86_400_000))
+      return json(c, { code: 'RATE_LIMITED', window: 'day' }, 429)
+    streaming.set(accountId, (streaming.get(accountId) ?? 0) + 1)
+    const abort = new AbortController()
+    const timeout = setTimeout(() => abort.abort(), TURN_DEADLINE_MS)
+    const cancel = () => abort.abort()
+    c.req.raw.signal.addEventListener('abort', cancel, { once: true })
+    try {
+      let output = ''
+      let usage = null
+      let modelName = null
+      for await (const part of llm.stream({
+        messages: draftPrompt(b.intent, turns),
+        signal: abort.signal,
+        maxOutputTokens: 4096
+      })) {
+        if (part.usage) usage = part.usage
+        if (part.model) modelName = part.model
+        output += part.text ?? ''
+        if (output.length > 8000) {
+          abort.abort()
+          return json(c, { code: 'DRAFT_FAILED' }, 502)
+        }
+      }
+      log.info?.(
+        `[assistant] draft account=${accountId} out_chars=${output.length} in_tokens=${usage?.inputTokens ?? 'unknown'} out_tokens=${usage?.outputTokens ?? 'unknown'} model=${modelName ?? '-'}`
+      )
+      const draft = parseDraft(output, b.intent, b.platform)
+      if (!draft) return json(c, { code: 'DRAFT_FAILED' }, 502)
+      if ((await readRevision()) !== b.sourceRevision) return json(c, { code: 'DRAFT_CHANGED' }, 409)
+      if (b.platform && draft.platform && b.platform !== draft.platform)
+        return json(c, { code: 'DRAFT_CHANGED' }, 409)
+      if (draft.needsClarification) return json(c, { code: 'DRAFT_AMBIGUOUS' }, 409)
+      return json(c, { draft: { ...draft, version: 1, sourceRevision: b.sourceRevision, intent: b.intent } })
+    } catch (error) {
+      log.warn(`[assistant] draft ${abort.signal.aborted ? 'TIMEOUT' : String(error?.code ?? 'FAILED')}`)
+      return json(c, { code: 'DRAFT_FAILED' }, 502)
+    } finally {
+      clearTimeout(timeout)
+      c.req.raw.signal.removeEventListener('abort', cancel)
+      streaming.set(accountId, Math.max(0, (streaming.get(accountId) ?? 1) - 1))
+    }
+  })
+
   app.post('/api/assistant/turns', async (c) => {
     const who = await signedIn(c)
     if (who.error) return who.error
@@ -445,7 +532,7 @@ export function assistantRoutes({
 
     const hidden = await readUiHidden(pool)
     const links = navigationFor(ctx, { start, hidden })
-    const history = await historyOf(pool, accountId, conversation.id)
+    const history = await historyOf(pool, accountId, conversation.id, start ? DRAFT_TURNS : undefined)
     // The model reads what was attached (names, kinds, sizes), never the bytes.
     const question = [message, filesNote(files)].filter((part) => part !== '').join('\n\n')
     const messages = [

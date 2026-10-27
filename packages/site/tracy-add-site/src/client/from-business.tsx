@@ -99,6 +99,7 @@ function viewerStorage(): Storage | null {
 }
 
 export function FromBusiness({
+  initialQuery = '',
   t,
   lang,
   onBack,
@@ -108,6 +109,7 @@ export function FromBusiness({
   storage = viewerStorage()
 }: {
   t: Translate
+  initialQuery?: string
   lang: string
   onBack(): void
   open?(href: string): void
@@ -121,7 +123,19 @@ export function FromBusiness({
   const [api] = useState(() => givenApi ?? fromBusinessApi())
   const fieldId = useId()
   const [question, setQuestion] = useState<{ label: string; hint: string | null } | null>(null)
-  const [text, setText] = useState('')
+  const [text, setText] = useState(initialQuery)
+  const editedQuery = useRef(false)
+  const seededQuery = useRef(initialQuery)
+  const searchSequence = useRef(0)
+  useEffect(() => {
+    if (seededQuery.current === initialQuery) return
+    seededQuery.current = initialQuery
+    if (editedQuery.current || !['idle', 'searching', 'found', 'failed'].includes(stage.at)) return
+    searchSequence.current++
+    setText(initialQuery)
+    setPicked(null)
+    setStage({ at: 'idle' })
+  }, [initialQuery])
   const [picked, setPicked] = useState<string | null>(null)
   const [stage, setStage] = useState<Stage>({ at: 'idle' })
   const [mode, setMode] = useState<FindMode>('search')
@@ -172,9 +186,11 @@ export function FromBusiness({
     stage.at === 'opening'
 
   async function search(): Promise<void> {
+    const mine = ++searchSequence.current
     setPicked(null)
     setStage({ at: 'searching' })
     const answer = await api.find(text.trim())
+    if (mine !== searchSequence.current) return
     if (!answer.ok) return setStage({ at: 'failed', key: failureKey(answer.body?.code) })
     setStage({ at: 'found', places: Array.isArray(answer.body?.candidates) ? answer.body.candidates : [] })
   }
@@ -390,6 +406,7 @@ export function FromBusiness({
                 if (pasteLinks(event.clipboardData.getData('text'))) event.preventDefault()
               }}
               onChange={(event) => {
+                editedQuery.current = true
                 setText(event.target.value)
                 if (stage.at === 'found' || stage.at === 'failed') setStage({ at: 'idle' })
               }}

@@ -8,6 +8,12 @@
 export const NS = 'tracy-assistant'
 
 export const en = {
+  'draft.preparing': 'Preparing your details…',
+  'draft.changed': 'Your request has changed. Use the action in the latest reply.',
+  'draft.long': 'This chat is too long to transfer. You can still use Create a new site or Import your site.',
+  'draft.ambiguous': 'Please clarify your choice in chat before continuing.',
+  'draft.failed': 'Your details could not be prepared. Press the action again to retry.',
+
   'onboarding.placeholder': 'Not sure where to start? Just ask',
   'onboarding.send': 'Send',
   'onboarding.action.create': 'Create a new site',

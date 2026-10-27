@@ -160,6 +160,7 @@ function AddSiteTab({
       pressedPlatform={pressed?.platform}
       pressedDesign={pressed?.design}
       pressedOrigin={pressed?.origin}
+      chatDraft={pressed?.chatDraft}
       pressKey={pressed?.key}
     />
   )
