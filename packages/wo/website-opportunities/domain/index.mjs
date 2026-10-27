@@ -196,7 +196,7 @@ export {
   withAcceptedDishPhotos,
   DISH_PHOTOS_MATCHER
 } from './dish-photos.mjs'
-export { slotMap, SLOT_MAP_VERSION } from './pictures/slot-map.mjs'
+export { slotMap, protectedPicture, SLOT_MAP_VERSION } from './pictures/slot-map.mjs'
 export {
   labelPicture,
   nearCopies,
@@ -210,6 +210,8 @@ export {
   drawPlan,
   outputSize,
   cropBox,
+  shapeFit,
+  fitCrop,
   ROLES,
   PLANNER_VERSION,
   MAX_SCALE,

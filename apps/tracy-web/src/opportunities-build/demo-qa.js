@@ -39,6 +39,7 @@ import { forbiddenFillers } from 'website-opportunities/domain/slot-fill-manifes
 import { createHash, randomUUID } from 'node:crypto'
 import { canonicalJson } from '../lib/questions-schema.mjs'
 import { picturesOfBuild, promptHandoff, withHandoffLock } from './handoff.js'
+import { keptPictures } from './agent-demo-slot-fit.js'
 
 /** The brief rows a query answered, each read with this build's choice (`build-choice.js`). */
 const seenBy = (build) => (result) => ({
@@ -305,6 +306,8 @@ const REPAIR = {
   'no-cms-error-leak': 'Find what prints this error and fix it; no PHP or database message may reach a page.',
   'no-raw-placeholders':
     'Replace each raw placeholder with real words from the brief; rewrite the topic when the original claim lacks supporting data.',
+  'picture-frames-kept':
+    "Each picture below sits in a frame of another shape than the template's, or replaced a picture the template keeps. Cut the photo to the frame's own shape (media.import with its plan row cuts it to the frame), or put the template's picture back: a frame no collected photo fits, an icon, an avatar strip, a signature, a cut-out and a slot marked customize \"keep\" keep the template's picture. Never resize the frame or change its style to make a photo fit.",
   'no-empty-picture-slots':
     'Fill every picture frame with a fitting supplied real photograph or a crop derived from one. Preserve the frame, its section and card count. Report any unresolved frame; never hide, empty or unpublish it to pass the check.',
   // Plan "10/10" §5 (David 26/10/2026): a dead form becomes a real way to reach the business, never an empty band.
@@ -533,6 +536,8 @@ async function takeBaseline(pool, deps, { build, lease }, { revision, site }) {
     .demoQa(site, {
       pages: ['/'],
       discover: true,
+      // The box each template picture is drawn in, so the check after the turn sees a frame that changed shape.
+      measureFrames: true,
       plan: planPaths(build.receipt?.pagePlan ?? null),
       contactPaths: contactPaths(build.receipt?.pagePlan ?? null),
       placed: placedPaths(build),
@@ -879,7 +884,9 @@ async function runRound(pool, deps, { build, lease }) {
               counts: build.content?.agentDemo?.structure?.inventory?.counts
             },
             structureHash: build.content?.agentDemo?.structureHash,
-            editorialPlan: build.content?.agentDemo?.plan
+            editorialPlan: build.content?.agentDemo?.plan,
+            // The template pictures no photo replaces (an icon, an avatar strip, a cut-out, a kept slot).
+            kept: keptPictures(build.content?.agentDemo?.structure, qa.baseline)
           }
         : {})
     })
