@@ -1,0 +1,3 @@
+- **The language bundle exceptions follow the rebuilt bundles again** — Akemi (Claude) · `akemi/language-policy-bundle-oids-2` · 2026-10-28
+  **Affects:** the website opportunities dev fixes pull request. It adds the Profile card's "Not on the site" strings in every interface language and rebuilds `packages/locale/tracy-locales/lib/client.js` and `packages/locale/tracy-locale-vi/lib/client.js`, so the two reviewed `objects` entries now name the rebuilt blobs.
+  **Why / Measured:** `language-policy` reads its exceptions from the base branch. Running `checkRange` with this policy over the follow-up branch: 7 commits, 0 findings.
