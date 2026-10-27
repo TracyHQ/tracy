@@ -1,4 +1,4 @@
-// JA Boxing 1.0.2 to 1.0.5 (contract joomla-ja-boxing-modes): the rules that make every must-fix design
+// JA Boxing 1.0.2 to 1.0.6 (contract joomla-ja-boxing-modes): the rules that make every must-fix design
 // system rule pass on the 18 contract pages (24/10/2026). Each test reads the sheet a worn system gets.
 import assert from 'node:assert/strict'
 import { createHash } from 'node:crypto'

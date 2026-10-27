@@ -1,0 +1,31 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-boxing/j6/1.0.6",
+  "platform": "joomla",
+  "template": "ja_boxing",
+  "quickstart": {
+    "product": "ja-boxing",
+    "platform": "joomla",
+    "version": "1.0.6",
+    "cms": {
+      "version": "6.1.1"
+    },
+    "template": "ja_boxing",
+    "parts": {
+      "installer": {
+        "file": "ja-boxing-j6-quickstart-1.0.6.zip",
+        "bytes": 67420943,
+        "sha256": "890407dd8c2301c199d278b0cdad2617b42a05cfbe0b183699e056eed8cead92"
+      }
+    },
+    "createdAt": "2026-10-27T15:08:50.881Z",
+    "builtFrom": {
+      "from": "quickstart/ja-boxing/j6@1.0.5",
+      "by": "tracy-ds-slot release-joomla.mjs",
+      "change": "repaired: 5 files replaced (templates/ja_boxing/css, templates/ja_boxing/scss); stylesheets read the worn design system (--ds-c-*)"
+    },
+    "release": "quickstart/ja-boxing/j6"
+  },
+  "coworkContractVersion": "0.24.68",
+  "mode": "content-recommendation"
+}
