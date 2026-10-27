@@ -1087,3 +1087,20 @@ test('Help prompt: a design system goes on with the Design system button; the ch
   assert.match(noButton, /with a button is not available right now/)
   assert.ok(!/point to the Design system row/.test(noButton), 'never point at a button that is not there')
 })
+
+test('draft extraction can use a bounded larger output budget without changing chat defaults', async () => {
+  const limits = []
+  const model = assistantModel({
+    pool: null,
+    config: { sessionSecret: 'x', model: { baseUrl: 'https://model.test', apiKey: 'test', words: 'test' } },
+    fetchImpl: async (_url, init) => {
+      limits.push(JSON.parse(init.body).max_tokens)
+      return new Response('data: [DONE]\n\n', { headers: { 'content-type': 'text/event-stream' } })
+    }
+  })
+  for (const maxOutputTokens of [undefined, 4096, 9000]) {
+    for await (const _part of model.stream({ messages: [], maxOutputTokens })) {
+    }
+  }
+  assert.deepEqual(limits, [1024, 4096, 4096])
+})

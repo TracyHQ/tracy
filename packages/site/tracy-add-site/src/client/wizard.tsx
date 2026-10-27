@@ -1,3 +1,4 @@
+import { chatDraftAnswers, type chatDraftOf } from './chat-draft.mjs'
 /**
  * The add-site flow: pick a source → name it → watch it build → receive the handover.
  *
@@ -107,7 +108,7 @@ import { StartingDesignGallery } from './starting-design-gallery'
 import { startingDesignImage } from './starting-design-image.mjs'
 import { stepsFrom } from './steps.mjs'
 import type { Translate } from './strings'
-import { draftOf, forgetDraft, keepDraft } from './wizard-draft.mjs'
+import { chatCarryOf, draftOf, forgetDraft, keepDraft } from './wizard-draft.mjs'
 import { WizardFooter } from './wizard-footer'
 import { reviewBusiness, WizardReview } from './wizard-review'
 import { WizardSteps } from './wizard-steps'
@@ -327,6 +328,7 @@ export interface WizardProps {
   pressedOrigin?: 'create' | 'import' | 'business'
   /** Which press these came from: a new key re-applies them, the same key never does. */
   pressKey?: string
+  chatDraft?: ReturnType<typeof chatDraftOf>
 }
 
 /**
@@ -394,13 +396,15 @@ export function AddSiteWizard({
   pressedPlatform,
   pressedDesign,
   pressedOrigin,
-  pressKey
+  pressKey,
+  chatDraft
 }: WizardProps): JSX.Element {
   // The right column unmounts a tab that is off screen ("Change design" opens Design inspiration in
   // it), so the person's picks are kept per wizard scope and handed back under the same press
   // (`wizard-draft.mjs`, walkthrough 11/10/2026 bug 6).
   const draftScope = `${sessionId ?? ''}:${siteKey ?? ''}`
   const [kept] = useState(() => draftOf(draftScope, pressKey))
+  const [chatKept] = useState(() => (chatDraft ? chatCarryOf(draftScope) : undefined))
   // Which card and platform a press lands on is `press-state.mjs`'s call; this holds the results.
   const [start] = useState(() =>
     initialPress({
@@ -598,8 +602,10 @@ export function AddSiteWizard({
   // "Customize your site" (`questions-sheet.tsx`): the answers given so far, by question id, kept while the panel is
   // open (a refused name keeps them too), and whether its page is up.
   const [answers, setAnswers] = useState<SheetAnswers>(
-    (kept?.answers as SheetAnswers | undefined) ?? EMPTY_BRIEF
+    ((kept?.answers ?? chatKept?.answers) as SheetAnswers | undefined) ?? EMPTY_BRIEF
   )
+  const chatApplied = useRef<Record<string, unknown>>(kept?.chatApplied ?? chatKept?.chatApplied ?? {})
+  const chatEdited = useRef(new Set<string>(kept?.chatEdited ?? chatKept?.chatEdited ?? []))
   const answersRef = useRef(answers)
   answersRef.current = answers
   /** After a change of template kept or left behind some answers: said once on the page, gone when it closes. */
@@ -730,7 +736,9 @@ export function AddSiteWizard({
       doneSteps,
       returnToReview,
       customizeSkipped,
-      answers
+      answers,
+      chatApplied: chatApplied.current,
+      chatEdited: [...chatEdited.current]
     })
   }, [
     draftScope,
@@ -778,7 +786,19 @@ export function AddSiteWizard({
       const seeded = nativeSeed.current
         ? nativeBriefAnswers(found.questions, nativeSeed.current.brief, answersRef.current)
         : {}
-      const carry = carryAnswers(found.questions, { ...seeded, ...answersRef.current }, { fresh: true })
+      const preserved = chatDraft
+        ? Object.fromEntries(
+            Object.entries(answersRef.current).filter(
+              ([id, value]) =>
+                chatEdited.current.has(id) ||
+                !(id in chatApplied.current) ||
+                JSON.stringify(value) !== JSON.stringify(chatApplied.current[id])
+            )
+          )
+        : answersRef.current
+      const fromChat = chatDraftAnswers(found.questions, chatDraft, preserved)
+      if (chatDraft) chatApplied.current = fromChat
+      const carry = carryAnswers(found.questions, { ...seeded, ...fromChat, ...preserved }, { fresh: true })
       // Only a change that touched earlier answers is worth a line; a first read says nothing.
       setCarried(carry.kept + carry.dropped > 0 ? { kept: carry.kept, dropped: carry.dropped } : null)
       setAnswers(carry.answers)
@@ -787,7 +807,7 @@ export function AddSiteWizard({
     return () => {
       live = false
     }
-  }, [askedPlatform, wantedDesign, questionsTry])
+  }, [askedPlatform, wantedDesign, questionsTry, chatDraft])
   // The card and the sheet ask about a NEW site whose words the brief can write; a fork takes its look and words from
   // the repository it was given, and a template no content contract seals keeps its own (`appliesTo`).
   const asksQuestions = origin === 'create' && appliesTo(startCard, chosen?.value) && questions.at !== 'none'
@@ -1613,6 +1633,7 @@ export function AddSiteWizard({
     origin === 'import' ? (
       <div className={ROOT} hidden={currentStep === 'source'}>
         <ImportWizard
+          initialAddress={chatDraft?.importUrl}
           t={t}
           onBackToSource={() => setCurrentStep('source')}
           onPage={setImportFormPage}
@@ -1636,6 +1657,7 @@ export function AddSiteWizard({
     shownOrigin === 'business' ? (
       <div className={ROOT} hidden={currentStep === 'source'}>
         <FromBusiness
+          initialQuery={chatDraft?.businessQuery}
           t={t}
           lang={interfaceLocale() || 'en'}
           onBack={() => {
@@ -1897,7 +1919,13 @@ export function AddSiteWizard({
                   questions={questions.ordered}
                   oneLanguage={questions.served.oneLanguage}
                   answers={answers}
-                  onAnswers={setAnswers}
+                  onAnswers={(next) => {
+                    for (const id of new Set([...Object.keys(answersRef.current), ...Object.keys(next)])) {
+                      if (JSON.stringify(answersRef.current[id]) !== JSON.stringify(next[id]))
+                        chatEdited.current.add(id)
+                    }
+                    setAnswers(next)
+                  }}
                   note={
                     carried
                       ? [

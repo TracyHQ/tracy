@@ -22,6 +22,7 @@ const MAX_DRAFTS = 20
 /**
  * @typedef {{ pressKey: string | undefined, platform: string, origin: string, name: string,
  *   design?: string, currentStep?: string, doneSteps?: string[], returnToReview?: boolean, customizeSkipped?: boolean, answers?: Record<string, unknown>,
+ *   chatApplied?: Record<string, unknown>, chatEdited?: string[],
  *   designSystem?: import('./design-system-pick.mjs').DesignSystemPick | null }} Draft
  */
 
@@ -62,4 +63,13 @@ export function draftOf(scope, pressKey) {
  */
 export function forgetDraft(scope) {
   drafts.delete(scope)
+}
+
+/** Only answer provenance crosses a new chat press; the new platform and entry step still win.
+ * @param {string} scope
+ */
+export function chatCarryOf(scope) {
+  const draft = drafts.get(scope)
+  if (!draft) return undefined
+  return { answers: draft.answers, chatApplied: draft.chatApplied, chatEdited: draft.chatEdited }
 }

@@ -68,6 +68,11 @@ before(async () => {
         const t = (key, params = {}) =>
           Object.entries(params).reduce((text, [name, value]) => text.replaceAll('{' + name + '}', String(value)), en[key] ?? key)
         const root = createRoot(document.getElementById('root'))
+        const draftApi = {
+          question: () => Promise.resolve({ ok: true, body: {} }),
+          find: text => Promise.resolve({ ok: true, body: { candidates: [{ providerId: 'p1', name: text + ' result' }] } })
+        }
+        window.showDraftQuery = initialQuery => root.render(<FromBusiness t={t} lang="en" initialQuery={initialQuery} onBack={() => {}} api={draftApi} storage={null} />)
         window.showSwitch = (width) => root.render(
           <div id="panel" style={{ width: width + 'px' }}>
             <ModeSwitch mode="search" onMode={() => {}} search={<>{t('own_mode_search')}</>} links={<>{t('own_mode_links')}</>} />
@@ -228,5 +233,22 @@ test('after a start, a link the server left out shows its reason, not the client
     await page.locator('[data-own-progress]').waitFor()
     await page.getByText('Left out: Google could not read this link').waitFor()
     assert.equal(await page.getByText('Read from Google').count(), 0)
+  })
+})
+
+test('a corrected business draft drops old search results and preserves a manual clear', async () => {
+  await withPage(async (page) => {
+    await page.evaluate(() => window.showDraftQuery('Bakery A'))
+    const input = page.locator('input').first()
+    assert.equal(await input.inputValue(), 'Bakery A')
+    await page.locator('button[type="submit"]').click()
+    await page.locator('[data-own-places]').waitFor()
+    await page.evaluate(() => window.showDraftQuery('Bakery B'))
+    await page.waitForFunction(() => document.querySelector('input')?.value === 'Bakery B')
+    assert.equal(await page.locator('[data-own-places]').count(), 0, 'A results do not belong to B')
+    await input.fill('')
+    await page.evaluate(() => window.showDraftQuery('Bakery C'))
+    await page.waitForTimeout(200)
+    assert.equal(await input.inputValue(), '')
   })
 })

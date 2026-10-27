@@ -38,6 +38,7 @@
  * of the template asked about (`QUESTIONS`), or `questionsAnswer` when a test sets one (a status, or no questions).
  */
 import { createElement, type ComponentType } from 'react'
+import { openOnboardingStart } from '../../../../ui/tracy-chat-input/src/client/onboarding-start'
 import { createRoot } from 'react-dom/client'
 import { apply } from '../../src/client/index'
 import { en } from '../../src/client/strings'
@@ -67,6 +68,11 @@ interface PressOptions {
 declare global {
   interface Window {
     __harness: {
+      fromChat: (
+        draft: unknown,
+        platform?: 'joomla' | 'wordpress' | 'emdash',
+        action?: 'create' | 'import' | 'business' | 'templates'
+      ) => void
       registered: boolean
       posts: Array<Record<string, unknown>>
       questionCalls: string[]
@@ -400,6 +406,7 @@ let holdingRewrites = false
 const heldRewrites: Array<() => void> = []
 
 const harness: Window['__harness'] = {
+  fromChat: () => undefined,
   registered: false,
   posts: [],
   questionCalls: [],
@@ -757,6 +764,8 @@ harness.returnToAddSite = () => {
   if (tab) sidebarRight.focus(tab.id)
 }
 
+harness.fromChat = (draft, platform, action = 'create') =>
+  openOnboardingStart(service, sidebarRight, action, '', platform, draft)
 harness.press = (card, platform, opts = {}) => {
   const pressedAt = opts.pressedAt ?? Date.now()
   const meta = pressMeta(card, platform, pressedAt)
