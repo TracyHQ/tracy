@@ -632,14 +632,32 @@ class SqlSource:
         """Whether every table an expression names (`{s}.<table>`) is on both sides."""
         return all(self.has(w, name[len(self.prefix):]) for name in self.NAMED.findall(text) for w in ("base", "copy"))
 
+    # A column of the record's own row named in an expression (`r.post_excerpt`, `r.\`ID\``).
+    OWN_COLUMN = re.compile(r"(?<![A-Za-z0-9_.`])r\.`?([A-Za-z_][A-Za-z0-9_]*)`?")
+    PLAIN_COLUMN = re.compile(r"^r\.`?([A-Za-z_][A-Za-z0-9_]*)`?$")
+
+    def both_columns(self, table: str) -> set[str]:
+        return set(self.table_columns("base", table)) & set(self.table_columns("copy", table))
+
     def usable(self, spec: Spec) -> bool:
-        return (self.has("base", spec.table) and self.has("copy", spec.table)
-                and self.present(spec.joins + spec.where + " ".join((spec.columns or {}).values())))
+        if not (self.has("base", spec.table) and self.has("copy", spec.table)
+                and self.present(spec.joins + spec.where + " ".join((spec.columns or {}).values()))):
+            return False
+        # A kind whose filter or key names a column this site's table lacks (an older or trimmed
+        # schema) is not this site's kind: left out, never a changeset that stops on ERROR 1054.
+        both = self.both_columns(spec.table)
+        keys = [spec.columns.get(k, "") for k in spec.key] if spec.columns is not None else []
+        needed = self.OWN_COLUMN.findall(spec.where) + [m.group(1) for k in keys if (m := self.PLAIN_COLUMN.match(k))]
+        return all(c in both for c in needed)
 
     def expressions(self, spec: Spec, which: str) -> dict[str, str]:
         schema = LS.q(self.side(which))
         if spec.columns is not None:
-            cols = dict(spec.columns)
+            # A plain column one side's table lacks is left out of what is compared (a trimmed schema
+            # with no `post_excerpt`), as the table's own columns are when the kind names none.
+            both = self.both_columns(spec.table)
+            cols = {c: e for c, e in spec.columns.items()
+                    if not (m := self.PLAIN_COLUMN.match(e)) or m.group(1) in both}
         else:
             base_cols = set(self.table_columns("base", spec.table))
             cols = {c: f"r.{LS.q(c)}" for c in self.table_columns("copy", spec.table) if c in base_cols}

@@ -47,6 +47,9 @@
 import { createHash } from 'node:crypto'
 import { spawnSync } from 'node:child_process'
 import {
+  closeSync,
+  openSync,
+  readSync,
   createReadStream,
   createWriteStream,
   existsSync,
@@ -60,7 +63,8 @@ import {
 import { dirname } from 'node:path'
 import { request } from 'node:http'
 import { join } from 'node:path'
-import { createGunzip, createGzip } from 'node:zlib'
+import { createGunzip, createGzip, gunzipSync } from 'node:zlib'
+import { once } from 'node:events'
 
 const USER_AGENT = 'Mozilla/5.0 (compatible; TracyBot/1.0; +https://tracy.ai)'
 const REQUEST_TIMEOUT_MS = 120_000
@@ -777,11 +781,13 @@ async function readDatabase(
   token,
   scratch,
   ability,
-  { only = null, previous = null, reuse = null, partial = false } = {}
+  { only = null, previous = null, reuse = null, partial = false, seeded = null } = {}
 ) {
   const { tables: listed } = await retried(() => call(endpoint, token, 'db.tables'))
   const all = listed.filter((t) => !isTracyCopy(t))
-  const tables = only ? all.filter((t) => only.has(t)) : all.filter((t) => !reuse?.has(t))
+  // Parts already read for this read (`seeded`: the row comparison's, moments ago): not asked again.
+  const have = new Map((seeded ?? []).map((p) => [p.table, p]))
+  const tables = only ? all.filter((t) => only.has(t)) : all.filter((t) => !reuse?.has(t) && !have.has(t))
   const limits = { value: DB_CHUNK_LIMIT }
   const fileOf = (table) => join(scratch, `t${all.indexOf(table)}.sql`)
   let reread = 0
@@ -825,7 +831,11 @@ async function readDatabase(
       `database: ${reads.size} table(s) asked for in ${Math.round((Date.now() - began) / 100) / 10}s (rows: ${largest.join(', ')})`
     )
   }
-  const kept = new Map([...(reuse ?? new Map()), ...(previous?.parts ?? []).map((p) => [p.table, p])])
+  const kept = new Map([
+    ...(reuse ?? new Map()),
+    ...have,
+    ...(previous?.parts ?? []).map((p) => [p.table, p])
+  ])
   const parts = all
     .filter((table) => reads.has(table) || kept.has(table))
     .map((table) =>
@@ -845,7 +855,7 @@ async function readDatabase(
     rows: parts.reduce((n, p) => n + (p.rows ?? 0), 0),
     reread,
     parts,
-    tablesRead: (previous?.tablesRead ?? 0) + tables.length
+    tablesRead: (previous?.tablesRead ?? 0) + tables.length + have.size
   }
 }
 
@@ -855,11 +865,32 @@ async function readDatabase(
  * for again. A file per table under `dir`: `Map<table, {table, path, digest, rows}>`.
  */
 async function reusableTables(last, now, dir) {
-  const same = new Set(
-    Object.keys(now).filter((t) => now[t] != null && last.tables?.[t] != null && now[t] === last.tables[t])
+  // A table the merge never takes from the live site (`isIgnored`: Tracy's own, sessions, logs) is
+  // the last read's whatever its checksum says: read again, it changes nothing the copy holds.
+  let same = new Set(
+    Object.keys(now).filter(
+      (t) => now[t] != null && last.tables?.[t] != null && (now[t] === last.tables[t] || isIgnored(t))
+    )
   )
   const out = new Map()
   if (same.size === 0) return out
+  // Written with its index: each unmoved table is its member, taken as it is — nothing unpacked.
+  const index = readIndex(last.dump)
+  if (index) {
+    for (const table of same) {
+      const at = index.get(table)
+      if (at)
+        out.set(table, {
+          table,
+          member: { file: last.dump, offset: at.offset, length: at.length },
+          digest: at.digest,
+          rows: null,
+          reused: true
+        })
+    }
+    same = new Set([...same].filter((t) => !out.has(t)))
+    if (same.size === 0) return out
+  }
   mkdirSync(dir, { recursive: true, mode: 0o700 })
   let n = 0
   const open = new Map()
@@ -966,13 +997,92 @@ function movedTables(a, b, ignored = isVolatile) {
   return moved
 }
 
+/**
+ * The read's dump: one gzip member a table, in the order read, and beside it `<dump>.index.json` —
+ * where each table's member lies and its digest. A table the next read finds unmoved is that
+ * member's bytes as they are: a WordPress read that took one small table spent 15 s unpacking and
+ * packing again the 60 MB of the others (dev, 27/10/2026). Every reader of a gzip file (gzip -dc,
+ * Python, this module) reads the members one after the other as one dump.
+ */
 async function writeDump(path, parts, scratch) {
-  const out = writer(path, true)
-  for (const part of parts) for await (const chunk of createReadStream(part.path)) await out.write(chunk)
-  await out.close()
+  const file = createWriteStream(path, { mode: 0o600 })
+  const put = async (chunk) => {
+    if (!file.write(chunk)) await once(file, 'drain')
+  }
+  const entries = []
+  let offset = 0
+  for (const part of parts) {
+    let length = 0
+    if (part.member && !part.path) {
+      const { file: from, offset: start, length: size } = part.member
+      for await (const chunk of createReadStream(from, { start, end: start + size - 1 })) {
+        length += chunk.length
+        await put(chunk)
+      }
+    } else {
+      const gz = createGzip({ level: 6 })
+      const feeding = (async () => {
+        for await (const chunk of createReadStream(part.path)) if (!gz.write(chunk)) await once(gz, 'drain')
+        gz.end()
+      })()
+      for await (const chunk of gz) {
+        length += chunk.length
+        await put(chunk)
+      }
+      await feeding
+    }
+    entries.push({ table: part.table, offset, length, digest: part.digest })
+    offset += length
+  }
+  await new Promise((resolve, reject) => {
+    file.on('finish', resolve)
+    file.on('error', reject)
+    file.end()
+  })
+  writeFileSync(
+    indexOf(path),
+    JSON.stringify({ version: INDEX_VERSION, rules: DIGEST_RULES, bytes: offset, parts: entries }),
+    { mode: 0o600 }
+  )
   const digests = Object.fromEntries(parts.map((p) => [p.table, p.digest]))
   rmSync(scratch, { recursive: true, force: true })
   return digests
+}
+
+/** The dump's index (`writeDump`); its version moves with `rowDigest`, whose digests it holds. */
+const INDEX_VERSION = 1
+const indexOf = (dump) => `${dump}.index.json`
+/** The rules a digest leaves rows out by: an index written under others holds digests of other rows. */
+const DIGEST_RULES = createHash('sha1')
+  .update(JSON.stringify([process.env.TRACY_SYNC_VOLATILE_ROWS ?? '', process.env.TRACY_SYNC_VOLATILE ?? '']))
+  .digest('hex')
+/** `Map<table, {offset, length, digest}>` of a dump written with its index, or null: none, another
+ * version, or a dump that is not the one indexed (its size says). */
+function readIndex(dump) {
+  try {
+    const index = JSON.parse(readFileSync(indexOf(dump), 'utf8'))
+    if (index?.version !== INDEX_VERSION || index.rules !== DIGEST_RULES || !Array.isArray(index.parts))
+      return null
+    if (index.bytes !== statSync(dump).size) return null
+    return new Map(index.parts.map((p) => [p.table, p]))
+  } catch {
+    return null
+  }
+}
+/** A part's rows in a file of its own: a member kept from the last read is unpacked when asked. */
+function partPath(part, dir) {
+  if (part.path) return part.path
+  mkdirSync(dir, { recursive: true, mode: 0o700 })
+  const bytes = Buffer.alloc(part.member.length)
+  const fd = openSync(part.member.file, 'r')
+  try {
+    readSync(fd, bytes, 0, bytes.length, part.member.offset)
+  } finally {
+    closeSync(fd)
+  }
+  part.path = join(dir, `m${part.member.offset}.sql`)
+  writeFileSync(part.path, gunzipSync(bytes), { mode: 0o600 })
+  return part.path
 }
 
 /**
@@ -983,13 +1093,22 @@ async function writeDump(path, parts, scratch) {
  * agree row for row on every table but the volatile ones. Either way the read is one moment of the
  * site. `checksumsBefore` is the quick check's, when taken.
  */
-async function pullDatabase(endpoint, token, path, scratch, ability, checksumsBefore = null, last = null) {
+async function pullDatabase(
+  endpoint,
+  token,
+  path,
+  scratch,
+  ability,
+  checksumsBefore = null,
+  last = null,
+  seeded = null
+) {
   if (ability.fingerprint) {
     const skip = ability.fingerprint.skip
     let before = checksumsBefore ?? (await tableChecksums(endpoint, token, skip))
     // Only the tables that moved since the last applied read are read; the others are that read's.
     const reuse = last && before ? await reusableTables(last, before, join(scratch, 'base')) : null
-    let read = await readDatabase(endpoint, token, join(scratch, 'a'), ability, { reuse })
+    let read = await readDatabase(endpoint, token, join(scratch, 'a'), ability, { reuse, seeded })
     // A checksum covers every row: WordPress's `wp_options` moves with each WP-Cron tick (`cron`, the
     // transients), so its checksum never holds still on a site with visitors, and comparing checksums
     // alone made every read of it busy (dev, 24/10/2026). Its two reads compared row by row decide.
@@ -1032,7 +1151,8 @@ async function pullDatabase(endpoint, token, path, scratch, ability, checksumsBe
         if (prior.digest === part.digest) {
           settled.add(part.table)
           differed.delete(part.table)
-        } else differed.set(part.table, rowsMoved(part.table, prior.path, part.path))
+        } else
+          differed.set(part.table, rowsMoved(part.table, partPath(prior, join(scratch, 'kept')), part.path))
       }
       before = after
     }
@@ -1272,6 +1392,12 @@ async function pullWebroot(endpoint, token, live, ability, steady = null) {
   const changed = base
     ? [...listing].filter(([p, f]) => f.unknown || baseSha(p) !== f.sha1).map(([p]) => p)
     : []
+  // Which files moved, by path (the first few): a WordPress read with nothing new went on to merge
+  // for a file that brought nothing, and nothing said which (dev, 27/10/2026).
+  if (changed.length)
+    note(
+      `files: ${changed.length} changed (${changed.slice(0, 3).join(', ')}${changed.length > 3 ? ', …' : ''})`
+    )
   // What file.read will not serve — a protected file (configuration.php: no sha1 either, the site
   // will not hash it) or one too large — comes in a pack cut to those files where the engine can
   // cut one; else the whole tree is read. A changed Global Configuration alone made a sync read
@@ -1496,12 +1622,18 @@ async function sameRows(endpoint, token, ability, stored, fingerprint, scratch) 
   if (!base || !existsSync(base)) return null
   const moved = movedTables(stored.tables, fingerprint.tables, isNoise)
   if (!moved?.length || !moved.every((table) => rowSkip(table) !== null)) return null
+  let keep = false
   try {
     const read = await readDatabase(endpoint, token, scratch, ability, {
       only: new Set(moved),
       partial: true
     })
-    const was = await dumpDigests(base, new Set(moved))
+    // The last read's digests from its index when it has one: nothing of it unpacked.
+    const index = readIndex(base)
+    const was =
+      index && moved.every((t) => index.has(t))
+        ? new Map(moved.map((t) => [t, index.get(t).digest]))
+        : await dumpDigests(base, new Set(moved))
     const same =
       read.parts.length === moved.length &&
       read.parts.every((p) => was.has(p.table) && was.get(p.table) === p.digest)
@@ -1509,15 +1641,34 @@ async function sameRows(endpoint, token, ability, stored, fingerprint, scratch) 
     // still went on to read and merge for 60 s, and nothing said which row held it (dev, 27/10/2026).
     if (!same) {
       const differs = read.parts.filter((p) => was.get(p.table) !== p.digest).map((p) => p.table)
-      const files = await tablesOf(base, new Set(differs), join(scratch, 'base'))
+      // The last read's part of each from its index when it has one (its member alone unpacked).
+      const files = new Map()
+      for (const table of differs) {
+        const at = index?.get(table)
+        if (at)
+          files.set(
+            table,
+            partPath({ member: { file: base, offset: at.offset, length: at.length } }, join(scratch, 'base'))
+          )
+      }
+      const rest = differs.filter((t) => !files.has(t))
+      if (rest.length)
+        for (const [t, path] of await tablesOf(base, new Set(rest), join(scratch, 'base'))) files.set(t, path)
       for (const part of read.parts) {
         const at = files.get(part.table)
         if (at) note(`compare: ${movedLine(rowsMoved(part.table, at, part.path))}`)
       }
     }
-    return { same, tables: moved, rows: read.parts.reduce((n, p) => n + (p.rows ?? 0), 0) }
+    const answer = { same, tables: moved, rows: read.parts.reduce((n, p) => n + (p.rows ?? 0), 0) }
+    // A row of substance: the read goes on, and the tables just read are its own — not asked for
+    // again (a WordPress read asked for wp_postmeta's 135 000 rows twice, 15 s each; dev, 27/10/2026).
+    if (!same) {
+      answer.parts = read.parts
+      keep = true
+    }
+    return answer
   } finally {
-    rmSync(scratch, { recursive: true, force: true })
+    if (!keep) rmSync(scratch, { recursive: true, force: true })
   }
 }
 
@@ -1623,8 +1774,10 @@ async function main(dir) {
       process.env.TRACY_SYNC_DB_BASE &&
       existsSync(process.env.TRACY_SYNC_DB_BASE)
       ? { tables: stored.tables, dump: process.env.TRACY_SYNC_DB_BASE }
-      : null
+      : null,
+    compared?.parts ?? null
   )
+  rmSync(join(out, 'compare'), { recursive: true, force: true })
   timing.database = since(at)
   note(
     `database ${timing.database}s: ${db.tablesRead ?? db.tables ?? '?'} of ${db.tables ?? '?'} table(s) read, ${db.dbRounds ?? '?'} round(s) (${db.dbCheck ?? '?'})`

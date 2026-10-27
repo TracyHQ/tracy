@@ -120,3 +120,62 @@ test('cut --skip leaves the named tables out and everything else as it was; --on
   assert.equal(run(['cut', '--skip', list], live), part('a', [['(1)']]) + part('c', [['(3)']]))
   assert.equal(run(['cut', '--only', list], live), part('b', [['(2)']]))
 })
+
+test('split: each table in a file of its own, shared out by size among the loads, largest first; skipped tables left out', async () => {
+  const { mkdirSync, readFileSync } = await import('node:fs')
+  const big = Array.from({ length: 40 }, (_, i) => `(${i},'${'x'.repeat(40)}')`)
+  const dump =
+    part('wp_big', [big]) +
+    part('wp_mid', [big.slice(0, 20)]) +
+    part('wp_small', [["(1,'a')"]]) +
+    part('wp_skip', [["(1,'s')"]])
+  const out = join(root, 'split-1')
+  mkdirSync(out)
+  const skip = join(root, 'split-skip.txt')
+  writeFileSync(skip, 'wp_skip\n')
+  const loads = run(['split', '--streams', '2', '--out', out, '--skip', skip], dump)
+    .split('\n')
+    .filter(Boolean)
+    .map((l) => l.split(' '))
+  assert.equal(loads.length, 2)
+  const tables = loads.map((paths) => paths.map((p) => /-- table `([^`]+)`/.exec(readFileSync(p, 'utf8'))[1]))
+  // The largest alone on one load, the next two on the other: neither waits on the other's bytes.
+  assert.deepEqual(tables, [['wp_big'], ['wp_mid', 'wp_small']])
+  // Every part loads as the whole dump did, the skipped table nowhere.
+  const joined = loads
+    .flat()
+    .map((p) => readFileSync(p, 'utf8'))
+    .join('')
+  assert.equal(
+    joined,
+    part('wp_big', [big]) + part('wp_mid', [big.slice(0, 20)]) + part('wp_small', [["(1,'a')"]])
+  )
+})
+
+test('split refuses (3) a dump with no `-- table` line: statements load as they are, never nothing', async () => {
+  const { mkdirSync } = await import('node:fs')
+  const out = join(root, 'split-none')
+  mkdirSync(out)
+  const done = spawnSync('python3', [TOOL, 'split', '--streams', '2', '--out', out], {
+    input: 'CREATE TABLE jos_content (id INT);\nINSERT INTO jos_content VALUES (1);\n',
+    encoding: 'utf8'
+  })
+  assert.equal(done.status, 3, done.stderr)
+})
+
+test('split refuses (3) a dump that cannot load table by table side by side: LOCK TABLES, a view, a tail', async () => {
+  const { mkdirSync } = await import('node:fs')
+  for (const [i, tail] of [
+    'LOCK TABLES `wp_a` WRITE;\n',
+    '-- Temporary table structure for view `v`\n',
+    "-- Dumping routines for database 'x'\n"
+  ].entries()) {
+    const out = join(root, `split-no-${i}`)
+    mkdirSync(out)
+    const done = spawnSync('python3', [TOOL, 'split', '--streams', '2', '--out', out], {
+      input: part('wp_a', [["(1,'a')"]]) + tail,
+      encoding: 'utf8'
+    })
+    assert.equal(done.status, 3, `${tail.trim()}: ${done.stderr}`)
+  }
+})

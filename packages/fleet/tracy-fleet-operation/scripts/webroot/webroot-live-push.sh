@@ -256,7 +256,7 @@ changeset() {
   # Every step checked by hand: this runs inside a command substitution, where bash turns `set -e`
   # off — and a base the server refused or loaded half would make the live site's records look new.
   if ! tracy_db_exec mariadb -uroot -e "CREATE DATABASE \`$SCHEMA_BASE\` CHARACTER SET $CHARSET COLLATE $COLLATION" \
-     || ! gzip -dc "$LIVE_BASE_DUMP" | tracy_db_exec mariadb -uroot --max-allowed-packet=256M --init-command="SET FOREIGN_KEY_CHECKS=0" "$SCHEMA_BASE" \
+     || ! tracy_db_load_dump "$SCHEMA_BASE" "$LIVE_BASE_DUMP" "$PREVIEW_DIR/load-base" \
      || ! tracy_db_drop_triggers "$SCHEMA_BASE" >&2 \
      || ! sync_engine normalise --schema "$SCHEMA_BASE" --platform "$(tracy_backup_platform)" --prefix "$PREFIX" >&2; then
     drop_scratch; trap - EXIT

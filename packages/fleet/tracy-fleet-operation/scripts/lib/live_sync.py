@@ -2597,7 +2597,29 @@ def parse(argv: list[str]) -> argparse.Namespace:
     keep = sub.add_parser("keep-tables")
     keep.add_argument("--platform", required=True)
     keep.add_argument("--prefix", default="")
+    never = sub.add_parser("never-taken")
+    never.add_argument("--platform", required=True)
+    never.add_argument("--prefix", default="")
     return parser.parse_args(argv)
+
+
+def never_taken(platform: str, prefix: str) -> dict:
+    """The tables a merge keeps the copy's whatever the live site holds — Tracy's own (`tracyTables`:
+    the Claude Cowork engine's undo log, its caches) and the ignored ones (`ignoreTables`: sessions,
+    Smart Search's index, plugins' logs and queues) — for live-pull.mjs (TRACY_SYNC_IGNORED_TABLES),
+    which reads none of them again once it has a read of them: `{prefix, names, patterns}` over the
+    name without the prefix, `{}` when the prefix is not known. The engine's undo log on a WordPress
+    site held 22 MB and moved with every Sync to live write, and each sync after one read it whole
+    (dev, 27/10/2026)."""
+    if not prefix or platform not in POLICIES:
+        return {}
+    policy = POLICIES[platform]
+    ignore = policy.get("ignoreTables", set())
+    names = sorted(getattr(ignore, "names", ignore))
+    patterns = [p.pattern for p in getattr(ignore, "patterns", [])]
+    if policy.get("tracyTables") is not None:
+        patterns.append(policy["tracyTables"].pattern)
+    return {"prefix": prefix, "names": names, "patterns": patterns}
 
 
 def run_half(args: argparse.Namespace) -> int:
@@ -2605,6 +2627,9 @@ def run_half(args: argparse.Namespace) -> int:
 
     if args.half == "keep-tables":
         sys.stdout.write("".join(t + "\n" for t in sorted(policy_tables(args.platform, args.prefix))))
+        return 0
+    if args.half == "never-taken":
+        print(json.dumps(never_taken(args.platform, args.prefix)))
         return 0
     if args.half == "stat-manifest":
         with open(args.stat, encoding="utf-8", errors="surrogateescape") as f:
