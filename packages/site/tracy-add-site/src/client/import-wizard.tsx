@@ -143,6 +143,7 @@ type Step =
   | { at: 'removed'; siteKey: string }
 
 export interface ImportWizardProps {
+  initialAddress?: string
   t: Translate
   onBackToSource?: () => void
   /** Once the content is in storage and the fleet has taken the job — the parent switches to the site-build console. */
@@ -225,6 +226,7 @@ export function ImportProgress({
 }
 
 export function ImportWizard({
+  initialAddress = '',
   t,
   onProvisioned,
   onCreate,
@@ -241,7 +243,33 @@ export function ImportWizard({
   const frame = useRef<HTMLDivElement>(null)
   const checkedAddress = useRef('')
   const confirmedPlatform = useRef('')
-  const [address, setAddress] = useState('')
+  const [address, setAddress] = useState(initialAddress)
+  const editedAddress = useRef(false)
+  const seededAddress = useRef(initialAddress)
+  useEffect(() => {
+    if (seededAddress.current === initialAddress) return
+    seededAddress.current = initialAddress
+    if (editedAddress.current || !['site', 'connect'].includes(step.at)) return
+    setAddress(initialAddress)
+    siteCheckSequence.current++
+    setSiteCheck(null)
+    setCheckingAddress(false)
+    checkedAddress.current = ''
+    confirmedPlatform.current = ''
+    setFormPage('details')
+    setReached(0)
+    setPlatform('')
+    setStep({ at: 'site' })
+    setAdminUrl('')
+    setUsername('')
+    setPassword('')
+    setToken('')
+    setBasicUser('')
+    setBasicPass('')
+    adminCheckSequence.current++
+    setAdminCheck(null)
+    setError(null)
+  }, [initialAddress])
   const [step, setStep] = useState<Step>(() => {
     // The recovery page asks the host, never this tab's memory: the same after a reload, on another device.
     if (recover) return { at: 'recover', siteKey: recover, answer: 'asking' }
@@ -1639,6 +1667,7 @@ export function ImportWizard({
               className="pr-8"
               aria-invalid={error ? true : undefined}
               onChange={(event) => {
+                editedAddress.current = true
                 setAddress(event.target.value)
                 if (normalizeSiteKey(event.target.value) !== siteKey) {
                   siteCheckSequence.current++

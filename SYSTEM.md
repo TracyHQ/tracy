@@ -124,6 +124,16 @@ Every request reaches `tracy-web` first. [`app.js`](apps/tracy-web/src/app.js) m
    `/design-inspiration` (public), `/tracy-badge.js`, beta, sign-in (`identity/`), seats
    (`seats/`, `lanes/`), `/api/sites/*` (`sites/`), public REST `/v1` (`api/`), notifications,
    `/ops` (`ops/`), the AI assistant `/api/assistant/*` (`assistant/`: answers with a model, hands over to a real person via Telegram; read-only, never writes to a site).
+   On the new-site screen, pressing a setup action calls `POST /api/assistant/onboarding-draft`.
+   It reads only the signed-in account's current session conversation and uses the Help model to
+   extract an editable draft from the canonical CMS question feeds. It never creates a site,
+   reads file contents or fetches a supplied address. The latest user revision is checked before
+   and after extraction and again in the browser; queued corrections prevent stale handoffs.
+   The limits are 50 turns, 32,000 characters, 12 requests per minute and 50 per day, without
+   silently truncating history. Tab metadata carries the draft into Add site, where untouched
+   answers can update while manual edits and intentional clears win. Multilingual requests stay
+   in the description because the initial build selects one language. Import and business flows
+   receive only their address or search seed and retain the customer's explicit next action.
    Tracy's Discord bot calls `/api/discord/*` (`discord/`, see §9).
    Voice input in the chat box: `GET /api/speech` and WebSocket `/api/speech/stream`; reading answers aloud:
    `POST /api/speech/say`; per-turn Voice timings measured by the page: `POST /api/speech/trace` (metrics only, stored as

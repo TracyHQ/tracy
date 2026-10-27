@@ -1585,6 +1585,28 @@ export const PEOPLE_ROUTES = [
   },
   {
     method: 'POST',
+    path: '/api/assistant/onboarding-draft',
+    summary: 'Prepare an editable setup draft from the saved onboarding conversation',
+    description:
+      'Called only after an explicit creation action. Reads the current conversation owned by the signed-in account and session, then uses the assistant model to extract volunteered details against the shipped CMS Site questions. Both sides supply reference context; only customer statements and confirmations supply facts. The latest user turn must match sourceRevision before and after extraction. Does not create or import a site, fetch a supplied address, read file contents or assign a logo. At most 50 turns and 32000 characters; no silent truncation. At most 12 requests per minute and 50 per day per account. Refusals: 400 BAD_DRAFT, 409 DRAFT_CHANGED / DRAFT_UNAVAILABLE / DRAFT_AMBIGUOUS, 413 DRAFT_TOO_LONG, 429 RATE_LIMITED, 502 DRAFT_FAILED. Returns no provider error body.',
+    audience: ['customer'],
+    auth: 'session',
+    internal: false,
+    body: {
+      type: 'object',
+      required: ['intent', 'session', 'sourceRevision'],
+      properties: {
+        intent: { type: 'string', enum: ['create', 'import', 'business'] },
+        session: { type: 'string' },
+        sourceRevision: { type: 'string' },
+        platform: { type: 'string', enum: ['wordpress', 'joomla', 'emdash'] }
+      }
+    },
+    answers:
+      '{draft: {version: 1, sourceRevision, intent, platform, answersByFeed, importUrl, businessQuery}}'
+  },
+  {
+    method: 'POST',
     path: '/api/assistant/attachments',
     summary: 'Upload a file for a Help question',
     description:

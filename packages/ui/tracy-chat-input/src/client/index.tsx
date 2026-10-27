@@ -1074,8 +1074,14 @@ export function apply(ctx: ClientContext): void {
   ctx.effect(() => {
     if (!onboarding) return
     const onStart = (event: Event) => {
-      const detail = (event as CustomEvent<{ action?: unknown; question?: unknown; platform?: unknown }>)
-        .detail
+      const detail = (
+        event as CustomEvent<{
+          action?: unknown
+          question?: unknown
+          platform?: unknown
+          chatDraft?: unknown
+        }>
+      ).detail
       const action = detail?.action
       // Build from my business only while its switch is on, as its card on the start screen.
       const business = action === 'business' && uiSwitches().isShown('site-from-business')
@@ -1092,7 +1098,8 @@ export function apply(ctx: ClientContext): void {
         right(),
         action,
         typeof detail.question === 'string' ? detail.question : '',
-        startPlatformOf(detail.platform)
+        startPlatformOf(detail.platform),
+        detail.chatDraft
       )
     }
     window.addEventListener(ONBOARDING_START_EVENT, onStart)

@@ -1,0 +1,27 @@
+{
+  "id": "REG-PR-5-chat-flexible-onboarding",
+  "kind": "feat",
+  "title": "Conversation corrections reach editable setup without stale actions or overwritten edits",
+  "pr": 5,
+  "area": "onboarding/chat",
+  "cms": ["any"],
+  "needs": ["browser"],
+  "flaky_model": false,
+  "steps": [
+    "Run tests/regression/scripts/REG-PR-5-chat-flexible-onboarding.mjs against the current checkout; it uses the real wizard, bridge and CSS with deterministic API fixtures and closes its own browsers and servers."
+  ],
+  "expect": [
+    "The latest settled revision and most recent action click win; pending corrections prevent a stale handoff.",
+    "Untouched chat prefills update, while manual edits and deliberate clears survive new chat drafts and tab remounts.",
+    "Corrected import and business seeds invalidate previous checks and search results before an operation starts.",
+    "No site is created before the final customer confirmation."
+  ],
+  "selectors": {
+    "step": "[data-wizard-current]",
+    "question": "[data-questions-page]",
+    "draftDoor": "/api/assistant/onboarding-draft"
+  },
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-5-chat-flexible-onboarding.mjs"]
+  }
+}

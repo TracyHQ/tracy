@@ -2422,6 +2422,48 @@
           "x-audience": ["customer"]
         }
       },
+      "/api/assistant/onboarding-draft": {
+        "post": {
+          "operationId": "post_api_assistant_onboarding_draft",
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "intent": {
+                      "enum": ["create", "import", "business"],
+                      "type": "string"
+                    },
+                    "platform": {
+                      "enum": ["wordpress", "joomla", "emdash"],
+                      "type": "string"
+                    },
+                    "session": {
+                      "type": "string"
+                    },
+                    "sourceRevision": {
+                      "type": "string"
+                    }
+                  },
+                  "required": ["intent", "session", "sourceRevision"],
+                  "type": "object"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {}
+          },
+          "security": [
+            {
+              "session": []
+            }
+          ],
+          "tags": ["Accounts & seats"],
+          "x-audience": ["customer"]
+        }
+      },
       "/api/assistant/tip/seen": {
         "post": {
           "operationId": "post_api_assistant_tip_seen",
@@ -25066,6 +25108,48 @@
                     }
                   },
                   "required": ["conversationId", "reason"],
+                  "type": "object"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {}
+          },
+          "security": [
+            {
+              "session": []
+            }
+          ],
+          "tags": ["Accounts & seats"],
+          "x-audience": ["customer"]
+        }
+      },
+      "/api/assistant/onboarding-draft": {
+        "post": {
+          "operationId": "post_api_assistant_onboarding_draft",
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "intent": {
+                      "enum": ["create", "import", "business"],
+                      "type": "string"
+                    },
+                    "platform": {
+                      "enum": ["wordpress", "joomla", "emdash"],
+                      "type": "string"
+                    },
+                    "session": {
+                      "type": "string"
+                    },
+                    "sourceRevision": {
+                      "type": "string"
+                    }
+                  },
+                  "required": ["intent", "session", "sourceRevision"],
                   "type": "object"
                 }
               }

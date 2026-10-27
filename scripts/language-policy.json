@@ -16,8 +16,47 @@
     {
       "path": "packages/cms/tracy-joomla-quickstart/translations/*/*/*/*.json",
       "reason": "CMS content translations; explanatory README files are not translation data."
+    },
+    {
+      "path": "packages/locale/tracy-locales/*/*.json",
+      "reason": "Interface language packs (de, es, fr, it, nl, zh); values are localized text shown to users."
+    },
+    {
+      "path": "packages/locale/tracy-locale-vi/vi/*.json",
+      "reason": "Vietnamese interface language pack; values are localized text shown to users."
     }
   ],
   "lines": [],
-  "objects": []
+  "objects": [
+    {
+      "path": "packages/locale/tracy-locales/lib/client.js",
+      "oid": "fa10ebe2115baa953bd484df29ecb8626a265a88",
+      "reason": "Bundle built from the interface language packs above, including the website opportunities labels; reviewed build output."
+    },
+    {
+      "path": "packages/locale/tracy-locale-vi/lib/client.js",
+      "oid": "43f12e3a08ea82fab2ed491f3c41a6d28868b697",
+      "reason": "Bundle built from the Vietnamese interface language pack above, including the website opportunities labels; reviewed build output."
+    },
+    {
+      "path": "packages/locale/tracy-locale-vi/lib/client.js",
+      "oid": "81b5b21039bec790b64086ba4b87d97617c12258",
+      "reason": "Vietnamese interface bundle rebuilt for PR #5 from its localized JSON; exact output verified by the bundle and eight-language gates."
+    },
+    {
+      "path": "packages/locale/tracy-locales/lib/client.js",
+      "oid": "b646fdc81fb6aaa4c149f6f214991013d27ce8dc",
+      "reason": "Interface language bundle rebuilt for PR #5 from its localized JSON; exact output verified by the bundle and eight-language gates."
+    },
+    {
+      "path": "packages/ui/tracy-assistant/lib/client.js",
+      "oid": "d4cda2efce909001292b70bd0658c85a684cbed7",
+      "reason": "Assistant bundle rebuilt for PR #5; inherited localized interface-language names are on changed minified lines. Authored source is English and the exact output passed the bundle gate."
+    },
+    {
+      "path": "packages/site/tracy-add-site/lib/client.js",
+      "oid": "c6f4cf910d8471f31a691168120bdb91fe247898",
+      "reason": "Reviewed generated Add site bundle for PR #5; reproducible from source and retains existing language-detection character ranges on changed minified lines."
+    }
+  ]
 }
