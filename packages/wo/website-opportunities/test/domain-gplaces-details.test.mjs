@@ -487,3 +487,39 @@ test('a long review keeps its whole text, so a demo can quote it word for word',
   })
   assert.equal(f.reviews[0].text, long)
 })
+
+test('detail field mask asks for the attributes any trade has: accessibility, parking, payment, restroom', () => {
+  const fields = GPLACES_DETAIL_FIELDS.split(',')
+  for (const f of ['accessibilityOptions', 'parkingOptions', 'paymentOptions', 'restroom', 'goodForChildren'])
+    assert.ok(fields.includes(f), f)
+})
+
+test('facts flatten the general Google attributes into amenities, booleans only', () => {
+  const f = placeFactsFromDetails({
+    id: 'HarbourSportClub1',
+    accessibilityOptions: {
+      wheelchairAccessibleEntrance: true,
+      wheelchairAccessibleParking: true,
+      wheelchairAccessibleRestroom: false,
+      wheelchairAccessibleSeating: true
+    },
+    parkingOptions: { freeParkingLot: true, paidStreetParking: false, valetParking: 'yes' },
+    paymentOptions: { acceptsCreditCards: true, acceptsCashOnly: false },
+    restroom: true,
+    goodForChildren: true,
+    goodForWatchingSports: true
+  })
+  assert.deepEqual(f.amenities, {
+    goodForChildren: true,
+    restroom: true,
+    goodForWatchingSports: true,
+    wheelchairAccessibleEntrance: true,
+    wheelchairAccessibleParking: true,
+    wheelchairAccessibleRestroom: false,
+    wheelchairAccessibleSeating: true,
+    freeParkingLot: true,
+    paidStreetParking: false,
+    acceptsCreditCards: true,
+    acceptsCashOnly: false
+  })
+})

@@ -49,8 +49,12 @@ export function mapsMenuLink(menu) {
 export const mapsListingUrl = (placeId) =>
   `https://www.google.com/maps/search/?api=1&query=Google&query_place_id=${encodeURIComponent(placeId)}`
 
-/** One exact-place lookup or one twenty-photo page. Never follows provider links or pagination. */
-export async function googleMapsSerpapiCall(operation, params, { key, fetch: fetchImpl = fetch } = {}) {
+/** One exact-place lookup or one twenty-photo page. Never follows provider links or pagination; `retry` overrides the retry defaults. */
+export async function googleMapsSerpapiCall(
+  operation,
+  params,
+  { key, fetch: fetchImpl = fetch, retry } = {}
+) {
   if (!key) throw fail('CREDENTIAL_MISSING')
   const place = operation === 'place'
   if (!['place', 'overview', 'menu'].includes(operation)) throw fail('INVALID_OPERATION')
@@ -68,7 +72,8 @@ export async function googleMapsSerpapiCall(operation, params, { key, fetch: fet
   url.search = new URLSearchParams(query).toString()
   let body
   try {
-    body = await tripadvisorJson(url.href, { accept: 'application/json' }, { fetch: fetchImpl })
+    // A 429 or transient 5xx is tried again within a few seconds (`provider-retry.mjs`); a 402 is final.
+    body = await tripadvisorJson(url.href, { accept: 'application/json' }, { fetch: fetchImpl, retry })
   } catch (error) {
     throw fail(error?.code ?? 'PROVIDER_ERROR')
   }

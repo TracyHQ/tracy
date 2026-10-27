@@ -215,6 +215,8 @@ async function fixture({
     loadDomain: async () => domain,
     runtime,
     chargeable: createChargeable(ledger),
+    // One try per provider call, so each test counts its calls (the retry is tested in provider-retry and shared-research).
+    providerRetry: { maxWaitMs: 0 },
     apiFetch: async (url) => {
       const q = new URL(url).searchParams
       const operation =

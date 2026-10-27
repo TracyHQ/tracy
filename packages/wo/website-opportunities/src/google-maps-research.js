@@ -35,7 +35,7 @@ export const controlError = (error) =>
 
 export async function researchGoogleMaps(
   ctx,
-  { pool, now, fetch: fetchImpl, chargeable, row, google, save, tried }
+  { pool, now, fetch: fetchImpl, retry, chargeable, row, google, save, tried }
 ) {
   if (
     ctx.prefetch ||
@@ -119,7 +119,8 @@ export async function researchGoogleMaps(
         try {
           const result = await googleMapsSerpapiCall(operation, params, {
             key: ctx.keys.serpapi,
-            fetch: fetchImpl
+            fetch: fetchImpl,
+            retry
           })
           pipeline[operation] = { state: 'done', result }
           await persist()

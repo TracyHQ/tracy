@@ -20,6 +20,7 @@ import {
   suggestedLabelOf,
   tripadvisorListingView
 } from '../src/client/detail-model.ts'
+import { en as EN_STRINGS } from '../src/client/strings.ts'
 
 test('profile fields come in a fixed order, plain or with their sources', () => {
   const rows = profileFields({
@@ -722,4 +723,36 @@ test('the Media row counts what was found, shows the photographs and keeps the h
   const allHidden = mediaRowView({ profile: {}, media: [tile('i1', { hidden: 'tiny' })], sources: [] })
   assert.equal(allHidden.photos.state, 'none')
   assert.equal(allHidden.photos.hidden.length, 1)
+})
+
+test('Google amenities any trade can have read as amenities: restroom, accessibility, parking and payment', () => {
+  const ids = [
+    'restroom',
+    'goodForWatchingSports',
+    'curbsidePickup',
+    'wheelchairAccessibleEntrance',
+    'wheelchairAccessibleParking',
+    'wheelchairAccessibleRestroom',
+    'wheelchairAccessibleSeating',
+    'freeParkingLot',
+    'paidParkingLot',
+    'freeStreetParking',
+    'paidStreetParking',
+    'valetParking',
+    'freeGarageParking',
+    'paidGarageParking',
+    'acceptsCreditCards',
+    'acceptsDebitCards',
+    'acceptsCashOnly',
+    'acceptsNfc'
+  ]
+  const view = googlePlaceView({
+    amenities: { ...Object.fromEntries(ids.map((id) => [id, true])), acceptsCashOnly: false }
+  })
+  assert.deepEqual(
+    view.offered,
+    ids.filter((id) => id !== 'acceptsCashOnly')
+  )
+  assert.deepEqual(view.notOffered, ['acceptsCashOnly'])
+  for (const id of ids) assert.equal(typeof EN_STRINGS[`amenity.${id}`], 'string', id)
 })

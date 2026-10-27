@@ -1,4 +1,5 @@
 import { siteAccentOf, siteWhatsAppOf } from './brand-on-site.js'
+import { pageGroundsOfRevision } from './brand-on-site-grounds.js'
 import { AGENT_DEMO, isAgentDemo, checkedResearch, agentDemoInventoryPolicy } from './agent-demo.js'
 import { withBuildChoice } from './build-choice.js'
 import { checkedFactText, demoFactEvidence } from './demo-fact-evidence.js'
@@ -126,8 +127,9 @@ export function briefOf(revision) {
       : {}),
     allowedCta,
     // What the build may add of the business's brand (#1780, `brand-on-site.js`): the logo's accent on the accent role
-    // tokens (look-kept) and the WhatsApp button beside Call (cta-real). Nothing when the brief has none.
-    accentTokens: siteAccentOf(brief)?.tokens ?? {},
+    // tokens (look-kept), its link tokens where it reads on the template's page grounds (the same grounds the build's
+    // steps were given), and the WhatsApp button beside Call (cta-real). Nothing when the brief has none.
+    accentTokens: siteAccentOf(brief, { grounds: pageGroundsOfRevision(revision) })?.tokens ?? {},
     whatsappLinks: [siteWhatsAppOf(brief)?.href].filter(Boolean),
     // 🔒 No filler, in any site language; an empty or neutral slot is no finding (`no-demo-words`, plan §7).
     fillers: forbiddenFillers(),

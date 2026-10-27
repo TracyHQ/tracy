@@ -286,7 +286,11 @@
               }
             }
           },
-          "decidedBy": { "enum": ["rule", "owner"] }
+          "decidedBy": { "enum": ["rule", "owner"] },
+          "basis": {
+            "enum": ["praise"],
+            "description": "A theme customers praise in at least two reviews, on their verbatim quotes; tied to the on-site services or audience it names. Said as praise, never as the business's own claim."
+          }
         }
       }
     },
@@ -304,6 +308,15 @@
         "properties": {
           "slug": { "type": "string", "pattern": "^[a-z0-9-]+$" },
           "title": { "type": "string", "minLength": 1 },
+          "seo": {
+            "description": "The page's HTML title and meta description, made only of facts on the site (name when on the site, kind of business, city, top services). Absent in briefs before 27/10/2026.",
+            "type": "object",
+            "required": ["title", "description"],
+            "properties": {
+              "title": { "type": "string", "minLength": 1, "maxLength": 60 },
+              "description": { "type": "string", "minLength": 1, "maxLength": 155 }
+            }
+          },
           "sections": {
             "type": "array",
             "items": {
@@ -323,7 +336,7 @@
                 },
                 "assetIds": { "type": "array", "items": { "type": "string" } },
                 "heroCandidates": {
-                  "description": "Hero only (#1780): up to three pictures to open the site with, the most pixels first; never the logo or a profile picture. Absent when none qualifies. The build step picks one and crops it.",
+                  "description": "Hero only (#1780): up to three pictures to open the site with, best first (landscape, high resolution grade, people at work or the venue, then the most pixels); never the logo, a profile picture or a graphic of words. Absent when none qualifies. The build step picks one and crops it.",
                   "type": "array",
                   "maxItems": 3,
                   "items": {
@@ -359,6 +372,18 @@
                       "kind": { "type": "string" },
                       "quote": { "type": "string" },
                       "source": { "type": "object" }
+                    }
+                  }
+                },
+                "inferred": {
+                  "description": "Optional. Lines of the copy Tracy concluded rather than quoted (\"By appointment.\" when the only hours say open 24 hours every day), each with its reason code; no excerpt backs them and none is shown as hours.",
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["text", "reason"],
+                    "properties": {
+                      "text": { "type": "string", "minLength": 1 },
+                      "reason": { "type": "string", "minLength": 1 }
                     }
                   }
                 },
@@ -455,6 +480,19 @@
           "properties": {
             "origin": { "enum": ["website", "social"] },
             "official": { "type": "boolean" },
+            "name": {
+              "type": ["string", "null"],
+              "description": "The decided business name; null while that name is held off the site (see nameHeld)."
+            },
+            "nameHeld": {
+              "type": "object",
+              "description": "Present while the business name is held off the site: the brand names nobody, and the held name, its reasons and the other names the business uses are in the Missing entry of the field named here.",
+              "required": ["missing", "reasons"],
+              "properties": {
+                "missing": { "const": "name" },
+                "reasons": { "type": "array", "items": { "type": "string" } }
+              }
+            },
             "colors": {
               "type": "array",
               "items": {
@@ -525,6 +563,19 @@
               "language": { "type": "string" },
               "publishTime": { "type": "string" },
               "googleMapsUri": { "type": "string" }
+            }
+          }
+        },
+        "heldReviews": {
+          "description": "Optional. Reviews the site may not quote: each names someone the brief holds off the site (a person named only in guest reviews), listed in namesHeld. Same fields as reviews.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["author", "text", "namesHeld"],
+            "properties": {
+              "author": { "type": "string", "minLength": 1 },
+              "text": { "type": "string", "minLength": 1 },
+              "namesHeld": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } }
             }
           }
         },
@@ -613,6 +664,30 @@
                 "values": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } }
               }
             }
+          },
+          "otherNames": {
+            "description": "Optional, on the held name's entry. The names the business gives itself on its own marks (its logo, its social page's display name or handle), each with those marks as evidence: the builder and the owner see them; no copy, title or meta description prints them either.",
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "required": ["name", "evidence"],
+              "properties": {
+                "name": { "type": "string", "minLength": 1 },
+                "evidence": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["source"],
+                    "properties": {
+                      "source": { "type": "string" },
+                      "ref": { "type": "string" },
+                      "quote": { "type": "string" }
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -629,6 +704,19 @@
         }
       }
     },
+    "assetLabelling": {
+      "description": "Optional (F08): how the photographs were labelled by a vision model when this brief was made. A failure leaves them unlabelled and says why.",
+      "type": "object",
+      "required": ["status"],
+      "properties": {
+        "status": { "enum": ["labelled", "cached", "failed", "off", "none"] },
+        "asked": { "type": "integer", "minimum": 0 },
+        "labelled": { "type": "integer", "minimum": 0 },
+        "cached": { "type": "integer", "minimum": 0 },
+        "max": { "type": "integer", "minimum": 0 },
+        "reason": { "type": "string" }
+      }
+    },
     "assets": {
       "type": "array",
       "items": {
@@ -638,7 +726,44 @@
           "id": { "type": "string", "minLength": 1 },
           "kind": { "enum": ["image", "video"] },
           "category": { "enum": ["food", "space", "event", "people", "other"] },
-          "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+          "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+          "width": {
+            "type": ["integer", "null"],
+            "minimum": 1,
+            "description": "Pixels; null when unknown (a video whose size was never read)."
+          },
+          "height": {
+            "type": ["integer", "null"],
+            "minimum": 1,
+            "description": "Pixels; null when unknown (a video whose size was never read)."
+          },
+          "orientation": { "enum": ["landscape", "portrait", "square", "unknown"] },
+          "quality": {
+            "enum": ["high", "medium", "low", "unknown"],
+            "description": "Resolution grade from the size: high fits a full-width hero (long edge 1600 px, short edge 900 px), medium a gallery (long edge 800 px), low a thumbnail."
+          },
+          "content": {
+            "enum": [
+              "people-in-action",
+              "team",
+              "venue-interior",
+              "venue-exterior",
+              "product",
+              "food",
+              "equipment",
+              "logo",
+              "text-graphic",
+              "other",
+              "unlabelled"
+            ],
+            "description": "What the picture shows, as a vision model labelled it; unlabelled when no model has looked at it."
+          },
+          "caption": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 124,
+            "description": "Short alt text from the vision model; absent when none."
+          }
         }
       }
     },
@@ -652,12 +777,44 @@
           "source": { "type": "string", "minLength": 1 },
           "status": { "enum": ["complete", "partial", "blocked", "failed"] },
           "reason": { "type": "string" },
+          "code": {
+            "type": "string",
+            "description": "Optional. The machine code of `reason` (HTTP_429, HTTP_402, APPLICATION_ERROR)."
+          },
+          "httpStatus": {
+            "type": "integer",
+            "description": "Optional. The HTTP status behind `code` when it is one (429 rate limited, 402 paid quota spent)."
+          },
           "coverage": {
             "type": "object",
             "properties": {
               "fetched": { "type": "integer" },
               "total": { "type": "integer" },
-              "until": { "type": "string" }
+              "pages": { "type": "integer" },
+              "until": { "type": "string" },
+              "reviews": {
+                "type": "integer",
+                "description": "Optional. Of fetched, the reviews this source gave (Google Places)."
+              },
+              "photos": {
+                "type": "integer",
+                "description": "Optional. Of fetched, the photos of the brief this source gave (Google Places)."
+              }
+            }
+          },
+          "attempts": {
+            "description": "Optional. The providers this source called, in order, each with its outcome: why the data is thin when one failed.",
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["provider", "status"],
+              "properties": {
+                "provider": { "type": "string", "minLength": 1 },
+                "status": { "type": "string", "minLength": 1 },
+                "step": { "type": "string" },
+                "code": { "type": "string" },
+                "httpStatus": { "type": "integer" }
+              }
             }
           }
         }

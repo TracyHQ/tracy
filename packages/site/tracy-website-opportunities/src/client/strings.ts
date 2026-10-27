@@ -613,6 +613,24 @@ export const en = {
   'amenity.goodForChildren': 'Good for children',
   'amenity.goodForGroups': 'Good for groups',
   'amenity.allowsDogs': 'Dogs allowed',
+  'amenity.restroom': 'Restroom',
+  'amenity.goodForWatchingSports': 'Good for watching sports',
+  'amenity.curbsidePickup': 'Curbside pickup',
+  'amenity.wheelchairAccessibleEntrance': 'Wheelchair accessible entrance',
+  'amenity.wheelchairAccessibleParking': 'Wheelchair accessible parking',
+  'amenity.wheelchairAccessibleRestroom': 'Wheelchair accessible restroom',
+  'amenity.wheelchairAccessibleSeating': 'Wheelchair accessible seating',
+  'amenity.freeParkingLot': 'Free parking lot',
+  'amenity.paidParkingLot': 'Paid parking lot',
+  'amenity.freeStreetParking': 'Free street parking',
+  'amenity.paidStreetParking': 'Paid street parking',
+  'amenity.valetParking': 'Valet parking',
+  'amenity.freeGarageParking': 'Free garage parking',
+  'amenity.paidGarageParking': 'Paid garage parking',
+  'amenity.acceptsCreditCards': 'Credit cards',
+  'amenity.acceptsDebitCards': 'Debit cards',
+  'amenity.acceptsCashOnly': 'Cash only',
+  'amenity.acceptsNfc': 'Contactless payment',
 
   'field.name': 'Name',
   'name.label': 'Name on the site',
@@ -688,6 +706,9 @@ export const en = {
   'facts.reason.implausible-all-week-hours':
     'Left off by rule: open 24 hours every day is unlikely for this kind of business.',
   'facts.reason.review-only-person': 'Left off by rule: this person is named only in guest reviews.',
+  'facts.reason.name-differs-from-own-marks':
+    "Left off by rule: the business's own logo or social page uses another name. Show it to confirm this name.",
+  'facts.alsoCalled': 'The business also calls itself {name} ({sources}).',
   'facts.reason.inferred-kind-not-allowed':
     'Left off by rule: Tracy worked this out and no source states it.',
   'facts.reason.allowed-inferred-kind':
@@ -714,6 +735,7 @@ export const en = {
   'field.website': 'Website',
   'field.socials': 'Social profiles',
   'field.whatsapp': 'WhatsApp',
+  'field.contactChannels': 'Contact channels',
   'field.socialFigures': 'Social figures',
 
   'media.category.food': 'Food',

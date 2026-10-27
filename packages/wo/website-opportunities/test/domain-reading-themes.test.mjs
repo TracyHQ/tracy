@@ -329,7 +329,7 @@ test('facts reach the About block with their source; facts from reviews are drop
       ['EST. 2011', 'logo']
     ]
   )
-  assert.match(renderBriefMarkdown(brief), /"EST\. 2011" — its logo: "EST\. 2011"/)
+  assert.match(renderBriefMarkdown(brief), /"EST\. 2011", its logo: "EST\. 2011"/)
 })
 
 // T1: the hero says what the business says it is, never the address.

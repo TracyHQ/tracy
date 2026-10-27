@@ -9,6 +9,11 @@
  * one that does not stays exactly as it was. Every other colour, the fonts and the layout stay the template's. The text
  * on the accent is white or black, whichever reads better, and always at least 4.5:1 (WCAG AA).
  *
+ * 🔒 LINKS TAKE THE ACCENT ONLY WHERE IT READS (option A, 27/10/2026). Links are the readable accent as text
+ * (`--ds-c-accent-text` and its hover). They take the logo accent only when it reaches 4.5:1 (WCAG AA, normal text)
+ * against EVERY page ground the template paints (light and dark, `ds-slot.js` `pageGroundsOf`); otherwise, or with
+ * no ground known, the template keeps its own link colour. One rule for every template.
+ *
  * 🔒 THE WHATSAPP BUTTON MAY REST ON AN INFERENCE (ADR 0037, amended 26/10/2026): a UAE mobile number with no source
  * saying WhatsApp is still shown as a button; the brief and profile keep it `verified: false`. A number without
  * WhatsApp gives a broken button: the risk Akemi accepted.
@@ -22,6 +27,9 @@ export const ACCENT_TOKENS = Object.freeze([
   '--ds-c-accent-active',
   '--ds-c-accent-on'
 ])
+
+/** The link role variables, set only when the accent reads on every page ground (`siteAccentOf`). */
+export const ACCENT_LINK_TOKENS = Object.freeze(['--ds-c-accent-text', '--ds-c-accent-text-hover'])
 
 /** WCAG AA for normal text. */
 const AA = 4.5
@@ -66,11 +74,13 @@ function mix(hex, toward, share) {
 
 /**
  * The site's accent from the brief's logo accent (`brief.brand.accent`, agent D's contract: `{hex, source: 'logo',
- * share}`), or null when the logo gave none.
+ * share}`), or null when the logo gave none. `grounds`: the page grounds the template paints (`#rrggbb`, light and
+ * dark); `links` is whether the accent reads on all of them at AA and so paints the links too.
  * @param {any} brief
- * @returns {null | {hex: string, on: string, contrast: number, tokens: Record<string, string>, css: string}}
+ * @param {{grounds?: string[]}} [page]
+ * @returns {null | {hex: string, on: string, contrast: number, links: boolean, tokens: Record<string, string>, css: string}}
  */
-export function siteAccentOf(brief) {
+export function siteAccentOf(brief, { grounds = [] } = {}) {
   const given = brief?.brand?.accent
   if (!given || given.source !== 'logo') return null
   const hex = hexOf(given.hex)
@@ -89,8 +99,20 @@ export function siteAccentOf(brief) {
     '--ds-c-accent-active': mix(hex, away, 0.22),
     '--ds-c-accent-on': on
   }
-  const css = `:root{${ACCENT_TOKENS.map((t) => `${t}:${tokens[t]}`).join(';')}}`
-  return { hex, on, contrast: Math.round(contrast * 100) / 100, tokens, css }
+  const pages = (Array.isArray(grounds) ? grounds : []).map(hexOf).filter(Boolean)
+  const readsOn = (colour) => pages.length > 0 && pages.every((g) => contrastRatio(colour, g) >= AA)
+  const links = readsOn(hex)
+  if (links) {
+    tokens['--ds-c-accent-text'] = hex
+    // Hover moves away from the page as the button does; where that would read worse, it stays the accent.
+    tokens['--ds-c-accent-text-hover'] = readsOn(tokens['--ds-c-accent-hover'])
+      ? tokens['--ds-c-accent-hover']
+      : hex
+  }
+  const css = `:root{${Object.entries(tokens)
+    .map(([t, v]) => `${t}:${v}`)
+    .join(';')}}`
+  return { hex, on, contrast: Math.round(contrast * 100) / 100, links, tokens, css }
 }
 
 /**
@@ -133,14 +155,15 @@ export function siteServiceAreasOf(brief) {
  *   beside Call, else a link beside the phone in the contact text; the areas are one line beside the address. Where a
  *   map names demo fact blocks (`facts`, ja-restaurant on WordPress), `contactOf` gives both as lines of those blocks.
  * @param {any} brief
+ * @param {{grounds?: string[]}} [page] the template's page grounds (`brand-on-site-grounds.js`)
  * @returns {string}
  */
-export function brandOnSiteSteps(brief) {
+export function brandOnSiteSteps(brief, page = {}) {
   const steps = []
-  const accent = siteAccentOf(brief)
+  const accent = siteAccentOf(brief, page)
   if (accent)
     steps.push(
-      `Brand accent (from the business's logo, ADR 0023 as amended 26/10/2026): the site takes this ONE colour on the template's accent, and nothing else of its look changes. Put this rule, exactly as written, where the CMS keeps the site's own extra CSS (WordPress: Additional CSS; Joomla: the template's custom.css; EmDash: the site's own stylesheet, then site.rebuild): ${accent.css} It sets the template's accent role variables: buttons, rules and accent fills take ${accent.hex} with ${accent.on} words on them (${accent.contrast}:1). Add no other colour, background or font rule for it; a template that does not read these variables keeps its own look, which is right. tracy_site and tracy_design_check report these values as OFF_PALETTE_COLOR: that is expected, keep them.`
+      `Brand accent (from the business's logo, ADR 0023 as amended 26/10/2026): the site takes this ONE colour on the template's accent, and nothing else of its look changes. Put this rule, exactly as written, where the CMS keeps the site's own extra CSS (WordPress: Additional CSS; Joomla: the template's custom.css; EmDash: the site's own stylesheet, then site.rebuild): ${accent.css} It sets the template's accent role variables: buttons, rules and accent fills take ${accent.hex} with ${accent.on} words on them (${accent.contrast}:1). ${accent.links ? `The links take ${accent.hex} too: it reads at 4.5:1 or more on every page ground of this template.` : "The links keep the template's own colour: the accent does not read at 4.5:1 on every page ground of this template, or no ground is known."} Add no other colour, background or font rule for it; a template that does not read these variables keeps its own look, which is right. tracy_site and tracy_design_check read these values off the page as the site's accent and do not report them as OFF_PALETTE_COLOR; any other colour is still reported.`
     )
   const whatsapp = siteWhatsAppOf(brief)
   if (whatsapp)

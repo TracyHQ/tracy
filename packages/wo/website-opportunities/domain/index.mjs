@@ -218,6 +218,15 @@ export {
 } from './pictures/picture-labels.mjs'
 export { heroCandidates, withoutNearCopies, NEAR_COPY_BITS } from './pictures/brief-media.mjs'
 export {
+  ASSET_CONTENT,
+  ASSET_CONTENT_KINDS,
+  ASSET_ORIENTATIONS,
+  ASSET_QUALITIES,
+  assetLabelsOf,
+  orientationOf,
+  resolutionGradeOf
+} from './pictures/asset-labels.mjs'
+export {
   planPlacement,
   drawPlan,
   outputSize,

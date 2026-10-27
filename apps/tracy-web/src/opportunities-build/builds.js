@@ -1,3 +1,4 @@
+import { siteNameOf } from 'website-opportunities/domain/held-name.mjs'
 import { AGENT_DEMO, isAgentDemo, checkedResearch } from './agent-demo.js'
 import { quickstartReleaseMatches } from '../lib/quickstart-selection.js'
 /**
@@ -47,7 +48,8 @@ export function deterministicBuildId(accountId, revisionId, requestId) {
 /** The one-paragraph `about` the create door accepts (≤ 300 characters): name and one line. */
 export function aboutOf(revision) {
   const brief = revision.brief ?? {}
-  const name = brief.business?.name ?? ''
+  // The name the site goes by: never a name the brief holds off the site (`held-name.mjs`).
+  const name = siteNameOf(brief) ?? ''
   const firstCopy = (brief.sitemap ?? [])
     .flatMap((page) => page?.sections ?? [])
     .map((s) => (typeof s?.copy === 'string' ? s.copy : ''))
@@ -73,7 +75,7 @@ const SITE_LABEL_MAX = 30
  * hashes the typed label into the build, so a second name for one build answers IDEMPOTENCY_CONFLICT.
  */
 export async function suggestedLabel({ pool, config, domain, revision }) {
-  let base = domain.siteLabelFor(revision.brief?.business?.name, { max: SITE_LABEL_MAX })
+  let base = domain.siteLabelFor(siteNameOf(revision.brief), { max: SITE_LABEL_MAX })
   if (siteLabelRefusal(base) !== null) base = `${base.slice(0, SITE_LABEL_MAX - 8).replace(/-+$/, '')}-demo`
   const prefix = config.siteAddressPrefix ?? ''
   const like = `${prefix}${base}%`

@@ -1,5 +1,13 @@
-/** Preserve review objects and their actual source instead of assigning every quote to one provider. */
-export function quickstartReviews(given) {
+import { heldPeopleOf, heldReviewsSplit } from 'website-opportunities/domain/held-reviews.mjs'
+
+/**
+ * Preserve review objects and their actual source instead of assigning every quote to one provider. 🔒 A review that
+ * names someone the revision's brief holds off the site (a person named only in guest reviews) is left out, by the
+ * same rule as the brief's own reviews (`held-reviews.mjs`): no testimonial puts a held name on the site.
+ * @param {any} given the revision's effective profile
+ * @param {any} [brief] the revision's brief, whose `missing` names the people held off the site
+ */
+export function quickstartReviews(given, brief = null) {
   // A revision frozen without a profile stores JSON null, which a default parameter does not catch.
   const profile = given ?? {}
   const rows = []
@@ -42,9 +50,9 @@ export function quickstartReviews(given) {
           provider: review.attribution ?? source.attribution ?? review.provider
         }))
       )
-  return rows.filter(
-    (row, index) =>
-      rows.findIndex(
+  return heldReviewsSplit(rows, heldPeopleOf(brief?.missing)).reviews.filter(
+    (row, index, kept) =>
+      kept.findIndex(
         (other) =>
           other.text === row.text &&
           other.author === row.author &&

@@ -142,6 +142,7 @@ import { createWebsiteBuilder } from './opportunities-build/route.js'
 import { createSiteChecks } from 'website-opportunities/src/site-checks.js'
 import { createSiteContent, quickstartActionOpen } from './opportunities-build/site-content.js'
 import { createSitePictures } from './opportunities-build/site-pictures.js'
+import { createBriefPictureLabels } from './opportunities-build/brief-picture-labels.js'
 import {
   createSocialClient,
   replicaSocialDomain,
@@ -1423,6 +1424,28 @@ export function buildApp(deps) {
       },
       siteChecks,
       socialStats,
+      // What the brief's photographs show, labelled when the brief is made (F08): the build's vision door, key and cache,
+      // at most TRACY_BRIEF_VISION_MAX_PICTURES (24) pictures, billed to the research caps. `deps.…PictureLabels`: a test's own.
+      pictureLabels:
+        deps.websiteOpportunitiesPictureLabels ??
+        createBriefPictureLabels({
+          pool: deps.pool,
+          objects,
+          chargeable: createChargeable(
+            createCostLedger({
+              pool: deps.pool,
+              caps: capsFromRuntime(() => woRuntime(deps.pool, deps.config))
+            })
+          ),
+          visionFor: async () => {
+            const door = await visionDoorFor(deps)
+            return door ? { door, key: visionKey(door) } : null
+          },
+          ...(Number(process.env.TRACY_BRIEF_VISION_MAX_PICTURES) > 0
+            ? { maxPictures: Number(process.env.TRACY_BRIEF_VISION_MAX_PICTURES) }
+            : {}),
+          log: deps.log ?? console
+        }),
       quality: deps.websiteOpportunitiesQuality ?? null,
       resolve,
       fetchImpl: crawlFetch,
@@ -1898,11 +1921,13 @@ export function buildApp(deps) {
       (async ({ ctx, source, report, baseline = null, stage = 'final' }) => {
         const site = await siteByKey(deps.pool, ctx.siteKey)
         if (!site) throw new Error('QUICKSTART_SITE_MISSING')
-        const reviewTestimonials = quickstartReviews(source.profile_effective).map((review) => ({
-          text: review.text,
-          author: review.author,
-          ...review.provenance
-        }))
+        const reviewTestimonials = quickstartReviews(source.profile_effective, source.brief).map(
+          (review) => ({
+            text: review.text,
+            author: review.author,
+            ...review.provenance
+          })
+        )
         const answer = await deps.host.hostCall(
           deps.config,
           site.host,

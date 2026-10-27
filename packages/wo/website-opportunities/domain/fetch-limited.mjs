@@ -125,7 +125,16 @@ export async function fetchLimited(
       if (Array.isArray(accept) && res.ok && !mimeMatches(mime, accept)) {
         throw new FetchLimitedError('MIME_REJECTED', `unexpected type ${mime ?? 'unknown'}`, { mime })
       }
-      return { url: u.href, status: res.status, mime, bytes: read.bytes, truncated: read.truncated }
+      // `retryAfter`: the provider's Retry-After on a refused call, what a bounded retry waits (`provider-retry.mjs`).
+      const retryAfter = res.ok ? null : res.headers.get('retry-after')
+      return {
+        url: u.href,
+        status: res.status,
+        mime,
+        bytes: read.bytes,
+        truncated: read.truncated,
+        ...(retryAfter ? { retryAfter } : {})
+      }
     }
   } finally {
     clearTimeout(timer)

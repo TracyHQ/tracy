@@ -145,7 +145,10 @@ test('the brief: no hours, no sample hours, listed for the owner, and By appoint
   assert.match(missing.why, /show no hours, not even sample hours, until the owner confirms them/)
   assert.deepEqual(missing.withheld, [{ source: 'google', hours: ALL_DAY }])
   const contact = brief.sitemap.find((p) => p.slug === 'contact')
-  assert.ok(contact.sections[0].copy.endsWith(BY_APPOINTMENT))
+  assert.ok(
+    contact.sections[0].copy.endsWith(`${BY_APPOINTMENT} To book, call +971 50 123 4567 or WhatsApp.`),
+    contact.sections[0].copy
+  )
   assert.ok(!contact.sections.some((s) => s.kind === 'hours'))
   const md = renderBriefMarkdown(brief)
   assert.match(md, /Opening hours \(disputed, see Missing; do not show\)/)

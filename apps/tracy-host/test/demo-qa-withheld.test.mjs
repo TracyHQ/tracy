@@ -170,3 +170,49 @@ test('withheld-not-shown: the same words pass when nothing about hours or rating
   )
   assert.equal(quiet.pass, true, JSON.stringify(quiet.detail))
 })
+
+// A business name the brief holds (it disagrees with the business's own logo and social page, #1791) stays off the
+// site's text, its title and its meta description; the logo picture may still show it. Fictional names.
+test('withheld-not-shown: a held business name in the text, the title or the meta description fails', () => {
+  const held = [{ field: 'name', values: ['Padel & Tennis Coach', 'Harbour Sport Club'] }]
+  for (const over of [
+    { text: 'Welcome to Harbour Sport Club.' },
+    { text: 'Welcome.', title: 'Home | Harbour Sport Club' },
+    { text: 'Welcome.', metaDescription: 'Harbour Sport Club teaches padel in Dubai.' }
+  ]) {
+    const check = checkWithheldNotShown([page(over)], { briefText: '', withheld: held })
+    assert.equal(check.pass, false, JSON.stringify(over))
+    assert.deepEqual(
+      check.detail.map((d) => [d.field, d.shown]),
+      [['name', 'Harbour Sport Club']]
+    )
+    assert.match(check.detail[0].fix, /title and its meta description.*logo picture may stay/s)
+  }
+})
+
+test('withheld-not-shown: a held business name only in the logo picture is no finding', () => {
+  const held = [{ field: 'name', values: ['Harbour Sport Club'] }]
+  const check = checkWithheldNotShown(
+    [
+      page({
+        text: 'Welcome. Book a padel session.',
+        title: 'Home',
+        metaDescription: 'Padel and tennis coaching.',
+        wordmark: { text: 'HARBOUR SPORT CLUB' },
+        images: [
+          {
+            src: '/logo.png',
+            sha256: null,
+            width: 200,
+            height: 80,
+            broken: false,
+            kind: 'img',
+            alt: 'Harbour Sport Club'
+          }
+        ]
+      })
+    ],
+    { briefText: '', withheld: held }
+  )
+  assert.equal(check.pass, true, JSON.stringify(check.detail))
+})

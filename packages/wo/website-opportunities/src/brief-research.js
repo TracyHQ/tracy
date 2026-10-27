@@ -13,6 +13,7 @@ import { withRatingDecision } from './business-rating.js'
 import { withPhoneDecision } from './business-phones.js'
 import { candidateAsRead } from '../domain/candidate-as-read.mjs'
 import { cleanProfileLinks } from '../domain/social-links.mjs'
+import { suppliedBySource, withAttemptedSources } from '../domain/brief-sources.mjs'
 
 export const opportunityOf = (opp) => ({
   id: opp.id,
@@ -106,6 +107,16 @@ export function fromPlace(view) {
         reason: s.reason,
         coverage: s.coverage ?? { fetched: 0 }
       })),
+    // Every source the run tried, failures included (the research card's rows): the brief lists them all, so a reader
+    // sees a Google Maps 429 or a TripAdvisor 402 behind thin reviews (`brief-sources.mjs`).
+    attemptedSources: (view.shown ?? [])
+      .filter((s) => EVIDENCE.has(s.status))
+      .map((s) => ({
+        source: s.source,
+        status: s.status,
+        reason: s.reason ?? null,
+        coverage: s.coverage ?? null
+      })),
     // The restaurant's photographs and its logos: the icons, maps and spacers of its website's markup stay out (`media-junk.js`),
     // and so does the smaller copy of a photograph two sources both hold (`brief-media.mjs`).
     media: withoutNearCopies(
@@ -195,21 +206,70 @@ function withoutRevoked(read, revoked) {
     profile,
     rawSources: read.rawSources.filter(keep),
     sources: read.sources.filter(keep),
+    ...(read.attemptedSources ? { attemptedSources: read.attemptedSources.filter(keep) } : {}),
     posts: read.posts.filter(keep),
     hubRevoked: revoked
   }
+}
+
+/**
+ * Pictures with the vision label a build already paid for (F08): a place's picture keeps its label in
+ * `wo_media_analysis` by sha256, not on its row, so the brief reads it there. Of several answers, one with a content kind
+ * first, then the newest. A picture that carries a label on its own row, or has none anywhere, is returned as it is.
+ * @param {any[]} media a brief read's media
+ * @param {{media_sha256: string, model: string, version: string, result: any, updated_at: any}[]} analyses done rows
+ */
+export function withCachedVision(media, analyses) {
+  const best = new Map()
+  const rank = (r) => [r.result?.content ? 1 : 0, new Date(r.updated_at).getTime() || 0]
+  for (const r of analyses) {
+    if (!r?.result || typeof r.result !== 'object') continue
+    const held = best.get(r.media_sha256)
+    const [c, t] = rank(r)
+    const [hc, ht] = held ? rank(held) : [-1, -1]
+    if (c > hc || (c === hc && t > ht)) best.set(r.media_sha256, r)
+  }
+  return media.map((m) => {
+    const r = m.labels?.vision ? null : best.get(m.sha256)
+    if (!r) return m
+    return {
+      ...m,
+      labels: { ...m.labels, vision: { key: r.version, model: r.model, labels: r.result } }
+    }
+  })
+}
+
+/** The done vision labels of these pictures' bytes; none where the table is absent. */
+async function cachedVisionOf(db, media) {
+  const shas = [...new Set(media.filter((m) => !m.labels?.vision && m.sha256).map((m) => m.sha256))]
+  if (!shas.length) return []
+  const { rows } = await db.query(`select to_regclass('wo_media_analysis') is not null as present`)
+  if (!rows[0]?.present) return []
+  return (
+    await db.query(
+      `select media_sha256, model, version, result, updated_at from wo_media_analysis
+        where media_sha256 = any($1) and state = 'done' and result is not null`,
+      [shas]
+    )
+  ).rows
+}
+
+/** A read whose pictures carry the vision labels already paid for. */
+async function withVision(db, read) {
+  return { ...read, media: withCachedVision(read.media, await cachedVisionOf(db, read.media)) }
 }
 
 /** What a brief of this opportunity reads now: `{read, view}`, `view` null without a place. */
 export async function briefResearchOf(db, opp) {
   const view = opp.place_id ? await placeViewOf(db, opp) : null
   if (!view) {
-    const read = await fromOpportunity(db, opp)
+    const read = await withVision(db, await fromOpportunity(db, opp))
     const revoked = await revokedHubCopy(db, read.profile?.googlePlace)
     return { read: revoked ? withoutRevoked(read, [{ ...revoked, source: 'google-places' }]) : read, view }
   }
   const revoked = await revokedHubUses(db, opp.place_id)
-  return { read: revoked.length ? withoutRevoked(fromPlace(view), revoked) : fromPlace(view), view }
+  const read = await withVision(db, fromPlace(view))
+  return { read: revoked.length ? withoutRevoked(read, revoked) : read, view }
 }
 
 /** The site brief of one research read (`fromPlace`/`fromOpportunity`), with its review sources; not yet validated. */
@@ -222,7 +282,8 @@ export function makeSiteBrief(domain, read, { opportunity, madeAt, placeProfile 
     Array.isArray(placeProfile.assessment?.facts)
       ? placeProfile
       : null
-  return addReviewSources(
+  // Every source the research tried joins the brief's own, failures with their codes (`brief-sources.mjs`).
+  const brief = addReviewSources(
     domain.buildBrief({
       opportunity,
       ...(frozen ? { placeProfile: frozen.profile, factAssessment: frozen.assessment.facts } : {}),
@@ -239,4 +300,10 @@ export function makeSiteBrief(domain, read, { opportunity, madeAt, placeProfile 
     }),
     read.profile
   )
+  // How the photographs were labelled when this brief was made (F08), failure included: the brief says it.
+  if (read.assetLabelling) brief.assetLabelling = read.assetLabelling
+  // A source row that counted nothing (Google Places) reports what the brief holds of it (`suppliedBySource`).
+  return withAttemptedSources(brief, read.attemptedSources, {
+    supplied: suppliedBySource({ googlePlace: brief.googlePlace, media: read.media, posts: read.posts })
+  })
 }

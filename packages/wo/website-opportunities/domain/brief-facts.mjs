@@ -7,7 +7,7 @@
 // shows only when its fact is on the site; nothing else turns it on or off.
 import { factDecisions } from './fact-assessment.mjs'
 import { ratingShownForms } from './google-rating.mjs'
-import { comparable } from './business-reading.mjs'
+import { comparable, labelQuoted } from './business-reading.mjs'
 import { cleanSocialUrl } from './social-links.mjs'
 
 // The brief names a source by its platform: Google's two collectors are one Google.
@@ -43,6 +43,8 @@ function fieldOf(path, fact, sourceKind, food) {
   if (group === 'links') {
     const kind = fact.value?.kind
     if (kind === 'whatsapp' || kind === 'website' || kind === 'menu' || kind === 'booking') return kind
+    // A channel the business invites messages on in its own words (`own-channels.mjs`): "DM us" on Instagram.
+    if (/^(?:instagram|facebook|tiktok|x)-dm$/.test(kind ?? '')) return 'contactChannels'
     return ['facebook', 'instagram', 'tiktok', 'youtube', 'x'].includes(kind) ? 'socials' : null
   }
   if (group === 'extensions' && key === 'research:otherPhones') return 'otherPhones'
@@ -122,6 +124,50 @@ export function briefFactsOf(profile, { food = false, decisions }) {
   return out
 }
 
+/**
+ * The other names the business gives itself on its own marks (pure, #1791): the values of the place profile's
+ * `name-differs-from-own-marks` conflict that are not the held name, each with its marks as evidence (the logo's text,
+ * the social page's display name or handle). The builder and the owner read "it also calls itself X"; no copy prints it.
+ * @returns {{name: string, evidence: {source: string, ref?: string, quote?: string}[]}[]}
+ */
+export function otherNamesOf(profile) {
+  const held = profile?.business?.name?.value
+  const evidence = new Map((profile?.evidence ?? []).map((e) => [e.id, e]))
+  const sources = new Map((profile?.sources ?? []).map((s) => [s.id, s]))
+  const out = []
+  for (const c of Array.isArray(profile?.conflicts) ? profile.conflicts : []) {
+    if (c?.target !== 'business.name' || !String(c.reason ?? '').startsWith('name-differs-from-own-marks'))
+      continue
+    for (const v of Array.isArray(c.values) ? c.values : []) {
+      if (typeof v?.value !== 'string' || v.value === held || out.some((o) => o.name === v.value)) continue
+      out.push({
+        name: v.value,
+        evidence: (v.evidenceRefs ?? [])
+          .map((r) => evidence.get(r))
+          .filter(Boolean)
+          .map((e) => {
+            const s = sources.get(e.sourceId)
+            // A logo's source is its picture's address: its words are the evidence, not where the file was served.
+            const ref =
+              typeof s?.ref === 'string' && s.kind !== 'logo' ? (cleanSocialUrl(s.ref) ?? s.ref) : null
+            return {
+              source: sourceName(s?.kind),
+              ...(ref ? { ref } : {}),
+              ...(typeof e.excerpt === 'string' ? { quote: e.excerpt } : {})
+            }
+          })
+      })
+    }
+  }
+  return out
+}
+
+/** "Harbour Sport Club" (its logo: "HARBOUR SPORT CLUB EST. 2023"; instagram: "harbour.sportclub"). */
+const otherNameWords = (n) => {
+  const marks = n.evidence.filter((e) => e.quote).map((e) => `${e.source}: ${JSON.stringify(e.quote)}`)
+  return `${JSON.stringify(n.name)}${marks.length ? ` (${marks.join('; ')})` : ''}`
+}
+
 /** The fact of a field (the first, or the one whose value `match` accepts), or null. */
 export const factOf = (facts, field, match = () => true) =>
   (Array.isArray(facts) ? facts : []).find((f) => f.field === field && match(f.value)) ?? null
@@ -140,6 +186,15 @@ const WHY = {
   },
   'review-only-person': () =>
     'These people are named only in guest reviews: name nobody of them on the site until the owner shows them.',
+  'name-differs-from-own-marks': (field, facts, otherNames = []) => {
+    const held = factOf(facts, 'name')?.value
+    const other = otherNames.length
+      ? `the business also calls itself ${otherNames.map(otherNameWords).join(' or ')} on its own logo or social page`
+      : 'its own logo or social page calls it by another'
+    return field === 'name'
+      ? `Sources call the business ${typeof held === 'string' ? held : 'by one name'}, but ${other}: write no business name in the copy, neither of them, until the owner confirms which it is; the logo may show.`
+      : null
+  },
   'inferred-not-allowed': (field) =>
     `Tracy inferred this ${field} without a source stating it: leave it off the site until the owner confirms it.`
 }
@@ -147,7 +202,7 @@ const WHY = {
 const NAMES = { hours: 'the opening hours', googleRating: "Google's rating", team: 'these people' }
 
 /** Why a withheld field is off the site, in the words the builder reads. */
-function whyOf(field, group, facts) {
+function whyOf(field, group, facts, otherNames = []) {
   if (group.some((f) => f.decidedBy === 'owner'))
     return field === 'googleRating'
       ? "The owner chose to leave Google's rating off the site: show no star rating or review count of Google's, not even a sample."
@@ -161,7 +216,7 @@ function whyOf(field, group, facts) {
         group.map((f) => ({ ...f, decidedBy: 'owner' })),
         facts
       )
-    const why = WHY[code]?.(field, facts)
+    const why = WHY[code]?.(field, facts, otherNames)
     if (why) return why
   }
   return `Tracy keeps this ${field} off the site (${[...new Set(group.flatMap((f) => f.reasons))].join(', ') || 'no reason recorded'}) until the owner shows it.`
@@ -183,9 +238,11 @@ const textsOf = (value) =>
 /**
  * The `missing` entries of what the brief withholds (pure): one per field whose facts are kept off the site, with every
  * value a page could write, the way the agent prompt names them and the site check looks for them.
- * @returns {{field: string, why: string, withheld: object[]}[]}
+ * `otherNames` (`otherNamesOf`) are the names the business's own marks give: the held name's entry names them, with
+ * their marks, as `otherNames`.
+ * @returns {{field: string, why: string, withheld: object[], otherNames?: object[]}[]}
  */
-export function withheldMissing(facts) {
+export function withheldMissing(facts, { otherNames = [] } = {}) {
   const off = (Array.isArray(facts) ? facts : []).filter((f) => f.onSite === false)
   const fields = [...new Set(off.map((f) => f.field))]
   return fields.map((field) => {
@@ -217,7 +274,17 @@ export function withheldMissing(facts) {
           values: [...new Set(group.flatMap((f) => textsOf(f.value)))]
         }
       ]
-    return { field, why: whyOf(field, group, facts), withheld }
+    const others = field === 'name' && group.some((f) => f.reasons.includes('name-differs-from-own-marks'))
+    // 🔒 The other names are held from the site's text too (copy, titles, meta): the site check reads them as withheld
+    // values. Only its text: the logo picture may still show the name it carries.
+    if (others && otherNames.length)
+      withheld.push({ source: 'own-marks', values: [...new Set(otherNames.map((n) => n.name))] })
+    return {
+      field,
+      why: whyOf(field, group, facts, others ? otherNames : []),
+      withheld,
+      ...(others && otherNames.length ? { otherNames } : {})
+    }
   })
 }
 
@@ -256,6 +323,33 @@ function factsOfQuote(quote, reading, facts) {
   return out
 }
 
+// Words that name a kind of offering, not which one: a praise that says "lessons" names no service of its own.
+const OFFERING_WORDS = new Set(
+  'session sessions lesson lessons class classes coaching course courses programme programmes program programs training workshop workshops membership memberships treatment treatments and the for with all of'.split(
+    ' '
+  )
+)
+
+/**
+ * The facts a praise theme rests on (pure): customers praise something the business offers, so a theme ties to each
+ * service or audience of the reading whose own words (its kind of offering aside) its review quotes name ("our kids
+ * take tennis lessons" names the service "Tennis"). A theme that names none rests on nothing and is dropped.
+ */
+function factsOfPraise(quotes, reading, facts) {
+  const out = []
+  const said = quotes.map((x) => x.quote).join(' ')
+  for (const [group, field] of READING_FIELDS.filter(([g]) => g === 'services' || g === 'audience'))
+    for (const item of reading?.[group] ?? []) {
+      const words = (comparable(item?.label).match(/[\p{L}\p{N}]+/gu) ?? []).filter(
+        (w) => w.length >= 3 && !OFFERING_WORDS.has(w)
+      )
+      if (!words.length || !words.every((w) => labelQuoted(w, said))) continue
+      for (const f of facts ?? [])
+        if (f.field === field && f.evidence.some((e) => e.quote === item.quote)) out.push(f)
+    }
+  return out
+}
+
 /** Every value the brief keeps off the site, as text (`withheldMissing`): a key message may quote none of them. */
 const withheldTexts = (facts) =>
   withheldMissing(facts).flatMap((m) =>
@@ -272,16 +366,22 @@ const withheldTexts = (facts) =>
  * @param {{id: string, label: string, edited?: boolean, quotes: {quote: string, source: any}[]}[]} messages
  * @param {any[]} facts the brief's fact envelopes
  * @param {any} [reading] the business reading the messages came with (its items and their sources)
+ * @param {{otherNames?: string[]}} [options] names a message may not quote either (`otherNamesOf`)
  * @returns {{id: string, label: string, factRefs: string[], quotes: {text: string, sourceRef: string}[], decidedBy: 'rule' | 'owner'}[]}
  */
-export function keyMessagesOf(messages, facts, reading = null) {
-  const held = withheldTexts(facts)
+export function keyMessagesOf(messages, facts, reading = null, { otherNames = [] } = {}) {
+  // The other names the business's own marks give are held like the name itself (`otherNamesOf`).
+  const held = [...withheldTexts(facts), ...otherNames.filter((n) => typeof n === 'string')]
   const holdsWithheld = (t) => held.some((v) => contains(t, v))
   const out = []
   for (const m of Array.isArray(messages) ? messages : []) {
     if (holdsWithheld(m.label)) continue
     const quotes = (m.quotes ?? []).filter((x) => typeof x?.quote === 'string' && !holdsWithheld(x.quote))
-    const refs = quotes.flatMap((x) => factsOfQuote(x, reading, facts)).filter((f) => f.onSite)
+    const refs = (
+      m.basis === 'praise'
+        ? factsOfPraise(quotes, reading, facts)
+        : quotes.flatMap((x) => factsOfQuote(x, reading, facts))
+    ).filter((f) => f.onSite)
     if (!quotes.length || !refs.length) continue
     out.push({
       id: m.id,
@@ -292,6 +392,8 @@ export function keyMessagesOf(messages, facts, reading = null) {
         sourceRef: x.source?.ref ?? 'unknown',
         ...(x.source?.url ? { url: x.source.url } : {})
       })),
+      // A theme customers praise, on their reviews' words (#1791): the build says it as praise, never as the business.
+      ...(m.basis === 'praise' ? { basis: 'praise' } : {}),
       decidedBy: m.edited ? 'owner' : 'rule'
     })
   }
@@ -395,7 +497,9 @@ export function renderBriefFacts(brief, line, q) {
       "Each is a point the business's own texts make, never copy: write it in the site's words from its quotes and facts, adding no claim."
     )
     messages.forEach((m, n) => {
-      line(`${n + 1}. ${q(m.label)}${m.decidedBy === 'owner' ? ' (worded by the owner)' : ''}`)
+      line(
+        `${n + 1}. ${q(m.label)}${m.basis === 'praise' ? ' (what customers praise)' : ''}${m.decidedBy === 'owner' ? ' (worded by the owner)' : ''}`
+      )
       for (const x of m.quotes) line(`   - ${x.sourceRef}: ${q(x.text)}`)
     })
     line()
